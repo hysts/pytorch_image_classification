@@ -1,0 +1,24 @@
+{
+  "model_config": {
+    "arch": "pyramidnet",
+    "base_channels": 16,
+    "depth": 272,
+    "block_type": "bottleneck",
+    "pyramid_alpha": 200
+  },
+  "optim_config": {
+    "optimizer": "sgd",
+    "base_lr": 0.1,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "nesterov": true,
+    "epochs": 300,
+    "scheduler": "multistep",
+    "milestones": [
+      150,
+      225
+    ],
+    "lr_decay": 0.1,
+    "batch_size": 128
+  }
+}

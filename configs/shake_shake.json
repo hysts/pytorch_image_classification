@@ -1,0 +1,21 @@
+{
+  "model_config": {
+    "arch": "shake_shake",
+    "base_channels": 96,
+    "depth": 26,
+    "shake_forward": true,
+    "shake_backward": true,
+    "shake_image": true
+  },
+  "optim_config": {
+    "optimizer": "sgd",
+    "base_lr": 0.2,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "nesterov": true,
+    "epochs": 1800,
+    "scheduler": "cosine",
+    "lr_min": 0,
+    "batch_size": 128
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "model_config": {
+    "arch": "resnet",
+    "base_channels": 16,
+    "block_type": "basic",
+    "depth": 110
+  },
+  "optim_config": {
+    "optimizer": "sgd",
+    "base_lr": 0.1,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "nesterov": true,
+    "epochs": 160,
+    "scheduler": "multistep",
+    "milestones": [
+      80,
+      120
+    ],
+    "lr_decay": 0.1,
+    "batch_size": 128
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "model_config": {
+    "arch": "resnet_preact",
+    "base_channels": 16,
+    "block_type": "basic",
+    "depth": 110,
+    "remove_first_relu": true,
+    "add_last_bn": true,
+    "preact_stage": [
+      true,
+      false,
+      false
+    ],
+    "se_reduction": 16
+  },
+  "optim_config": {
+    "optimizer": "sgd",
+    "base_lr": 0.1,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "nesterov": true,
+    "epochs": 160,
+    "scheduler": "multistep",
+    "milestones": [
+      80,
+      120
+    ],
+    "lr_decay": 0.1,
+    "batch_size": 128
+  }
+}

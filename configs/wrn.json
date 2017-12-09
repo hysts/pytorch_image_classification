@@ -1,0 +1,25 @@
+{
+  "model_config": {
+    "arch": "wrn",
+    "base_channels": 16,
+    "depth": 28,
+    "widening_factor": 10,
+    "drop_rate": 0
+  },
+  "optim_config": {
+    "optimizer": "sgd",
+    "base_lr": 0.1,
+    "momentum": 0.9,
+    "weight_decay": 5e-4,
+    "nesterov": true,
+    "epochs": 200,
+    "scheduler": "multistep",
+    "milestones": [
+      60,
+      120,
+      160
+    ],
+    "lr_decay": 0.2,
+    "batch_size": 128
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "model_config": {
+    "arch": "resnext",
+    "base_channels": 64,
+    "depth": 29,
+    "cardinality": 8
+  },
+  "optim_config": {
+    "optimizer": "sgd",
+    "base_lr": 0.1,
+    "momentum": 0.9,
+    "weight_decay": 5e-4,
+    "nesterov": true,
+    "epochs": 300,
+    "scheduler": "multistep",
+    "milestones": [
+      150,
+      225
+    ],
+    "lr_decay": 0.1,
+    "batch_size": 128
+  }
+}
