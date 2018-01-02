@@ -190,6 +190,82 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 
 
 
+### Results on FashionMNIST
+
+| Model                                          | Test Error (1 run) | # of Epochs | Training Time |
+|:-----------------------------------------------|:------------------:|------------:|--------------:|
+| ResNet-preact-20, widening factor 4, Cutout 12 |        4.30        |     160     |     2h37m     |
+| ResNet-preact-20, widening factor 4, Cutout 14 |        4.27        |     160     |     2h41m     |
+| ResNet-preact-50, Cutout 12                    |        4.56        |     160     |     1h28m     |
+| ResNet-preact-50, Cutout 14                    |        4.34        |     160     |     1h28m     |
+| ResNet-preact-50, widening factor 4, Cutout 12 |        4.07        |     200     |     8h14m     |
+| ResNet-preact-50, widening factor 4, Cutout 14 |        4.29        |     200     |     8h14m     |
+| shake-shake-26 2x32d (S-S-I), Cutout 12        |        4.05        |     300     |     5h32m     |
+| shake-shake-26 2x32d (S-S-I), Cutout 14        |        4.19        |     300     |     5h24m     |
+| shake-shake-26 2x96d (S-S-I), Cutout 14        |        3.91        |     300     |    23h58m     |
+
+| Model                           | Test Error (1 run) | # of Epochs | Training Time |
+|:--------------------------------|:------------------:|------------:|--------------:|
+| ResNet-preact-20                |        5.58        |      80     |       19m     |
+| ResNet-preact-20, Cutout  6     |        5.10        |      80     |       19m     |
+| ResNet-preact-20, Cutout  8     |        5.02        |      80     |       19m     |
+| ResNet-preact-20, Cutout 10     |        4.98        |      80     |       19m     |
+| ResNet-preact-20, Cutout 12     |        4.85        |      80     |       19m     |
+| ResNet-preact-20, Cutout 14     |        4.98        |      80     |       19m     |
+| ResNet-preact-20, Cutout 16     |        5.06        |      80     |       19m     |
+| ResNet-preact-20, RandomErasing |        5.17        |      80     |       19m     |
+| ResNet-preact-20, Mixup         |        5.37        |      80     |       24m     |
+| ResNet-preact-20                |        5.24        |     160     |       38m     |
+| ResNet-preact-20, Cutout 12     |        4.60        |     160     |       38m     |
+| ResNet-preact-20, Cutout 14     |        4.63        |     160     |       38m     |
+| ResNet-preact-20, RandomErasing |        4.77        |     160     |       38m     |
+| ResNet-preact-20, Mixup         |        4.86        |     160     |       49m     |
+| ResNet-preact-20, Cutout 12     |        4.74        |     300     |     1h11m     |
+| ResNet-preact-20, RandomErasing |        4.70        |     300     |     1h11m     |
+| ResNet-preact-20, Mixup         |        4.53        |     300     |     1h31m     |
+| ResNet-preact-20, Mixup         |        4.81        |     600     |     3h03m     |
+
+
+#### Note
+
+* Results reported in the tables are the test errors at last epochs.
+* All models are trained using cosine annealing with initial learning rate 0.2.
+* Following data augmentations are applied to the training data:
+    * Images are padded with 4 pixels on each side, and 28x28 patches are randomly cropped from the padded images.
+    * Images are randomly flipped horizontally.
+
+
+
+### Results on MNIST
+
+| Model                                          | Test Error (1 run) | # of Epochs | Training Time |
+|:-----------------------------------------------|:------------------:|------------:|--------------:|
+| ResNet-preact-20                               |        0.37        |      40     |        9m     |
+| ResNet-preact-20, Cutout  6                    |        0.40        |      40     |        9m     |
+| ResNet-preact-20, Cutout  8                    |        0.32        |      40     |        9m     |
+| ResNet-preact-20, Cutout 10                    |        0.32        |      40     |        9m     |
+| ResNet-preact-20, Cutout 12                    |        0.30        |      40     |        9m     |
+| ResNet-preact-20, Cutout 14                    |        0.31        |      40     |        9m     |
+| ResNet-preact-20, Cutout 16                    |        0.35        |      40     |        9m     |
+| ResNet-preact-20, RandomErasing                |        0.39        |      40     |        9m     |
+| ResNet-preact-20, Mixup (alpha=1)              |        0.43        |      40     |       11m     |
+| ResNet-preact-20, Mixup (alpha=1)              |        0.39        |      80     |       21m     |
+| ResNet-preact-20, Mixup (alpha=0.5)            |        0.31        |      40     |       11m     |
+| ResNet-preact-20, Mixup (alpha=0.5)            |        0.38        |      80     |       21m     |
+| ResNet-preact-20, widening factor 4, Cutout 12 |        0.27        |      40     |       40m     |
+| ResNet-preact-50                               |        0.36        |      40     |       22m     |
+| ResNet-preact-50, Cutout 12                    |        0.31        |      40     |       22m     |
+| ResNet-preact-50, widening factor 4, Cutout 12 |        0.29        |      40     |     1h40m     |
+| shake-shake-26 2x32d (S-S-I), Cutout 12        |        0.28        |     100     |     1h48m     |
+
+
+#### Note
+
+* Results reported in the table are the test errors at last epochs.
+* All models are trained using cosine annealing with initial learning rate 0.2.
+
+
+
 ## Experiments
 
 ### Experiment on residual units, learning rate scheduling, and data augmentation
