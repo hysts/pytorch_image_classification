@@ -57,9 +57,9 @@ $ ./main.py --arch wrn --outdir results --scheduler cosine
 
 
 
-## Results
+## Results on CIFAR-10
 
-### Results on CIFAR-10 using almost same settings as papers
+### Results using almost same settings as papers
 
 ![](figures/cifar10/test_errors.png)
 
@@ -190,7 +190,7 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 
 
 
-### Results on FashionMNIST
+## Results on FashionMNIST
 
 | Model                                          | Test Error (1 run) | # of Epochs | Training Time |
 |:-----------------------------------------------|:------------------:|------------:|--------------:|
@@ -226,7 +226,7 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 | ResNet-preact-20, Mixup         |        4.81        |     600     |     3h03m     |
 
 
-#### Note
+### Note
 
 * Results reported in the tables are the test errors at last epochs.
 * All models are trained using cosine annealing with initial learning rate 0.2.
@@ -236,7 +236,7 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 
 
 
-### Results on MNIST
+## Results on MNIST
 
 | Model                                          | Test Error (1 run) | # of Epochs | Training Time |
 |:-----------------------------------------------|:------------------:|------------:|--------------:|
@@ -259,7 +259,7 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 | shake-shake-26 2x32d (S-S-I), Cutout 12        |        0.28        |     100     |     1h48m     |
 
 
-#### Note
+### Note
 
 * Results reported in the table are the test errors at last epochs.
 * All models are trained using cosine annealing with initial learning rate 0.2.
