@@ -202,6 +202,7 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 | ResNet-preact-50, widening factor 4, Cutout 14 |        4.29        |     200     |     8h14m     |
 | shake-shake-26 2x32d (S-S-I), Cutout 12        |        4.05        |     300     |     5h32m     |
 | shake-shake-26 2x32d (S-S-I), Cutout 14        |        4.19        |     300     |     5h24m     |
+| shake-shake-26 2x96d (S-S-I), Cutout 12        |        4.06        |     300     |    23h54m     |
 | shake-shake-26 2x96d (S-S-I), Cutout 14        |        3.91        |     300     |    23h58m     |
 
 | Model                           | Test Error (1 run) | # of Epochs | Training Time |
