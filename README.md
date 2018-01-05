@@ -205,26 +205,21 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 | shake-shake-26 2x96d (S-S-I), Cutout 12        |        4.06        |     300     |    23h54m     |
 | shake-shake-26 2x96d (S-S-I), Cutout 14        |        3.91        |     300     |    23h58m     |
 
-| Model                           | Test Error (1 run) | # of Epochs | Training Time |
-|:--------------------------------|:------------------:|------------:|--------------:|
-| ResNet-preact-20                |        5.58        |      80     |       19m     |
-| ResNet-preact-20, Cutout  6     |        5.10        |      80     |       19m     |
-| ResNet-preact-20, Cutout  8     |        5.02        |      80     |       19m     |
-| ResNet-preact-20, Cutout 10     |        4.98        |      80     |       19m     |
-| ResNet-preact-20, Cutout 12     |        4.85        |      80     |       19m     |
-| ResNet-preact-20, Cutout 14     |        4.98        |      80     |       19m     |
-| ResNet-preact-20, Cutout 16     |        5.06        |      80     |       19m     |
-| ResNet-preact-20, RandomErasing |        5.17        |      80     |       19m     |
-| ResNet-preact-20, Mixup         |        5.37        |      80     |       24m     |
-| ResNet-preact-20                |        5.24        |     160     |       38m     |
-| ResNet-preact-20, Cutout 12     |        4.60        |     160     |       38m     |
-| ResNet-preact-20, Cutout 14     |        4.63        |     160     |       38m     |
-| ResNet-preact-20, RandomErasing |        4.77        |     160     |       38m     |
-| ResNet-preact-20, Mixup         |        4.86        |     160     |       49m     |
-| ResNet-preact-20, Cutout 12     |        4.74        |     300     |     1h11m     |
-| ResNet-preact-20, RandomErasing |        4.70        |     300     |     1h11m     |
-| ResNet-preact-20, Mixup         |        4.53        |     300     |     1h31m     |
-| ResNet-preact-20, Mixup         |        4.81        |     600     |     3h03m     |
+| Model                           | Test Error (median of 3 runs) | # of Epochs | Training Time |
+|:--------------------------------|:-----------------------------:|------------:|--------------:|
+| ResNet-preact-20                |             5.14              |     160     |       38m     |
+| ResNet-preact-20, Cutout  6     |             4.82              |     160     |       38m     |
+| ResNet-preact-20, Cutout  8     |             4.72              |     160     |       38m     |
+| ResNet-preact-20, Cutout 10     |             4.88              |     160     |       38m     |
+| ResNet-preact-20, Cutout 12     |             4.65              |     160     |       38m     |
+| ResNet-preact-20, Cutout 14     |             4.68              |     160     |       38m     |
+| ResNet-preact-20, Cutout 16     |             4.84              |     160     |       38m     |
+| ResNet-preact-20, RandomErasing |             4.77              |     160     |       38m     |
+| ResNet-preact-20, Mixup         |             4.86              |     160     |       49m     |
+| ResNet-preact-20, Cutout 12     |             4.74 (1 run)      |     300     |     1h11m     |
+| ResNet-preact-20, RandomErasing |             4.70 (1 run)      |     300     |     1h11m     |
+| ResNet-preact-20, Mixup         |             4.53              |     300     |     1h31m     |
+| ResNet-preact-20, Mixup         |             4.81 (1 run)      |     600     |     3h03m     |
 
 
 ### Note
