@@ -234,25 +234,25 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 
 ## Results on MNIST
 
-| Model                                          | Test Error (1 run) | # of Epochs | Training Time |
-|:-----------------------------------------------|:------------------:|------------:|--------------:|
-| ResNet-preact-20                               |        0.37        |      40     |        9m     |
-| ResNet-preact-20, Cutout  6                    |        0.40        |      40     |        9m     |
-| ResNet-preact-20, Cutout  8                    |        0.32        |      40     |        9m     |
-| ResNet-preact-20, Cutout 10                    |        0.32        |      40     |        9m     |
-| ResNet-preact-20, Cutout 12                    |        0.30        |      40     |        9m     |
-| ResNet-preact-20, Cutout 14                    |        0.31        |      40     |        9m     |
-| ResNet-preact-20, Cutout 16                    |        0.35        |      40     |        9m     |
-| ResNet-preact-20, RandomErasing                |        0.39        |      40     |        9m     |
-| ResNet-preact-20, Mixup (alpha=1)              |        0.43        |      40     |       11m     |
-| ResNet-preact-20, Mixup (alpha=1)              |        0.39        |      80     |       21m     |
-| ResNet-preact-20, Mixup (alpha=0.5)            |        0.31        |      40     |       11m     |
-| ResNet-preact-20, Mixup (alpha=0.5)            |        0.38        |      80     |       21m     |
-| ResNet-preact-20, widening factor 4, Cutout 12 |        0.27        |      40     |       40m     |
-| ResNet-preact-50                               |        0.36        |      40     |       22m     |
-| ResNet-preact-50, Cutout 12                    |        0.31        |      40     |       22m     |
-| ResNet-preact-50, widening factor 4, Cutout 12 |        0.29        |      40     |     1h40m     |
-| shake-shake-26 2x32d (S-S-I), Cutout 12        |        0.28        |     100     |     1h48m     |
+| Model                                          | Test Error (median of 3 runs) | # of Epochs | Training Time |
+|:-----------------------------------------------|:-----------------------------:|------------:|--------------:|
+| ResNet-preact-20                               |             0.38              |      40     |        9m     |
+| ResNet-preact-20, Cutout  6                    |             0.40              |      40     |        9m     |
+| ResNet-preact-20, Cutout  8                    |             0.32              |      40     |        9m     |
+| ResNet-preact-20, Cutout 10                    |             0.34              |      40     |        9m     |
+| ResNet-preact-20, Cutout 12                    |             0.30              |      40     |        9m     |
+| ResNet-preact-20, Cutout 14                    |             0.34              |      40     |        9m     |
+| ResNet-preact-20, Cutout 16                    |             0.35              |      40     |        9m     |
+| ResNet-preact-20, RandomErasing                |             0.36              |      40     |        9m     |
+| ResNet-preact-20, Mixup (alpha=1)              |             0.39              |      40     |       11m     |
+| ResNet-preact-20, Mixup (alpha=1)              |             0.37              |      80     |       21m     |
+| ResNet-preact-20, Mixup (alpha=0.5)            |             0.33              |      40     |       11m     |
+| ResNet-preact-20, Mixup (alpha=0.5)            |             0.38              |      80     |       21m     |
+| ResNet-preact-20, widening factor 4, Cutout 12 |             0.29              |      40     |       40m     |
+| ResNet-preact-50                               |             0.39              |      40     |       22m     |
+| ResNet-preact-50, Cutout 12                    |             0.31              |      40     |       22m     |
+| ResNet-preact-50, widening factor 4, Cutout 12 |             0.29 (1 run)      |      40     |     1h40m     |
+| shake-shake-26 2x32d (S-S-I), Cutout 12        |             0.29              |     100     |     1h48m     |
 
 
 ### Note
