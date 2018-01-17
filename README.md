@@ -85,7 +85,7 @@ $ ./main.py --arch wrn --outdir results --scheduler cosine
 | ResNeXt-29 8x64d                       | 3.97 (1 run)                  | 3.65 (average of 10 runs)             |  42h50m*      |
 | ResNeXt-29 16x64d                      |                               | 3.58 (average of 10 runs)             |               |
 | shake-shake-26 2x32d (S-S-I)           | 3.68                          | 3.55 (average of 3 runs)              |  33h49m       |
-| shake-shake-26 2x64d (S-S-I)           |                               | 2.98 (average of 3 runs)              |               |
+| shake-shake-26 2x64d (S-S-I)           | 2.88 (1 run)                  | 2.98 (average of 3 runs)              |  78h48m       |
 | shake-shake-26 2x96d (S-S-I)           | 2.90 (1 run)                  | 2.86 (average of 5 runs)              | 101h32m*      |
 
 
@@ -95,7 +95,8 @@ $ ./main.py --arch wrn --outdir results --scheduler cosine
     * Trained WRN-28-10 with batch size 64 (128 in paper).
     * Trained DenseNet-BC-100 (k=12) with batch size 32 and initial learning rate 0.05 (batch size 64 and initial learning rate 0.1 in paper).
     * Trained ResNeXt-29 4x64d with a single GPU, batch size 32 and initial learning rate 0.025 (8 GPUs, batch size 128 and initial learning rate 0.1 in paper).
-    * Trained shake-shake 26 2x32d (S-S-I) with a single GPU (2 GPUs in paper).
+    * Trained shake-shake models with a single GPU (2 GPUs in paper).
+    * Trained shake-shake 26 2x64d (S-S-I) with batch size 64, and initial learning rate 0.1.
 * Test errors reported above are the ones at last epoch.
 * Experiments with only 1 run are done on different computer from the one used for experiments with 3 runs.
 
@@ -181,6 +182,12 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 32 --shake_for
 ```
 
 ![](figures/cifar10/shake-shake-26_2x32d.png)
+
+```
+$ python -u main.py --arch shake_shake --depth 26 --base_channels 64 --shake_forward True --shake_backward True --shake_image True --batch_size 64 --base_lr 0.1 --seed 7 --outdir results/shake_shake_26_2x64d_SSI/00
+```
+
+![](figures/cifar10/shake-shake-26_2x64d.png)
 
 ```
 $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_forward True --shake_backward True --shake_image True --seed 7 --outdir results/shake_shake_26_2x96d_SSI/00
