@@ -196,6 +196,27 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 ![](figures/cifar10/shake-shake-26_2x96d.png)
 
 
+### Results
+
+| Model                                   | Test Error (1 run) | # of Epochs | Training Time |
+|:----------------------------------------|:------------------:|------------:|--------------:|
+| WRN-28-10, Cutout 16                    |        3.19        |      200    |     16h23m    |
+| shake-shake-26 2x64d, Cutout 16         |        2.64        |     1800    |     78h55m    |
+
+
+```
+python -u main.py --arch wrn --depth 28 --outdir results/wrn_28_10_cutout16 --epochs 200 --scheduler cosine --base_lr 0.1 --batch_size 64 --seed 17 --use_cutout --cutout_size 16
+```
+
+![](figures/cifar10/WRN-28-10_Cutout_16.png)
+
+```
+python -u main.py --arch shake_shake --depth 26 --base_channels 64 --outdir results/shake_shake_26_2x64d_SSI_cutout16 --epochs 300 --scheduler cosine --base_lr 0.1 --batch_size 64 --seed 17 --use_cutout --cutout_size 16
+```
+
+![](figures/cifar10/shake-shake-26_2x64d_Cutout_16.png)
+
+
 
 ## Results on FashionMNIST
 
