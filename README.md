@@ -72,14 +72,14 @@ $ ./main.py --arch wrn --outdir results --scheduler cosine
 | ResNet-preact-1001 bottleneck          |                               | 4.62 (median of 5 runs), 4.69 ± 0.20 |               |
 | WRN-28-10                              | 4.03                          | 4.00 (median of 5 runs)               |  16h10m       |
 | WRN-28-10 w/ dropout                   |                               | 3.89 (median of 5 runs)               |               |
-| DenseNet-100 (k=12)                    |                               | 4.10 (1 run)                          |               |
+| DenseNet-100 (k=12)                    | 3.87 (1 run)                  | 4.10 (1 run)                          |  24h28m*      |
 | DenseNet-100 (k=24)                    |                               | 3.74 (1 run)                          |               |
 | DenseNet-BC-100 (k=12)                 | 4.69                          | 4.51 (1 run)                          |  15h20m       |
 | DenseNet-BC-250 (k=24)                 |                               | 3.62 (1 run)                          |               |
 | DenseNet-BC-190 (k=40)                 |                               | 3.46 (1 run)                          |               |
 | PyramidNet-110 (alpha=84)              | 4.40                          | 4.26 ± 0.23                          |  11h40m       |
 | PyramidNet-110 (alpha=270)             | 3.92 (1 run)                  | 3.73 ± 0.04                          |  24h12m*      |
-| PyramidNet-164 bottleneck (alpha=270)  |                               | 3.48 ± 0.20                          |               |
+| PyramidNet-164 bottleneck (alpha=270)  | 3.44 (1 run)                  | 3.48 ± 0.20                          |  32h37m*      |
 | PyramidNet-272 bottleneck (alpha=200)  |                               | 3.31 ± 0.08                          |               |
 | ResNeXt-29 4x64d                       | 3.89                          | ~3.75 (from Figure 7)                 |  31h17m       |
 | ResNeXt-29 8x64d                       | 3.97 (1 run)                  | 3.65 (average of 10 runs)             |  42h50m*      |
