@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import torch
-from torch.autograd import Variable, Function
+from torch.autograd import Function
 
 
 class ShakeFunction(Function):
@@ -49,4 +49,4 @@ def get_alpha_beta(batch_size, shake_config, is_cuda):
         alpha = alpha.cuda()
         beta = beta.cuda()
 
-    return Variable(alpha), Variable(beta)
+    return alpha, beta

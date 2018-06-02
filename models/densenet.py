@@ -3,12 +3,11 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.autograd import Variable
 
 
 def initialize_weights(m):
     if isinstance(m, nn.Conv2d):
-        nn.init.kaiming_normal(m.weight.data, mode='fan_out')
+        nn.init.kaiming_normal_(m.weight.data, mode='fan_out')
     elif isinstance(m, nn.BatchNorm2d):
         m.weight.data.fill_(1)
         m.bias.data.zero_()
@@ -151,9 +150,9 @@ class Network(nn.Module):
         self.bn = nn.BatchNorm2d(in_channels[3])
 
         # compute conv feature size
-        self.feature_size = self._forward_conv(
-            Variable(torch.zeros(*input_shape),
-                     volatile=True)).view(-1).shape[0]
+        with torch.no_grad():
+            self.feature_size = self._forward_conv(
+                torch.zeros(*input_shape)).view(-1).shape[0]
 
         self.fc = nn.Linear(self.feature_size, n_classes)
 
@@ -163,15 +162,16 @@ class Network(nn.Module):
     def _make_stage(self, in_channels, n_blocks, block, add_transition_block):
         stage = nn.Sequential()
         for index in range(n_blocks):
-            stage.add_module('block{}'.format(index + 1),
-                             block(in_channels + index * self.growth_rate,
-                                   self.growth_rate, self.drop_rate))
+            stage.add_module(
+                'block{}'.format(index + 1),
+                block(in_channels + index * self.growth_rate, self.growth_rate,
+                      self.drop_rate))
         if add_transition_block:
             in_channels = int(in_channels + n_blocks * self.growth_rate)
             out_channels = int(in_channels * self.compression_rate)
-            stage.add_module('transition',
-                             TransitionBlock(in_channels, out_channels,
-                                             self.drop_rate))
+            stage.add_module(
+                'transition',
+                TransitionBlock(in_channels, out_channels, self.drop_rate))
         return stage
 
     def _forward_conv(self, x):

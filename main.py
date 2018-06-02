@@ -11,7 +11,6 @@ import random
 
 import torch
 import torch.nn as nn
-from torch.autograd import Variable
 import torch.optim
 import torch.utils.data
 import torch.backends.cudnn
@@ -129,8 +128,7 @@ def parse_args():
         '--random_erasing_min_aspect_ratio', type=float, default=0.3)
     parser.add_argument('--random_erasing_max_attempt', type=int, default=20)
     # mixup configuration
-    parser.add_argument(
-        '--use_mixup', action='store_true', default=False)
+    parser.add_argument('--use_mixup', action='store_true', default=False)
     parser.add_argument('--mixup_alpha', type=float, default=1)
 
     args = parser.parse_args()
@@ -142,8 +140,8 @@ def parse_args():
     return config
 
 
-def train(epoch, model, optimizer, scheduler, criterion, train_loader,
-          config, writer):
+def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
+          writer):
     global global_step
 
     run_config = config['run_config']
@@ -185,8 +183,6 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader,
         if run_config['use_gpu']:
             data = data.cuda()
             targets = targets.cuda()
-        data = Variable(data)
-        targets = Variable(targets)
 
         optimizer.zero_grad()
 
@@ -198,10 +194,10 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader,
 
         _, preds = torch.max(outputs, dim=1)
 
-        loss_ = loss.data[0]
+        loss_ = loss.item()
         if data_config['use_mixup']:
             _, targets = targets.max(dim=1)
-        correct_ = preds.eq(targets).cpu().sum().data.numpy()[0]
+        correct_ = preds.eq(targets).sum().item()
         num = data.size(0)
 
         accuracy = correct_ / num
@@ -211,8 +207,7 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader,
 
         if run_config['tensorboard']:
             writer.add_scalar('Train/RunningLoss', loss_, global_step)
-            writer.add_scalar('Train/RunningAccuracy', accuracy,
-                              global_step)
+            writer.add_scalar('Train/RunningAccuracy', accuracy, global_step)
 
         if step % 100 == 0:
             logger.info('Epoch {} Step {}/{} '
@@ -254,16 +249,15 @@ def test(epoch, model, criterion, test_loader, run_config, writer):
         if run_config['use_gpu']:
             data = data.cuda()
             targets = targets.cuda()
-        data = Variable(data, volatile=True)
-        targets = Variable(targets, volatile=True)
 
-        outputs = model(data)
+        with torch.no_grad():
+            outputs = model(data)
         loss = criterion(outputs, targets)
 
         _, preds = torch.max(outputs, dim=1)
 
-        loss_ = loss.data[0]
-        correct_ = preds.eq(targets).cpu().sum().data.numpy()[0]
+        loss_ = loss.item()
+        correct_ = preds.eq(targets).sum().item()
         num = data.size(0)
 
         loss_meter.update(loss_, num)

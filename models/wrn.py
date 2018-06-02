@@ -3,12 +3,11 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.autograd import Variable
 
 
 def initialize_weights(module):
     if isinstance(module, nn.Conv2d):
-        nn.init.kaiming_normal(module.weight.data, mode='fan_in')
+        nn.init.kaiming_normal_(module.weight.data, mode='fan_in')
     elif isinstance(module, nn.BatchNorm2d):
         module.weight.data.uniform_()
         module.bias.data.zero_()
@@ -129,9 +128,9 @@ class Network(nn.Module):
         self.bn = nn.BatchNorm2d(n_channels[3])
 
         # compute conv feature size
-        self.feature_size = self._forward_conv(
-            Variable(torch.zeros(*input_shape),
-                     volatile=True)).view(-1).shape[0]
+        with torch.no_grad():
+            self.feature_size = self._forward_conv(
+                torch.zeros(*input_shape)).view(-1).shape[0]
 
         self.fc = nn.Linear(self.feature_size, n_classes)
 
