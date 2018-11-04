@@ -89,6 +89,10 @@ def _check_optim_config(config):
         for key in ['lr_min']:
             message = 'Key `{}` must be specified.'.format(key)
             assert key in config.keys(), message
+    elif scheduler == 'sgdr':
+        for key in ['lr_min', 'T0', 'Tmult']:
+            message = 'Key `{}` must be specified.'.format(key)
+            assert key in config.keys(), message
 
 
 def _get_optim_config(args):
@@ -104,6 +108,8 @@ def _get_optim_config(args):
         'milestones',
         'lr_decay',
         'lr_min',
+        'T0',
+        'Tmult',
         'betas',
     ]
     json_keys = ['milestones', 'betas']
@@ -190,8 +196,10 @@ def _cleanup_args(args):
         args.n_channels = None
         args.n_layers = None
         args.use_bn = None
-    if args.arch not in ['resnet', 'resnet_preact', 'densenet', 'pyramidnet',
-                         'se_resnet_preact']:
+    if args.arch not in [
+            'resnet', 'resnet_preact', 'densenet', 'pyramidnet',
+            'se_resnet_preact'
+    ]:
         args.block_type = None
     if args.arch not in ['resnet_preact', 'se_resnet_preact']:
         args.remove_first_relu = None
@@ -227,8 +235,11 @@ def _cleanup_args(args):
     if args.scheduler != 'multistep':
         args.milestones = None
         args.lr_decay = None
-    if args.scheduler != 'cosine':
+    if args.scheduler not in ['cosine', 'sgdr']:
         args.lr_min = None
+    if args.scheduler != 'sgdr':
+        args.T0 = None
+        args.Tmult = None
 
     # cutout
     if not args.use_cutout:
