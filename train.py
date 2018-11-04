@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import os
+import pathlib
 import time
 import json
 import logging
@@ -324,12 +324,11 @@ def main():
     random.seed(seed)
 
     # create output directory
-    outdir = run_config['outdir']
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
+    outdir = pathlib.Path(run_config['outdir'])
+    outdir.mkdir(exist_ok=True, parents=True)
 
     # save config as json file in output directory
-    outpath = os.path.join(outdir, 'config.json')
+    outpath = outdir / 'config.json'
     with open(outpath, 'w') as fout:
         json.dump(config, fout, indent=2)
 
@@ -385,7 +384,7 @@ def main():
         save_checkpoint(state, outdir)
 
     if run_config['tensorboard']:
-        outpath = os.path.join(outdir, 'all_scalars.json')
+        outpath = outdir / 'all_scalars.json'
         writer.export_scalars_to_json(outpath)
 
 
