@@ -349,8 +349,8 @@ def main():
     if config['data_config']['use_mixup']:
         train_criterion = CrossEntropyLoss(size_average=True)
     else:
-        train_criterion = nn.CrossEntropyLoss(size_average=True)
-    test_criterion = nn.CrossEntropyLoss(size_average=True)
+        train_criterion = nn.CrossEntropyLoss(reduction='elementwise_mean')
+    test_criterion = nn.CrossEntropyLoss(reduction='elementwise_mean')
 
     # create optimizer
     optim_config['steps_per_epoch'] = len(train_loader)
