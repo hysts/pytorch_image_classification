@@ -383,10 +383,6 @@ def main():
         # save model
         save_checkpoint(state, outdir)
 
-    if run_config['tensorboard']:
-        outpath = outdir / 'all_scalars.json'
-        writer.export_scalars_to_json(outpath)
-
 
 if __name__ == '__main__':
     main()
