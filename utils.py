@@ -1,7 +1,6 @@
 # coding: utf-8
 
 import importlib
-import os
 import shutil
 import numpy as np
 import torch
@@ -24,8 +23,8 @@ def load_model(config):
 
 
 def save_checkpoint(state, outdir):
-    model_path = os.path.join(outdir, 'model_state.pth')
-    best_model_path = os.path.join(outdir, 'model_best_state.pth')
+    model_path = outdir / 'model_state.pth'
+    best_model_path = outdir / 'model_best_state.pth'
     torch.save(state, model_path)
     if state['best_epoch'] == state['epoch']:
         shutil.copy(model_path, best_model_path)
