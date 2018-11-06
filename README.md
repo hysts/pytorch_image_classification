@@ -21,7 +21,7 @@ Following papers are implemented using PyTorch.
 * Python 3.6.3
 * PyTorch
 * torchvision
-* [tensorboard-pytorch]( https://github.com/lanpa/tensorboard-pytorch ) (optional)
+* [tensorboardX](https://github.com/lanpa/tensorboardX) (optional)
 
 
 
