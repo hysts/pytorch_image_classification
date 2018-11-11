@@ -308,7 +308,7 @@ def main():
 
     # TensorBoard SummaryWriter
     if run_config['tensorboard']:
-        writer = SummaryWriter()
+        writer = SummaryWriter(run_config['outdir'])
     else:
         writer = None
 
