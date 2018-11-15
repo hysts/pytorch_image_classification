@@ -12,7 +12,8 @@ def main():
     parser.add_argument('--outdir', type=str, required=True)
     args = parser.parse_args()
 
-    event_acc = event_accumulator.EventAccumulator(args.path)
+    event_acc = event_accumulator.EventAccumulator(
+        args.path, size_guidance={'scalars': 0})
     event_acc.Reload()
 
     scalars = {}
