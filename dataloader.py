@@ -18,6 +18,8 @@ class Dataset:
         self.dataset_dir = dataset_rootdir / config['dataset']
 
         self._train_transforms = []
+        self.train_transform = self._get_train_transform()
+        self.test_transform = self._get_test_transform()
 
     def get_datasets(self):
         train_dataset = getattr(torchvision.datasets, self.config['dataset'])(
@@ -84,41 +86,26 @@ class Dataset:
 
 class CIFAR(Dataset):
     def __init__(self, config):
-        super(CIFAR, self).__init__(config)
         self.size = 32
-
         if config['dataset'] == 'CIFAR10':
             self.mean = np.array([0.4914, 0.4822, 0.4465])
             self.std = np.array([0.2470, 0.2435, 0.2616])
         elif config['dataset'] == 'CIFAR100':
             self.mean = np.array([0.5071, 0.4865, 0.4409])
             self.std = np.array([0.2673, 0.2564, 0.2762])
-
-        self.train_transform = self._get_train_transform()
-        self.test_transform = self._get_test_transform()
+        super(CIFAR, self).__init__(config)
 
 
 class MNIST(Dataset):
     def __init__(self, config):
-        super(MNIST, self).__init__(config)
         self.size = 28
-
-        self.mean = np.array([0.1307])
-        self.std = np.array([0.3081])
-
-        self.train_transform = self._get_train_transform()
-        self.test_transform = self._get_test_transform()
-
-
-class FashionMNIST(Dataset):
-    def __init__(self, config):
-        super(FashionMNIST, self).__init__(config)
-
-        self.mean = np.array([0.2860])
-        self.std = np.array([0.3530])
-
-        self.train_transform = self._get_train_transform()
-        self.test_transform = self._get_test_transform()
+        if config['dataset'] == 'MNIST':
+            self.mean = np.array([0.1307])
+            self.std = np.array([0.3081])
+        elif config['dataset'] == 'FashionMNIST':
+            self.mean = np.array([0.2860])
+            self.std = np.array([0.3530])
+        super(MNIST, self).__init__(config)
 
 
 def get_loader(config):
@@ -131,10 +118,8 @@ def get_loader(config):
 
     if dataset_name in ['CIFAR10', 'CIFAR100']:
         dataset = CIFAR(config)
-    elif dataset_name == 'MNIST':
+    elif dataset_name in ['MNIST', 'FashionMNIST']:
         dataset = MNIST(config)
-    elif dataset_name == 'FashionMNIST':
-        dataset = FashionMNIST(config)
 
     train_dataset, test_dataset = dataset.get_datasets()
 
