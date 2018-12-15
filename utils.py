@@ -1,5 +1,3 @@
-# coding: utf-8
-
 import importlib
 import shutil
 import numpy as np
