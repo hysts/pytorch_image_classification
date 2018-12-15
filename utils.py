@@ -40,7 +40,7 @@ def save_epoch_logs(epoch_logs, outdir):
     with open(temppath, 'w') as fout:
         json.dump(epoch_logs, fout, indent=2)
     os.chmod(temppath, stat.S_IREAD)
-    shutil.move(temppath.as_posix(), outdir / temppath.name)
+    shutil.copy(temppath.as_posix(), outdir / temppath.name)
     shutil.rmtree(tempdir, ignore_errors=True)
 
 
