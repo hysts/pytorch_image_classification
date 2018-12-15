@@ -118,6 +118,9 @@ def _get_data_config(args):
         'n_classes',
         'num_workers',
         'batch_size',
+        'use_random_crop',
+        'random_crop_padding',
+        'use_horizontal_flip',
         'use_cutout',
         'cutout_size',
         'cutout_prob',
@@ -188,8 +191,10 @@ def _cleanup_args(args):
         args.n_channels = None
         args.n_layers = None
         args.use_bn = None
-    if args.arch not in ['resnet', 'resnet_preact', 'densenet', 'pyramidnet',
-                         'se_resnet_preact']:
+    if args.arch not in [
+            'resnet', 'resnet_preact', 'densenet', 'pyramidnet',
+            'se_resnet_preact'
+    ]:
         args.block_type = None
     if args.arch not in ['resnet_preact', 'se_resnet_preact']:
         args.remove_first_relu = None
@@ -227,6 +232,10 @@ def _cleanup_args(args):
         args.lr_decay = None
     if args.scheduler != 'cosine':
         args.lr_min = None
+
+    # standard data augmentation
+    if not args.use_random_crop:
+        args.random_crop_padding = None
 
     # cutout
     if not args.use_cutout:
