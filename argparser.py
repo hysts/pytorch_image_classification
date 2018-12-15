@@ -135,7 +135,7 @@ def _get_data_config(args):
     ]
     json_keys = ['random_erasing_area_ratio_range']
     config = _args2config(args, keys, json_keys)
-    config['use_gpu'] = True if args.gpu != '-1' else False
+    config['use_gpu'] = args.device != 'cpu'
     return config
 
 
@@ -144,7 +144,7 @@ def _get_run_config(args):
         'outdir',
         'seed',
         'test_first',
-        'gpu',
+        'device',
         'tensorboard',
         'tensorboard_train_images',
         'tensorboard_test_images',
@@ -152,7 +152,6 @@ def _get_run_config(args):
     ]
     config = _args2config(args, keys, None)
 
-    config['use_gpu'] = True if args.gpu != '-1' else False
     return config
 
 
@@ -169,15 +168,15 @@ def _get_env_info(args):
         capability = '{}.{}'.format(*capability)
         return name, capability
 
-    for gpu_id in args.gpus:
-        if gpu_id == -1:
-            continue
-
-        name, capability = _get_device_info(gpu_id)
-        info['gpu{}'.format(gpu_id)] = OrderedDict({
-            'name': name,
-            'capability': capability,
-        })
+    if args.device != 'cpu':
+        for gpu_id in range(torch.cuda.device_count()):
+            name, capability = _get_device_info(gpu_id)
+            info['gpu{}'.format(gpu_id)] = OrderedDict({
+                'name':
+                name,
+                'capability':
+                capability,
+            })
 
     return info
 
@@ -307,8 +306,6 @@ def get_config(args):
             'One of args.arch and args.config must be specified')
     if args.config is None:
         args.config = 'configs/{}.json'.format(args.arch)
-
-    args.gpus = list(map(lambda x: int(x), args.gpu.split(',')))
 
     args = _set_default_values(args)
     args = _cleanup_args(args)

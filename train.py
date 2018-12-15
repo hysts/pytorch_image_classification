@@ -74,7 +74,7 @@ def parse_args():
     parser.add_argument('--outdir', type=str, required=True)
     parser.add_argument('--seed', type=int, default=17)
     parser.add_argument('--test_first', type=str2bool, default=True)
-    parser.add_argument('--gpu', type=str, default='0')
+    parser.add_argument('--device', type=str, default='cuda')
 
     # TensorBoard configuration
     parser.add_argument(
@@ -150,6 +150,7 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
     run_config = config['run_config']
     optim_config = config['optim_config']
     data_config = config['data_config']
+    device = run_config['device']
 
     logger.info('Train {}'.format(epoch))
 
@@ -183,9 +184,8 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
                 lr = optim_config['base_lr']
             writer.add_scalar('Train/LearningRate', lr, global_step)
 
-        if run_config['use_gpu']:
-            data = data.cuda()
-            targets = targets.cuda()
+        data = data.to(device)
+        targets = targets.to(device)
 
         optimizer.zero_grad()
 
@@ -237,6 +237,8 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
 def test(epoch, model, criterion, test_loader, run_config, writer):
     logger.info('Test {}'.format(epoch))
 
+    device = run_config['device']
+
     model.eval()
 
     loss_meter = AverageMeter()
@@ -250,9 +252,8 @@ def test(epoch, model, criterion, test_loader, run_config, writer):
                         data, normalize=True, scale_each=True)
                     writer.add_image('Test/Image', image, epoch)
 
-            if run_config['use_gpu']:
-                data = data.cuda()
-                targets = targets.cuda()
+            data = data.to(device)
+            targets = targets.to(device)
 
             outputs = model(data)
             loss = criterion(outputs, targets)
@@ -338,9 +339,10 @@ def main():
     model = load_model(config['model_config'])
     n_params = sum([param.view(-1).size()[0] for param in model.parameters()])
     logger.info('n_params: {}'.format(n_params))
-    if run_config['use_gpu']:
+    device = run_config['device']
+    if device is not 'cpu' and torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
-        model.cuda()
+    model.to(device)
     logger.info('Done')
 
     if config['data_config']['use_mixup']:
