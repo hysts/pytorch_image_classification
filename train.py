@@ -239,29 +239,29 @@ def test(epoch, model, criterion, test_loader, run_config, writer):
     loss_meter = AverageMeter()
     correct_meter = AverageMeter()
     start = time.time()
-    for step, (data, targets) in enumerate(test_loader):
-        if run_config['tensorboard_test_images']:
-            if epoch == 0 and step == 0:
-                image = torchvision.utils.make_grid(
-                    data, normalize=True, scale_each=True)
-                writer.add_image('Test/Image', image, epoch)
+    with torch.no_grad():
+        for step, (data, targets) in enumerate(test_loader):
+            if run_config['tensorboard_test_images']:
+                if epoch == 0 and step == 0:
+                    image = torchvision.utils.make_grid(
+                        data, normalize=True, scale_each=True)
+                    writer.add_image('Test/Image', image, epoch)
 
-        if run_config['use_gpu']:
-            data = data.cuda()
-            targets = targets.cuda()
+            if run_config['use_gpu']:
+                data = data.cuda()
+                targets = targets.cuda()
 
-        with torch.no_grad():
             outputs = model(data)
-        loss = criterion(outputs, targets)
+            loss = criterion(outputs, targets)
 
-        _, preds = torch.max(outputs, dim=1)
+            _, preds = torch.max(outputs, dim=1)
 
-        loss_ = loss.item()
-        correct_ = preds.eq(targets).sum().item()
-        num = data.size(0)
+            loss_ = loss.item()
+            correct_ = preds.eq(targets).sum().item()
+            num = data.size(0)
 
-        loss_meter.update(loss_, num)
-        correct_meter.update(correct_, 1)
+            loss_meter.update(loss_, num)
+            correct_meter.update(correct_, 1)
 
     accuracy = correct_meter.sum / len(test_loader.dataset)
 
