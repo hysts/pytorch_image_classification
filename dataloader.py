@@ -115,7 +115,7 @@ class MNIST(Dataset):
         self.std = np.array([0.3081])
 
         self.train_transform = self._get_train_transform()
-        self.test_transform = self._get_default_transform()
+        self.test_transform = self._get_default_test_transform()
 
     def _get_random_erasing_train_transform(self):
         transform = torchvision.transforms.Compose([
@@ -161,7 +161,7 @@ class FashionMNIST(Dataset):
         self.std = np.array([0.3530])
 
         self.train_transform = self._get_train_transform()
-        self.test_transform = self._get_default_transform()
+        self.test_transform = self._get_default_test_transform()
 
     def _get_random_erasing_train_transform(self):
         transform = torchvision.transforms.Compose([
@@ -189,20 +189,21 @@ class FashionMNIST(Dataset):
         ])
         return transform
 
-    def _get_default_transform(self):
+    def _get_default_train_transform(self):
         transform = torchvision.transforms.Compose([
-            torchvision.transforms.RandomCrop(32, padding=4),
+            torchvision.transforms.RandomCrop(28, padding=4),
             torchvision.transforms.RandomHorizontalFlip(),
             torchvision.transforms.ToTensor(),
             torchvision.transforms.Normalize(self.mean, self.std),
         ])
         return transform
 
-    def _get_default_train_transform(self):
-        return self._get_default_transform()
-
     def _get_default_test_transform(self):
-        return self._get_default_transform()
+        transform = torchvision.transforms.Compose([
+            torchvision.transforms.ToTensor(),
+            torchvision.transforms.Normalize(self.mean, self.std),
+        ])
+        return transform
 
 
 def get_loader(config):
