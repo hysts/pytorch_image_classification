@@ -28,7 +28,7 @@ def save_checkpoint(state, outdir):
         shutil.copy(model_path, best_model_path)
 
 
-class AverageMeter(object):
+class AverageMeter:
     def __init__(self):
         self.reset()
 
@@ -125,7 +125,7 @@ def cross_entropy_loss(input, target, size_average=True):
         return loss
 
 
-class CrossEntropyLoss(object):
+class CrossEntropyLoss:
     def __init__(self, size_average=True):
         self.size_average = size_average
 
