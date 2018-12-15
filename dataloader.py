@@ -1,6 +1,4 @@
-# coding: utf-8
-
-import os
+import pathlib
 import numpy as np
 
 import torch
@@ -13,11 +11,11 @@ import torchvision.transforms
 import transforms
 
 
-class Dataset(object):
+class Dataset:
     def __init__(self, config):
         self.config = config
-        self.dataset_dir = os.path.join('~/.torchvision/datasets',
-                                        config['dataset'])
+        dataset_rootdir = pathlib.Path('~/.torchvision/datasets').expanduser()
+        self.dataset_dir =  dataset_rootdir / config['dataset']
 
         self.use_cutout = (
             'use_cutout' in config.keys()) and config['use_cutout']
