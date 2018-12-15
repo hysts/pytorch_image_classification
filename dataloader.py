@@ -40,7 +40,8 @@ class Dataset:
         self._train_transforms.append(transform)
 
     def _add_horizontal_flip(self):
-        self._train_transforms.append(torchvision.transforms.HorizontalFlip())
+        self._train_transforms.append(
+            torchvision.transforms.RandomHorizontalFlip())
 
     def _add_normalization(self):
         self._train_transforms.append(
@@ -65,7 +66,7 @@ class Dataset:
 
     def _get_train_transform(self):
         if self.config['use_random_crop']:
-            self._add_random_crop(self.use_random_crop)
+            self._add_random_crop()
         if self.config['use_horizontal_flip']:
             self._add_horizontal_flip()
         self._add_normalization()
