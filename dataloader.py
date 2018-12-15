@@ -21,9 +21,15 @@ class Dataset:
 
     def get_datasets(self):
         train_dataset = getattr(torchvision.datasets, self.config['dataset'])(
-            self.dataset_dir, train=True, transform=self.train_transform)
+            self.dataset_dir,
+            train=True,
+            transform=self.train_transform,
+            download=True)
         test_dataset = getattr(torchvision.datasets, self.config['dataset'])(
-            self.dataset_dir, train=False, transform=self.test_transform)
+            self.dataset_dir,
+            train=False,
+            transform=self.test_transform,
+            download=True)
         return train_dataset, test_dataset
 
     def _add_random_crop(self):
