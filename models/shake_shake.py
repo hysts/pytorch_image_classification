@@ -101,7 +101,7 @@ class BasicBlock(nn.Module):
         else:
             shake_config = (False, False, False)
 
-        alpha, beta = get_alpha_beta(x.size(0), shake_config, x.is_cuda)
+        alpha, beta = get_alpha_beta(x.size(0), shake_config, x.device)
         y = shake_function(x1, x2, alpha, beta)
 
         return self.shortcut(x) + y
@@ -156,19 +156,21 @@ class Network(nn.Module):
         for index in range(n_blocks):
             block_name = 'block{}'.format(index + 1)
             if index == 0:
-                stage.add_module(block_name,
-                                 block(
-                                     in_channels,
-                                     out_channels,
-                                     stride=stride,
-                                     shake_config=self.shake_config))
+                stage.add_module(
+                    block_name,
+                    block(
+                        in_channels,
+                        out_channels,
+                        stride=stride,
+                        shake_config=self.shake_config))
             else:
-                stage.add_module(block_name,
-                                 block(
-                                     out_channels,
-                                     out_channels,
-                                     stride=1,
-                                     shake_config=self.shake_config))
+                stage.add_module(
+                    block_name,
+                    block(
+                        out_channels,
+                        out_channels,
+                        stride=1,
+                        shake_config=self.shake_config))
         return stage
 
     def _forward_conv(self, x):

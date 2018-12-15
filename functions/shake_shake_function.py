@@ -26,7 +26,7 @@ class ShakeFunction(Function):
 shake_function = ShakeFunction.apply
 
 
-def get_alpha_beta(batch_size, shake_config, is_cuda):
+def get_alpha_beta(batch_size, shake_config, device):
     forward_shake, backward_shake, shake_image = shake_config
 
     if forward_shake and not shake_image:
@@ -43,8 +43,7 @@ def get_alpha_beta(batch_size, shake_config, is_cuda):
     else:
         beta = torch.FloatTensor([0.5])
 
-    if is_cuda:
-        alpha = alpha.cuda()
-        beta = beta.cuda()
+    alpha = alpha.to(device)
+    beta = beta.to(device)
 
     return alpha, beta
