@@ -234,8 +234,18 @@ def _cleanup_args(args):
         args.lr_min = None
 
     # standard data augmentation
+    if args.use_random_crop is None:
+        if args.dataset in ['CIFAR10', 'CIFAR100', 'FashionMNIST']:
+            args.use_random_crop = True
+        else:
+            args.use_random_crop = False
     if not args.use_random_crop:
         args.random_crop_padding = None
+    if args.use_horizontal_flip is None:
+        if args.dataset in ['CIFAR10', 'CIFAR100', 'FashionMNIST']:
+            args.use_horizontal_flip = True
+        else:
+            args.use_horizontal_flip = False
 
     # cutout
     if not args.use_cutout:

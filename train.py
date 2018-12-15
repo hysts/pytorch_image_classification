@@ -113,11 +113,9 @@ def parse_args():
         choices=['CIFAR10', 'CIFAR100', 'MNIST', 'FashionMNIST'])
     parser.add_argument('--num_workers', type=int, default=7)
     # standard data augmentation
-    parser.add_argument(
-        '--use_random_crop', action='store_true', default=False)
+    parser.add_argument('--use_random_crop', type=str2bool)
     parser.add_argument('--random_crop_padding', type=int, default=4)
-    parser.add_argument(
-        '--use_horizontal_flip', action='store_true', default=False)
+    parser.add_argument('--use_horizontal_flip', type=str2bool)
     # cutout configuration
     parser.add_argument('--use_cutout', action='store_true', default=False)
     parser.add_argument('--cutout_size', type=int, default=16)
