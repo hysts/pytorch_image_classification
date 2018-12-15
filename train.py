@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import collections
 import pathlib
 import time
 import json
@@ -21,8 +22,8 @@ except Exception:
     is_tensorboard_available = False
 
 from dataloader import get_loader
-from utils import (str2bool, load_model, save_checkpoint, create_optimizer,
-                   AverageMeter, mixup, CrossEntropyLoss)
+from utils import (str2bool, load_model, save_checkpoint, save_epoch_logs,
+                   create_optimizer, AverageMeter, mixup, CrossEntropyLoss)
 from argparser import get_config
 
 torch.backends.cudnn.benchmark = True
@@ -233,6 +234,18 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
         writer.add_scalar('Train/Accuracy', accuracy_meter.avg, epoch)
         writer.add_scalar('Train/Time', elapsed, epoch)
 
+    train_log = collections.OrderedDict({
+        'epoch':
+        epoch,
+        'train':
+        collections.OrderedDict({
+            'loss': loss_meter.avg,
+            'accuracy': accuracy_meter.avg,
+            'time': elapsed,
+        }),
+    })
+    return train_log
+
 
 def test(epoch, model, criterion, test_loader, run_config, writer):
     logger.info('Test {}'.format(epoch))
@@ -285,7 +298,17 @@ def test(epoch, model, criterion, test_loader, run_config, writer):
         for name, param in model.named_parameters():
             writer.add_histogram(name, param, global_step)
 
-    return accuracy
+    test_log = collections.OrderedDict({
+        'epoch':
+        epoch,
+        'test':
+        collections.OrderedDict({
+            'loss': loss_meter.avg,
+            'accuracy': accuracy,
+            'time': elapsed,
+        }),
+    })
+    return test_log
 
 
 def update_state(state, epoch, accuracy, model, optimizer):
@@ -368,17 +391,24 @@ def main():
         'best_accuracy': 0,
         'best_epoch': 0,
     }
+    epoch_logs = []
     for epoch in range(1, optim_config['epochs'] + 1):
         # train
-        train(epoch, model, optimizer, scheduler, train_criterion,
-              train_loader, config, writer)
+        train_log = train(epoch, model, optimizer, scheduler, train_criterion,
+                          train_loader, config, writer)
 
         # test
-        accuracy = test(epoch, model, test_criterion, test_loader, run_config,
+        test_log = test(epoch, model, test_criterion, test_loader, run_config,
                         writer)
 
+        epoch_log = train_log.copy()
+        epoch_log.update(test_log)
+        epoch_logs.append(epoch_log)
+        save_epoch_logs(epoch_logs, outdir)
+
         # update state dictionary
-        state = update_state(state, epoch, accuracy, model, optimizer)
+        state = update_state(state, epoch, epoch_log['test']['accuracy'],
+                             model, optimizer)
 
         # save model
         save_checkpoint(state, outdir)

@@ -1,5 +1,10 @@
 import importlib
+import json
+import os
+import pathlib
 import shutil
+import stat
+import tempfile
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -26,6 +31,17 @@ def save_checkpoint(state, outdir):
     torch.save(state, model_path)
     if state['best_epoch'] == state['epoch']:
         shutil.copy(model_path, best_model_path)
+
+
+def save_epoch_logs(epoch_logs, outdir):
+    dirname = outdir.resolve().as_posix().replace('/', '_')
+    tempdir = pathlib.Path(tempfile.mkdtemp(prefix=dirname, dir='/tmp'))
+    temppath = tempdir / 'log.json'
+    with open(temppath, 'w') as fout:
+        json.dump(epoch_logs, fout, indent=2)
+    os.chmod(temppath, stat.S_IREAD)
+    shutil.move(temppath.as_posix(), outdir / temppath.name)
+    shutil.rmtree(tempdir, ignore_errors=True)
 
 
 class AverageMeter:
