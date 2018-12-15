@@ -18,8 +18,8 @@ Following papers are implemented using PyTorch.
 
 ## Requirements
 
-* Python 3.6.3
-* PyTorch
+* Python >= 3.6
+* PyTorch >= 1.0.0
 * torchvision
 * [tensorboardX](https://github.com/lanpa/tensorboardX) (optional)
 
@@ -99,6 +99,7 @@ $ ./main.py --arch wrn --outdir results --scheduler cosine
     * Trained shake-shake 26 2x64d (S-S-I) with batch size 64, and initial learning rate 0.1.
 * Test errors reported above are the ones at last epoch.
 * Experiments with only 1 run are done on different computer from the one used for experiments with 3 runs.
+* GeForce GTX 980 was used in these experiments.
 
 #### VGG-like
 
@@ -220,44 +221,6 @@ python -u main.py --arch shake_shake --depth 26 --base_channels 64 --outdir resu
 
 ## Results on FashionMNIST
 
-| Model                                          | Test Error (1 run) | # of Epochs | Training Time |
-|:-----------------------------------------------|:------------------:|------------:|--------------:|
-| ResNet-preact-20, widening factor 4, Cutout 12 |        4.30        |     160     |     2h37m     |
-| ResNet-preact-20, widening factor 4, Cutout 14 |        4.27        |     160     |     2h41m     |
-| ResNet-preact-50, Cutout 12                    |        4.56        |     160     |     1h28m     |
-| ResNet-preact-50, Cutout 14                    |        4.34        |     160     |     1h28m     |
-| ResNet-preact-50, widening factor 4, Cutout 12 |        4.07        |     200     |     8h14m     |
-| ResNet-preact-50, widening factor 4, Cutout 14 |        4.29        |     200     |     8h14m     |
-| shake-shake-26 2x32d (S-S-I), Cutout 12        |        4.05        |     300     |     5h32m     |
-| shake-shake-26 2x32d (S-S-I), Cutout 14        |        4.19        |     300     |     5h24m     |
-| shake-shake-26 2x96d (S-S-I), Cutout 12        |        4.06        |     300     |    23h54m     |
-| shake-shake-26 2x96d (S-S-I), Cutout 14        |        3.91        |     300     |    23h58m     |
-
-| Model                           | Test Error (median of 3 runs) | # of Epochs | Training Time |
-|:--------------------------------|:-----------------------------:|------------:|--------------:|
-| ResNet-preact-20                |             5.14              |     160     |       38m     |
-| ResNet-preact-20, Cutout  6     |             4.82              |     160     |       38m     |
-| ResNet-preact-20, Cutout  8     |             4.72              |     160     |       38m     |
-| ResNet-preact-20, Cutout 10     |             4.88              |     160     |       38m     |
-| ResNet-preact-20, Cutout 12     |             4.65              |     160     |       38m     |
-| ResNet-preact-20, Cutout 14     |             4.68              |     160     |       38m     |
-| ResNet-preact-20, Cutout 16     |             4.84              |     160     |       38m     |
-| ResNet-preact-20, RandomErasing |             4.77              |     160     |       38m     |
-| ResNet-preact-20, Mixup         |             4.86              |     160     |       49m     |
-| ResNet-preact-20, Cutout 12     |             4.74 (1 run)      |     300     |     1h11m     |
-| ResNet-preact-20, RandomErasing |             4.70 (1 run)      |     300     |     1h11m     |
-| ResNet-preact-20, Mixup         |             4.53              |     300     |     1h31m     |
-| ResNet-preact-20, Mixup         |             4.81 (1 run)      |     600     |     3h03m     |
-
-
-### Note
-
-* Results reported in the tables are the test errors at last epochs.
-* All models are trained using cosine annealing with initial learning rate 0.2.
-* Following data augmentations are applied to the training data:
-    * Images are padded with 4 pixels on each side, and 28x28 patches are randomly cropped from the padded images.
-    * Images are randomly flipped horizontally.
-
 
 
 ## Results on MNIST
@@ -287,7 +250,7 @@ python -u main.py --arch shake_shake --depth 26 --base_channels 64 --outdir resu
 
 * Results reported in the table are the test errors at last epochs.
 * All models are trained using cosine annealing with initial learning rate 0.2.
-
+* GeForce GTX 980 was used in these experiments.
 
 
 ## Experiments
