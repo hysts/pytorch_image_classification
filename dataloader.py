@@ -99,8 +99,8 @@ class CIFAR(Dataset):
         transform = torchvision.transforms.Compose([
             torchvision.transforms.RandomCrop(32, padding=4),
             torchvision.transforms.RandomHorizontalFlip(),
-            torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize(self.mean, self.std),
+            transforms.normalize(self.mean, self.std),
+            transforms.to_tensor(),
         ])
         return transform
 
@@ -139,8 +139,8 @@ class MNIST(Dataset):
 
     def _get_default_transform(self):
         transform = torchvision.transforms.Compose([
-            torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize(self.mean, self.std),
+            transforms.normalize(self.mean, self.std),
+            transforms.to_tensor(),
         ])
         return transform
 
@@ -188,8 +188,8 @@ class FashionMNIST(Dataset):
         transform = torchvision.transforms.Compose([
             torchvision.transforms.RandomCrop(28, padding=4),
             torchvision.transforms.RandomHorizontalFlip(),
-            torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize(self.mean, self.std),
+            transforms.normalize(self.mean, self.std),
+            transforms.to_tensor(),
         ])
         return transform
 
