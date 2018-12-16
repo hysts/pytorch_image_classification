@@ -345,7 +345,7 @@ def main():
     np.random.seed(seed)
     random.seed(seed)
     epoch_seeds = np.random.randint(
-        np.iinfo(np.int32).max, size=optim_config['epochs'])
+        np.iinfo(np.int32).max // 2, size=optim_config['epochs'])
 
     # create output directory
     outdir = pathlib.Path(run_config['outdir'])
