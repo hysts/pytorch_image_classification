@@ -109,6 +109,10 @@ class MNIST(Dataset):
         super(MNIST, self).__init__(config)
 
 
+def worker_init_fn(worker_id):
+    np.random.seed(np.random.get_state()[1][0] + worker_id)
+
+
 def get_loader(config):
     batch_size = config['batch_size']
     num_workers = config['num_workers']
@@ -131,6 +135,7 @@ def get_loader(config):
         num_workers=num_workers,
         pin_memory=use_gpu,
         drop_last=True,
+        worker_init_fn=worker_init_fn,
     )
     test_loader = torch.utils.data.DataLoader(
         test_dataset,

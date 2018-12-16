@@ -344,6 +344,8 @@ def main():
     torch.manual_seed(seed)
     np.random.seed(seed)
     random.seed(seed)
+    epoch_seeds = np.random.randint(
+        np.iinfo(np.int32).max, size=optim_config['epochs'])
 
     # create output directory
     outdir = pathlib.Path(run_config['outdir'])
@@ -392,7 +394,8 @@ def main():
         'best_epoch': 0,
     }
     epoch_logs = []
-    for epoch in range(1, optim_config['epochs'] + 1):
+    for epoch, seed in zip(range(1, optim_config['epochs'] + 1), epoch_seeds):
+        np.random.seed(seed)
         # train
         train_log = train(epoch, model, optimizer, scheduler, train_criterion,
                           train_loader, config, writer)
