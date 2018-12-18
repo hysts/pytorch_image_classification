@@ -9,7 +9,7 @@ from tensorboard.backend.event_processing import event_accumulator
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', type=str, required=True)
-    parser.add_argument('--outdir', type=str, required=True)
+    parser.add_argument('--outdir', type=str)
     args = parser.parse_args()
 
     event_acc = event_accumulator.EventAccumulator(
@@ -21,7 +21,10 @@ def main():
         events = event_acc.Scalars(tag)
         scalars[tag] = [event.value for event in events]
 
-    outdir = pathlib.Path(args.outdir)
+    if args.outdir is not None:
+        outdir = pathlib.Path(args.outdir)
+    else:
+        outdir = pathlib.Path(args.path).parent
     outdir.mkdir(exist_ok=True, parents=True)
 
     outpath = outdir / 'all_scalars.json'

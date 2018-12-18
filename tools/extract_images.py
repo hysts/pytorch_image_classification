@@ -10,14 +10,17 @@ from tensorboard.backend.event_processing import event_accumulator
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', type=str, required=True)
-    parser.add_argument('--outdir', type=str, required=True)
+    parser.add_argument('--outdir', type=str)
     args = parser.parse_args()
 
     event_acc = event_accumulator.EventAccumulator(
         args.path, size_guidance={'images': 0})
     event_acc.Reload()
 
-    outdir = pathlib.Path(args.outdir)
+    if args.outdir is not None:
+        outdir = pathlib.Path(args.outdir)
+    else:
+        outdir = pathlib.Path(args.path).parent / 'images'
     outdir.mkdir(exist_ok=True, parents=True)
 
     for tag in event_acc.Tags()['images']:
