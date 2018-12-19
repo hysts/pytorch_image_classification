@@ -294,10 +294,10 @@ python -u main.py --arch shake_shake --depth 26 --base_channels 64 --outdir resu
 
 | Model                                          | Test Error (median of 3 runs) | # of Epochs | Training Time |
 |:-----------------------------------------------|:-----------------------------:|------------:|--------------:|
-| ResNet-preact-20, Cutout 14                    |           0.82                |     200     |       24m     |
-| ResNet-preact-20, widening factor 4, Cutout 14 |           0.72                |     200     |     1h30m     |
-| PyramidNet-110-270, Cutout 14                  |           0.72 (1 run)        |     200     |    10h05m     |
-| shake-shake-26 2x96d (S-S-I), Cutout 14        |           0.63 (1 run)        |     200     |     6h46m     |
+| ResNet-preact-20, Cutout 14                    |        0.82 (best 0.67)       |     200     |       24m     |
+| ResNet-preact-20, widening factor 4, Cutout 14 |        0.72 (best 0.67)       |     200     |     1h30m     |
+| PyramidNet-110-270, Cutout 14                  |        0.72 (1 run)           |     200     |    10h05m     |
+| shake-shake-26 2x96d (S-S-I), Cutout 14        |        0.66 (best 0.63)       |     200     |     6h46m     |
 
 
 ### Note
