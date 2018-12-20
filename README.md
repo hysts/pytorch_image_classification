@@ -233,6 +233,8 @@ python -u main.py --arch shake_shake --depth 26 --base_channels 64 --outdir resu
 | shake-shake-26 2x32d (S-S-I), Cutout 14        |        4.05        |     400     |     3h39m     |
 | shake-shake-26 2x96d (S-S-I), Cutout 12        |        3.72        |     400     |    13h46m     |
 | shake-shake-26 2x96d (S-S-I), Cutout 14        |        3.85        |     400     |    13h39m     |
+| shake-shake-26 2x96d (S-S-I), Cutout 12        |        3.65        |     800     |    26h42m     |
+| shake-shake-26 2x96d (S-S-I), Cutout 14        |        3.60        |     800     |    26h42m     |
 
 | Model                           | Test Error (median of 3 runs) | # of Epochs | Training Time |
 |:--------------------------------|:-----------------------------:|------------:|--------------:|
