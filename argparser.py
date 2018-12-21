@@ -132,6 +132,8 @@ def _get_data_config(args):
         'random_erasing_max_attempt',
         'use_mixup',
         'mixup_alpha',
+        'use_ricap',
+        'ricap_beta',
     ]
     json_keys = ['random_erasing_area_ratio_range']
     config = _args2config(args, keys, json_keys)

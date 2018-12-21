@@ -22,8 +22,10 @@ except Exception:
     is_tensorboard_available = False
 
 from dataloader import get_loader
+import utils
 from utils import (str2bool, load_model, save_checkpoint, save_epoch_logs,
-                   create_optimizer, AverageMeter, mixup, CrossEntropyLoss)
+                   create_optimizer, AverageMeter)
+from augmentations import mixup, ricap
 from argparser import get_config
 
 torch.backends.cudnn.benchmark = True
@@ -134,6 +136,9 @@ def parse_args():
     # mixup configuration
     parser.add_argument('--use_mixup', action='store_true', default=False)
     parser.add_argument('--mixup_alpha', type=float, default=1)
+    # RICAP configuration
+    parser.add_argument('--use_ricap', action='store_true', default=False)
+    parser.add_argument('--ricap_beta', type=float, default=0.3)
 
     args = parser.parse_args()
     if not is_tensorboard_available:
@@ -164,8 +169,13 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
         global_step += 1
 
         if data_config['use_mixup']:
-            data, targets = mixup(data, targets, data_config['mixup_alpha'],
-                                  data_config['n_classes'])
+            data, targets = mixup.mixup(data, targets,
+                                        data_config['mixup_alpha'],
+                                        data_config['n_classes'])
+        elif data_config['use_ricap']:
+            data, targets = ricap.ricap(data, targets,
+                                        data_config['ricap_beta'],
+                                        data_config['n_classes'])
 
         if run_config['tensorboard_train_images']:
             if step == 0:
@@ -186,7 +196,15 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
             writer.add_scalar('Train/LearningRate', lr, global_step)
 
         data = data.to(device)
-        targets = targets.to(device)
+        if data_config['use_mixup']:
+            t1, t2, lam = targets
+            targets = (t1.to(device), t2.to(device), lam)
+        elif data_config['use_ricap']:
+            labels, weights = targets
+            labels = [label.to(device) for label in labels]
+            targets = (labels, weights)
+        else:
+            targets = targets.to(device)
 
         optimizer.zero_grad()
 
@@ -196,15 +214,19 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
 
         optimizer.step()
 
-        _, preds = torch.max(outputs, dim=1)
-
         loss_ = loss.item()
-        if data_config['use_mixup']:
-            _, targets = targets.max(dim=1)
-        correct_ = preds.eq(targets).sum().item()
         num = data.size(0)
-
-        accuracy = correct_ / num
+        if data_config['use_mixup']:
+            targets1, targets2, lam = targets
+            accuracy = lam * utils.accuracy(outputs, targets1)[0].item() + (
+                1 - lam) * utils.accuracy(outputs, targets2)[0].item()
+        elif data_config['use_ricap']:
+            accuracy = sum([
+                weight * utils.accuracy(outputs, labels)[0].item()
+                for labels, weight in zip(*targets)
+            ])
+        else:
+            accuracy = utils.accuracy(outputs, targets)[0].item()
 
         loss_meter.update(loss_, num)
         accuracy_meter.update(accuracy, num)
@@ -371,7 +393,9 @@ def main():
     logger.info('Done')
 
     if config['data_config']['use_mixup']:
-        train_criterion = CrossEntropyLoss(size_average=True)
+        train_criterion = mixup.mixup_criterion
+    elif config['data_config']['use_ricap']:
+        train_criterion = ricap.ricap_criterion
     else:
         train_criterion = nn.CrossEntropyLoss(reduction='mean')
     test_criterion = nn.CrossEntropyLoss(reduction='mean')

@@ -13,6 +13,7 @@ Following papers are implemented using PyTorch.
 * Random Erasing (1708.04896)
 * SENet (1709.01507)
 * Mixup (1710.09412)
+* RICAP (1811.09030)
 
 
 
@@ -423,5 +424,5 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 * Zhong, Zhun, et al. "Random Erasing Data Augmentation." arXiv preprint arXiv:1708.04896 (2017). [arXiv:1708.04896]( https://arxiv.org/abs/1708.04896 ), [PyTorch implementation]( https://github.com/zhunzhong07/Random-Erasing )
 * Hu, Jie, Li Shen, and Gang Sun. "Squeeze-and-excitation networks." arXiv preprint arXiv:1709.01507 (2017). [arXiv:1709.01507]( https://arxiv.org/abs/1709.01507 )
 * Hongyi Zhang, Moustapha Cisse, Yann N. Dauphin, David Lopez-Paz. "mixup: Beyond Empirical Risk Minimization." arXiv preprint arXiv:1710.09412 (2017). [arXiv:1710.09412]( https://arxiv.org/abs/1710.09412 )
-
+* Takahashi, Ryo, Takashi Matsubara, and Kuniaki Uehara. "Data Augmentation using Random Image Cropping and Patching for Deep CNNs." Proceedings of The 10th Asian Conference on Machine Learning, PMLR 95:786-798, 2018. [arXiv:1811.09030](https://arxiv.org/abs/1811.09030)
 
