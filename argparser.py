@@ -149,6 +149,7 @@ def _get_run_config(args):
         'seed',
         'test_first',
         'device',
+        'fp16',
         'tensorboard',
         'tensorboard_train_images',
         'tensorboard_test_images',

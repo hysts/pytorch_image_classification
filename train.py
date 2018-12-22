@@ -143,6 +143,8 @@ def parse_args():
     parser.add_argument(
         '--use_label_smoothing', action='store_true', default=False)
     parser.add_argument('--label_smoothing_epsilon', type=float, default=0.1)
+    # fp16
+    parser.add_argument('--fp16', action='store_true')
 
     args = parser.parse_args()
     if not is_tensorboard_available:
@@ -186,6 +188,9 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
                 image = torchvision.utils.make_grid(
                     data, normalize=True, scale_each=True)
                 writer.add_image('Train/Image', image, epoch)
+
+        if run_config['fp16']:
+            data = data.half()
 
         if optim_config['scheduler'] == 'multistep':
             scheduler.step(epoch - 1)
@@ -291,6 +296,9 @@ def test(epoch, model, criterion, test_loader, run_config, writer):
                         data, normalize=True, scale_each=True)
                     writer.add_image('Test/Image', image, epoch)
 
+            if run_config['fp16']:
+                data = data.half()
+
             data = data.to(device)
             targets = targets.to(device)
 
@@ -390,6 +398,13 @@ def main():
     model = load_model(config['model_config'])
     n_params = sum([param.view(-1).size()[0] for param in model.parameters()])
     logger.info('n_params: {}'.format(n_params))
+
+    if run_config['fp16']:
+        model.half()
+        for layer in model.modules():
+            if isinstance(layer, nn.BatchNorm2d):
+                layer.float()
+
     device = run_config['device']
     if device is not 'cpu' and torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
