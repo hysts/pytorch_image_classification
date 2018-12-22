@@ -409,6 +409,28 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_Mixup.png)
 
 
+### Experiments of Mixup and RICAP
+
+#### Results on CIFAR-10
+
+| Model                                              | Test Error (median of 3 runs) | # of Epochs | Training Time |
+|:---------------------------------------------------|:-----------------------------:|------------:|--------------:|
+| ResNet-preact-20                                   |             7.60              |     200     |       24m     |
+| ResNet-preact-20, mixup (alpha=1)                  |             7.24              |     200     |       26m     |
+| ResNet-preact-20, RICAP (beta=0.3), w/ random crop |             6.88              |     200     |       28m     |
+| ResNet-preact-20, RICAP (beta=0.3)                 |             6.77              |     200     |       28m     |
+| ResNet-preact-20                                   |             7.05              |     400     |       49m     |
+| ResNet-preact-20, mixup (alpha=1)                  |             6.66              |     400     |       51m     |
+| ResNet-preact-20, RICAP (beta=0.3), w/ random crop |             6.30              |     400     |       56m     |
+| ResNet-preact-20, RICAP (beta=0.3)                 |             6.19              |     400     |       56m     |
+
+#### Note
+
+* Results reported in the table are the test errors at last epochs.
+* All models are trained using cosine annealing with initial learning rate 0.2.
+* GeForce GTX 1080 Ti was used in these experiments.
+
+
 
 ## References
 
