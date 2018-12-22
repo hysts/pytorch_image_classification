@@ -160,3 +160,44 @@ def accuracy(output, target, topk=(1, )):
             correct_k = correct[:k].view(-1).float().sum(0, keepdim=True)
             res.append(correct_k.mul_(1 / batch_size))
     return res
+
+
+def onehot_encoding(label, n_classes):
+    return torch.zeros(label.size(0), n_classes).to(label.device).scatter_(
+        1, label.view(-1, 1), 1)
+
+
+def cross_entropy_loss(input, target, reduction):
+    input = F.log_softmax(input, dim=1)
+    loss = -input * target
+    if reduction == 'none':
+        return loss
+    elif reduction == 'mean':
+        return loss.mean()
+    elif reduction == 'sum':
+        return loss.sum()
+    else:
+        raise ValueError(
+            '`reduction` must be one of \'none\', \'mean\', or \'sum\'.')
+
+
+def label_smoothing_criterion(epsilon, reduction):
+    def _label_smoothing_criterion(preds, targets):
+        n_classes = preds.size(1)
+        device = preds.device
+
+        onehot = onehot_encoding(targets, n_classes).float().to(device)
+        targets = onehot * (1 - epsilon) + torch.ones_like(onehot).to(
+            device) * epsilon / n_classes
+        loss = cross_entropy_loss(preds, targets, reduction)
+        if reduction == 'none':
+            return loss
+        elif reduction == 'mean':
+            return loss.mean()
+        elif reduction == 'sum':
+            return loss.sum()
+        else:
+            raise ValueError(
+                '`reduction` must be one of \'none\', \'mean\', or \'sum\'.')
+
+    return _label_smoothing_criterion

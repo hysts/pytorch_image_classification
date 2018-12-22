@@ -134,6 +134,8 @@ def _get_data_config(args):
         'mixup_alpha',
         'use_ricap',
         'ricap_beta',
+        'use_label_smoothing',
+        'label_smoothing_epsilon',
     ]
     json_keys = ['random_erasing_area_ratio_range']
     config = _args2config(args, keys, json_keys)
@@ -268,6 +270,10 @@ def _cleanup_args(args):
     # RICAP
     if not args.use_ricap:
         args.ricap_beta = None
+
+    # label smoothing
+    if not args.use_label_smoothing:
+        args.label_smoothing_epsilon = None
 
     # TensorBoard
     if not args.tensorboard:

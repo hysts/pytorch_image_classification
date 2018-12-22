@@ -24,7 +24,7 @@ except Exception:
 from dataloader import get_loader
 import utils
 from utils import (str2bool, load_model, save_checkpoint, save_epoch_logs,
-                   create_optimizer, AverageMeter)
+                   create_optimizer, AverageMeter, label_smoothing_criterion)
 from augmentations import mixup, ricap
 from argparser import get_config
 
@@ -139,6 +139,10 @@ def parse_args():
     # RICAP configuration
     parser.add_argument('--use_ricap', action='store_true', default=False)
     parser.add_argument('--ricap_beta', type=float, default=0.3)
+    # label smoothing configuration
+    parser.add_argument(
+        '--use_label_smoothing', action='store_true', default=False)
+    parser.add_argument('--label_smoothing_epsilon', type=float, default=0.1)
 
     args = parser.parse_args()
     if not is_tensorboard_available:
@@ -392,10 +396,14 @@ def main():
     model.to(device)
     logger.info('Done')
 
-    if config['data_config']['use_mixup']:
+    data_config = config['data_config']
+    if data_config['use_mixup']:
         train_criterion = mixup.mixup_criterion
-    elif config['data_config']['use_ricap']:
+    elif data_config['use_ricap']:
         train_criterion = ricap.ricap_criterion
+    elif data_config['use_label_smoothing']:
+        train_criterion = label_smoothing_criterion(
+            data_config['label_smoothing_epsilon'], reduction='mean')
     else:
         train_criterion = nn.CrossEntropyLoss(reduction='mean')
     test_criterion = nn.CrossEntropyLoss(reduction='mean')
