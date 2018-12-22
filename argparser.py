@@ -265,6 +265,10 @@ def _cleanup_args(args):
     if not args.use_mixup:
         args.mixup_alpha = None
 
+    # RICAP
+    if not args.use_ricap:
+        args.ricap_beta = None
+
     # TensorBoard
     if not args.tensorboard:
         args.tensorboard_train_images = False
