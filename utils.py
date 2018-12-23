@@ -5,7 +5,10 @@ import shutil
 import tempfile
 import numpy as np
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
+
+import augmentations
 
 
 def str2bool(s):
@@ -164,3 +167,20 @@ def label_smoothing_criterion(epsilon, reduction):
                 '`reduction` must be one of \'none\', \'mean\', or \'sum\'.')
 
     return _label_smoothing_criterion
+
+
+def get_criterion(data_config):
+    if data_config['use_mixup']:
+        train_criterion = augmentations.mixup.mixup_criterion
+    elif data_config['use_ricap']:
+        train_criterion = augmentations.ricap.ricap_criterion
+    elif data_config['use_label_smoothing']:
+        train_criterion = label_smoothing_criterion(
+            data_config['label_smoothing_epsilon'], reduction='mean')
+    elif data_config['use_dual_cutout']:
+        train_criterion = augmentations.cutout.DualCutoutCriterion(
+            data_config['dual_cutout_alpha'])
+    else:
+        train_criterion = nn.CrossEntropyLoss(reduction='mean')
+    test_criterion = nn.CrossEntropyLoss(reduction='mean')
+    return train_criterion, test_criterion

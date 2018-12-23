@@ -23,8 +23,7 @@ except Exception:
 
 from dataloader import get_loader
 import utils
-from utils import (str2bool, load_model, save_checkpoint, save_epoch_logs,
-                   create_optimizer, AverageMeter, label_smoothing_criterion)
+from utils import str2bool, AverageMeter
 import augmentations
 from argparser import get_config
 
@@ -420,7 +419,7 @@ def main():
 
     # load model
     logger.info('Loading model...')
-    model = load_model(config['model_config'])
+    model = utils.load_model(config['model_config'])
     n_params = sum([param.view(-1).size()[0] for param in model.parameters()])
     logger.info('n_params: {}'.format(n_params))
 
@@ -436,24 +435,13 @@ def main():
     model.to(device)
     logger.info('Done')
 
-    data_config = config['data_config']
-    if data_config['use_mixup']:
-        train_criterion = augmentations.mixup.mixup_criterion
-    elif data_config['use_ricap']:
-        train_criterion = augmentations.ricap.ricap_criterion
-    elif data_config['use_label_smoothing']:
-        train_criterion = label_smoothing_criterion(
-            data_config['label_smoothing_epsilon'], reduction='mean')
-    elif data_config['use_dual_cutout']:
-        train_criterion = augmentations.cutout.DualCutoutCriterion(
-            data_config['dual_cutout_alpha'])
-    else:
-        train_criterion = nn.CrossEntropyLoss(reduction='mean')
-    test_criterion = nn.CrossEntropyLoss(reduction='mean')
+    train_criterion, test_criterion = utils.get_criterion(
+        config['data_config'])
 
     # create optimizer
     optim_config['steps_per_epoch'] = len(train_loader)
-    optimizer, scheduler = create_optimizer(model.parameters(), optim_config)
+    optimizer, scheduler = utils.create_optimizer(model.parameters(),
+                                                  optim_config)
 
     # run test before start training
     if run_config['test_first']:
@@ -482,14 +470,14 @@ def main():
         epoch_log = train_log.copy()
         epoch_log.update(test_log)
         epoch_logs.append(epoch_log)
-        save_epoch_logs(epoch_logs, outdir)
+        utils.save_epoch_logs(epoch_logs, outdir)
 
         # update state dictionary
         state = update_state(state, epoch, epoch_log['test']['accuracy'],
                              model, optimizer)
 
         # save model
-        save_checkpoint(state, outdir)
+        utils.save_checkpoint(state, outdir)
 
 
 if __name__ == '__main__':
