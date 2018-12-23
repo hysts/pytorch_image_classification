@@ -200,10 +200,12 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 
 ### Results
 
-| Model                                   | Test Error (1 run) | # of Epochs | Training Time |
-|:----------------------------------------|:------------------:|------------:|--------------:|
-| WRN-28-10, Cutout 16                    |        3.19        |      200    |     16h23m    |
-| shake-shake-26 2x64d, Cutout 16         |        2.64        |     1800    |     78h55m    |
+| Model                                  | Test Error (1 run) | # of Epochs | Training Time |
+|:---------------------------------------|:------------------:|------------:|--------------:|
+| WRN-28-10, Cutout 16                   |        3.19        |      200    |     16h23m    |
+| WRN-28-10, mixup (alpha=1)             |        3.32        |      200    |      6h35m*   |
+| WRN-28-10, RICAP (beta=0.3)            |        2.83        |      200    |      6h35m*   |
+| shake-shake-26 2x64d, Cutout 16        |        2.64        |     1800    |     78h55m    |
 
 
 ```
@@ -409,17 +411,21 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_Mixup.png)
 
 
-### Experiments of Mixup and RICAP
+### Experiments of label smoothing, Mixup, and RICAP
 
 #### Results on CIFAR-10
 
 | Model                                              | Test Error (median of 3 runs) | # of Epochs | Training Time |
 |:---------------------------------------------------|:-----------------------------:|------------:|--------------:|
 | ResNet-preact-20                                   |             7.60              |     200     |       24m     |
+| ResNet-preact-20, label smoothing (epsilon=0.001)  |             7.41              |     200     |       25m     |
+| ResNet-preact-20, label smoothing (epsilon=0.1)    |             7.53              |     200     |       25m     |
 | ResNet-preact-20, mixup (alpha=1)                  |             7.24              |     200     |       26m     |
 | ResNet-preact-20, RICAP (beta=0.3), w/ random crop |             6.88              |     200     |       28m     |
 | ResNet-preact-20, RICAP (beta=0.3)                 |             6.77              |     200     |       28m     |
 | ResNet-preact-20                                   |             7.05              |     400     |       49m     |
+| ResNet-preact-20, label smoothing (epsilon=0.001)  |             7.05              |     400     |       49m     |
+| ResNet-preact-20, label smoothing (epsilon=0.1)    |             7.13              |     400     |       49m     |
 | ResNet-preact-20, mixup (alpha=1)                  |             6.66              |     400     |       51m     |
 | ResNet-preact-20, RICAP (beta=0.3), w/ random crop |             6.30              |     400     |       56m     |
 | ResNet-preact-20, RICAP (beta=0.3)                 |             6.19              |     400     |       56m     |
@@ -434,6 +440,7 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 
 ## References
 
+* Szegedy, Christian, Vincent Vanhoucke, Sergey Ioffe, Jon Shlens, and Zbigniew Wojna. "Rethinking the Inception Architecture for Computer Vision." The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2016. [link](http://openaccess.thecvf.com/content_cvpr_2016/html/Szegedy_Rethinking_the_Inception_CVPR_2016_paper.html), [arXiv:1512.00567](https://arxiv.org/abs/1512.00567)
 * He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. "Deep Residual Learning for Image Recognition." The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2016. [link](http://openaccess.thecvf.com/content_cvpr_2016/html/He_Deep_Residual_Learning_CVPR_2016_paper.html), [arXiv:1512.03385](https://arxiv.org/abs/1512.03385)
 * He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. "Identity Mappings in Deep Residual Networks." In European Conference on Computer Vision (ECCV). 2016. [arXiv:1603.05027](https://arxiv.org/abs/1603.05027), [Torch implementation](https://github.com/KaimingHe/resnet-1k-layers)
 * Zagoruyko, Sergey, and Nikos Komodakis. "Wide Residual Networks." Proceedings of the British Machine Vision Conference (BMVC), 2016. [arXiv:1605.07146](https://arxiv.org/abs/1605.07146), [Torch implementation](https://github.com/szagoruyko/wide-residual-networks)
