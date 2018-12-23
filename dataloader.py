@@ -8,6 +8,7 @@ import torchvision
 import torchvision.models
 import torchvision.transforms
 
+import augmentations
 import transforms
 
 
@@ -51,7 +52,7 @@ class Dataset:
         self._train_transforms.append(transforms.to_tensor())
 
     def _add_random_erasing(self):
-        transform = transforms.random_erasing(
+        transform = augmentations.random_erasing.RandomErasing(
             self.config['random_erasing_prob'],
             self.config['random_erasing_area_ratio_range'],
             self.config['random_erasing_min_aspect_ratio'],
@@ -59,9 +60,9 @@ class Dataset:
         self._train_transforms.append(transform)
 
     def _add_cutout(self):
-        transform = transforms.cutout(self.config['cutout_size'],
-                                      self.config['cutout_prob'],
-                                      self.config['cutout_inside'])
+        transform = augmentations.cutout.Cutout(self.config['cutout_size'],
+                                                self.config['cutout_prob'],
+                                                self.config['cutout_inside'])
         self._train_transforms.append(transform)
 
     def _get_train_transform(self):
