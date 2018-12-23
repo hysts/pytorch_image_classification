@@ -119,11 +119,14 @@ def parse_args():
     parser.add_argument('--use_random_crop', type=str2bool)
     parser.add_argument('--random_crop_padding', type=int, default=4)
     parser.add_argument('--use_horizontal_flip', type=str2bool)
-    # cutout configuration
+    # (dual-)cutout configuration
     parser.add_argument('--use_cutout', action='store_true', default=False)
+    parser.add_argument(
+        '--use_dual_cutout', action='store_true', default=False)
     parser.add_argument('--cutout_size', type=int, default=16)
     parser.add_argument('--cutout_prob', type=float, default=1)
     parser.add_argument('--cutout_inside', action='store_true', default=False)
+    parser.add_argument('--dual_cutout_alpha', type=float, default=0.1)
     # random erasing configuration
     parser.add_argument(
         '--use_random_erasing', action='store_true', default=False)
@@ -189,8 +192,17 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
                     data, normalize=True, scale_each=True)
                 writer.add_image('Train/Image', image, epoch)
 
+        if data_config['use_dual_cutout']:
+            w = data.size(3) // 2
+            data1 = data[:, :, :, :w]
+            data2 = data[:, :, :, w:]
+
         if run_config['fp16']:
-            data = data.half()
+            if data_config['use_dual_cutout']:
+                data1 = data1.half()
+                data2 = data2.half()
+            else:
+                data = data.half()
 
         if optim_config['scheduler'] == 'multistep':
             scheduler.step(epoch - 1)
@@ -204,7 +216,12 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
                 lr = optim_config['base_lr']
             writer.add_scalar('Train/LearningRate', lr, global_step)
 
-        data = data.to(device)
+        if data_config['use_dual_cutout']:
+            data1 = data1.to(device)
+            data2 = data2.to(device)
+        else:
+            data = data.to(device)
+
         if data_config['use_mixup']:
             t1, t2, lam = targets
             targets = (t1.to(device), t2.to(device), lam)
@@ -217,7 +234,12 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
 
         optimizer.zero_grad()
 
-        outputs = model(data)
+        if data_config['use_dual_cutout']:
+            outputs1 = model(data1)
+            outputs2 = model(data2)
+            outputs = (outputs1, outputs2)
+        else:
+            outputs = model(data)
         loss = criterion(outputs, targets)
         loss.backward()
 
@@ -234,6 +256,9 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
                 weight * utils.accuracy(outputs, labels)[0].item()
                 for labels, weight in zip(*targets)
             ])
+        elif data_config['use_dual_cutout']:
+            accuracy = utils.accuracy((outputs1 + outputs2) / 2,
+                                      targets)[0].item()
         else:
             accuracy = utils.accuracy(outputs, targets)[0].item()
 
@@ -419,6 +444,9 @@ def main():
     elif data_config['use_label_smoothing']:
         train_criterion = label_smoothing_criterion(
             data_config['label_smoothing_epsilon'], reduction='mean')
+    elif data_config['use_dual_cutout']:
+        train_criterion = augmentations.cutout.DualCutoutCriterion(
+            data_config['dual_cutout_alpha'])
     else:
         train_criterion = nn.CrossEntropyLoss(reduction='mean')
     test_criterion = nn.CrossEntropyLoss(reduction='mean')

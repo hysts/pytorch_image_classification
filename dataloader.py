@@ -65,6 +65,12 @@ class Dataset:
                                                 self.config['cutout_inside'])
         self._train_transforms.append(transform)
 
+    def _add_dual_cutout(self):
+        transform = augmentations.cutout.DualCutout(
+            self.config['cutout_size'], self.config['cutout_prob'],
+            self.config['cutout_inside'])
+        self._train_transforms.append(transform)
+
     def _get_train_transform(self):
         if self.config['use_random_crop']:
             self._add_random_crop()
@@ -75,6 +81,8 @@ class Dataset:
             self._add_random_erasing()
         if self.config['use_cutout']:
             self._add_cutout()
+        elif self.config['use_dual_cutout']:
+            self._add_dual_cutout()
         self._add_to_tensor()
         return torchvision.transforms.Compose(self._train_transforms)
 

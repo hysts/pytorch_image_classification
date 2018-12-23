@@ -122,10 +122,12 @@ def _get_data_config(args):
         'random_crop_padding',
         'use_horizontal_flip',
         'use_cutout',
+        'use_dual_cutout',
         'cutout_size',
         'cutout_prob',
         'cutout_inside',
         'use_random_erasing',
+        'dual_cutout_alpha',
         'random_erasing_prob',
         'random_erasing_area_ratio_range',
         'random_erasing_min_aspect_ratio',
@@ -140,7 +142,20 @@ def _get_data_config(args):
     json_keys = ['random_erasing_area_ratio_range']
     config = _args2config(args, keys, json_keys)
     config['use_gpu'] = args.device != 'cpu'
+    _check_data_config(config)
     return config
+
+
+def _check_data_config(config):
+    if config['use_cutout'] and config['use_dual_cutout']:
+        raise ValueError(
+            'Only one of `use_cutout` and `use_dual_cutout` can be `True`.')
+    if sum([
+            config['use_mixup'], config['use_ricap'], config['use_dual_cutout']
+    ]) > 1:
+        raise ValueError(
+            'Only one of `use_mixup`, `use_ricap` and `use_dual_cutout` can be `True`.'
+        )
 
 
 def _get_run_config(args):
@@ -251,11 +266,13 @@ def _cleanup_args(args):
         else:
             args.use_horizontal_flip = False
 
-    # cutout
-    if not args.use_cutout:
+    # (dual-)cutout
+    if not args.use_cutout and not args.use_dual_cutout:
         args.cutout_size = None
         args.cutout_prob = None
         args.cutout_inside = None
+    if not args.use_dual_cutout:
+        args.dual_cutout_alpha = None
 
     # random erasing
     if not args.use_random_erasing:

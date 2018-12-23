@@ -1,4 +1,6 @@
 import numpy as np
+import torch.nn as nn
+import torch.nn.functional as F
 
 
 class Cutout:
@@ -38,3 +40,22 @@ class Cutout:
         ymax = min(h, ymax)
         image[ymin:ymax, xmin:xmax] = self.mask_color
         return image
+
+
+class DualCutout:
+    def __init__(self, mask_size, p, cutout_inside, mask_color=0):
+        self.cutout = Cutout(mask_size, p, cutout_inside, mask_color)
+
+    def __call__(self, image):
+        return np.hstack([self.cutout(image), self.cutout(image)])
+
+
+class DualCutoutCriterion:
+    def __init__(self, alpha):
+        self.alpha = alpha
+        self.criterion = nn.CrossEntropyLoss(reduction='mean')
+
+    def __call__(self, preds, targets):
+        preds1, preds2 = preds
+        return (self.criterion(preds1, targets) + self.criterion(
+            preds2, targets)) * 0.5 + self.alpha * F.mse_loss(preds1, preds2)
