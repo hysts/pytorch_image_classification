@@ -2,25 +2,26 @@ import numpy as np
 import torch
 
 
-def to_tensor():
-    def _to_tensor(data):
+class ToTensor:
+    def __call__(self, data):
         if isinstance(data, tuple):
-            return tuple([_to_tensor(image) for image in data])
+            return tuple([self._to_tensor(image) for image in data])
+        else:
+            return self._to_tensor(data)
+
+    def _to_tensor(self, data):
         if len(data.shape) == 3:
             return torch.from_numpy(data.transpose(2, 0, 1).astype(np.float32))
         else:
             return torch.from_numpy(data[None, :, :].astype(np.float32))
 
-    return _to_tensor
 
+class Normalize:
+    def __init__(self, mean, std):
+        self.mean = np.array(mean)
+        self.std = np.array(std)
 
-def normalize(mean, std):
-    mean = np.array(mean)
-    std = np.array(std)
-
-    def _normalize(image):
+    def __call__(self, image):
         image = np.asarray(image).astype(np.float32) / 255.
-        image = (image - mean) / std
+        image = (image - self.mean) / self.std
         return image
-
-    return _normalize

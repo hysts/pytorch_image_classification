@@ -46,10 +46,10 @@ class Dataset:
 
     def _add_normalization(self):
         self._train_transforms.append(
-            transforms.normalize(self.mean, self.std))
+            transforms.Normalize(self.mean, self.std))
 
     def _add_to_tensor(self):
-        self._train_transforms.append(transforms.to_tensor())
+        self._train_transforms.append(transforms.ToTensor())
 
     def _add_random_erasing(self):
         transform = augmentations.random_erasing.RandomErasing(
@@ -88,8 +88,8 @@ class Dataset:
 
     def _get_test_transform(self):
         transform = torchvision.transforms.Compose([
-            transforms.normalize(self.mean, self.std),
-            transforms.to_tensor(),
+            transforms.Normalize(self.mean, self.std),
+            transforms.ToTensor(),
         ])
         return transform
 
