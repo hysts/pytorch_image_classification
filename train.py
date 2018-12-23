@@ -25,7 +25,7 @@ from dataloader import get_loader
 import utils
 from utils import (str2bool, load_model, save_checkpoint, save_epoch_logs,
                    create_optimizer, AverageMeter, label_smoothing_criterion)
-from augmentations import mixup, ricap
+import augmentations
 from argparser import get_config
 
 torch.backends.cudnn.benchmark = True
@@ -175,13 +175,13 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
         global_step += 1
 
         if data_config['use_mixup']:
-            data, targets = mixup.mixup(data, targets,
-                                        data_config['mixup_alpha'],
-                                        data_config['n_classes'])
+            data, targets = augmentations.mixup.mixup(
+                data, targets, data_config['mixup_alpha'],
+                data_config['n_classes'])
         elif data_config['use_ricap']:
-            data, targets = ricap.ricap(data, targets,
-                                        data_config['ricap_beta'],
-                                        data_config['n_classes'])
+            data, targets = augmentations.ricap.ricap(
+                data, targets, data_config['ricap_beta'],
+                data_config['n_classes'])
 
         if run_config['tensorboard_train_images']:
             if step == 0:
@@ -413,9 +413,9 @@ def main():
 
     data_config = config['data_config']
     if data_config['use_mixup']:
-        train_criterion = mixup.mixup_criterion
+        train_criterion = augmentations.mixup.mixup_criterion
     elif data_config['use_ricap']:
-        train_criterion = ricap.ricap_criterion
+        train_criterion = augmentations.ricap.ricap_criterion
     elif data_config['use_label_smoothing']:
         train_criterion = label_smoothing_criterion(
             data_config['label_smoothing_epsilon'], reduction='mean')
