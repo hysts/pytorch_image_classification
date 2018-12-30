@@ -13,6 +13,7 @@ Following papers are implemented using PyTorch.
 * Random Erasing (1708.04896)
 * SENet (1709.01507)
 * Mixup (1710.09412)
+* Dual-Cutout (1802.07426)
 * RICAP (1811.09030)
 
 
@@ -200,13 +201,30 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 
 ### Results
 
-| Model                                  | Test Error (1 run) | # of Epochs | Training Time |
-|:---------------------------------------|:------------------:|------------:|--------------:|
-| WRN-28-10, Cutout 16                   |        3.19        |      200    |     16h23m    |
-| WRN-28-10, mixup (alpha=1)             |        3.32        |      200    |      6h35m*   |
-| WRN-28-10, RICAP (beta=0.3)            |        2.83        |      200    |      6h35m*   |
-| shake-shake-26 2x64d, Cutout 16        |        2.64        |     1800    |     78h55m    |
+| Model                                         | Test Error (1 run) | # of Epochs | Training Time |
+|:----------------------------------------------|:------------------:|------------:|--------------:|
+| WRN-28-10, Cutout 16                          |        3.19        |      200    |     16h23m*   |
+| WRN-28-10, mixup (alpha=1)                    |        3.32        |      200    |      6h35m    |
+| WRN-28-10, RICAP (beta=0.3)                   |        2.83        |      200    |      6h35m    |
+| WRN-28-10, Dual-Cutout (alpha=0.1)            |        2.87        |      200    |     12h42m    |
+| WRN-28-10, Cutout 16                          |        3.07        |      400    |     13h10m    |
+| WRN-28-10, mixup (alpha=1)                    |        3.04        |      400    |     13h08m    |
+| WRN-28-10, RICAP (beta=0.3)                   |        2.71        |      400    |     13h08m    |
+| WRN-28-10, Dual-Cutout (alpha=0.1)            |        2.76        |      400    |     25h20m    |
+| shake-shake-26 2x64d, Cutout 16               |        2.64        |     1800    |     78h55m*   |
+| shake-shake-26 2x64d, mixup (alpha=1)         |                |     1800    |         |
+| shake-shake-26 2x64d, RICAP (beta=0.3)        |        2.29        |     1800    |     35h10m    |
+| shake-shake-26 2x64d, Dual-Cutout (alpha=0.1) |                |     1800    |         |
+| shake-shake-26 2x96d, Cutout 16               |        2.50        |     1800    |     60h20m    |
+| shake-shake-26 2x96d, mixup (alpha=1)         |        2.36        |     1800    |     60h20m    |
+| shake-shake-26 2x96d, RICAP (beta=0.3)        |        2.10        |     1800    |     60h20m    |
+| shake-shake-26 2x96d, Dual-Cutout (alpha=0.1) |        2.41        |     1800    |    113h09m    |
 
+#### Note
+
+* Results reported in the table are the test errors at last epochs.
+* All models are trained using cosine annealing with initial learning rate 0.2.
+* GeForce GTX 1080 Ti was used in these experiments, except ones with *, which are done using GeForce GTX 980.
 
 ```
 python -u main.py --arch wrn --depth 28 --outdir results/wrn_28_10_cutout16 --epochs 200 --scheduler cosine --base_lr 0.1 --batch_size 64 --seed 17 --use_cutout --cutout_size 16
@@ -411,8 +429,7 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_Mixup.png)
 
 
-### Experiments of label smoothing, Mixup, and RICAP
-
+### Experiments on label smoothing, Mixup, RICAP, and Dual-Cutout
 #### Results on CIFAR-10
 
 | Model                                              | Test Error (median of 3 runs) | # of Epochs | Training Time |
@@ -423,12 +440,14 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 | ResNet-preact-20, mixup (alpha=1)                  |             7.24              |     200     |       26m     |
 | ResNet-preact-20, RICAP (beta=0.3), w/ random crop |             6.88              |     200     |       28m     |
 | ResNet-preact-20, RICAP (beta=0.3)                 |             6.77              |     200     |       28m     |
+| ResNet-preact-20, Dual-Cutout 16 (alpha=0.1)       |             6.24              |     200     |       45m     |
 | ResNet-preact-20                                   |             7.05              |     400     |       49m     |
 | ResNet-preact-20, label smoothing (epsilon=0.001)  |             7.05              |     400     |       49m     |
 | ResNet-preact-20, label smoothing (epsilon=0.1)    |             7.13              |     400     |       49m     |
 | ResNet-preact-20, mixup (alpha=1)                  |             6.66              |     400     |       51m     |
 | ResNet-preact-20, RICAP (beta=0.3), w/ random crop |             6.30              |     400     |       56m     |
 | ResNet-preact-20, RICAP (beta=0.3)                 |             6.19              |     400     |       56m     |
+| ResNet-preact-20, Dual-Cutout 16 (alpha=0.1)       |             5.55              |     400     |      1h36m     |
 
 #### Note
 
