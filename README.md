@@ -213,7 +213,7 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 | WRN-28-10, Dual-Cutout (alpha=0.1)            |        2.76        |      400    |     25h20m    |
 | shake-shake-26 2x64d, Cutout 16               |        2.64        |     1800    |     78h55m*   |
 | shake-shake-26 2x64d, mixup (alpha=1)         |        2.63        |     1800    |     36h01m    |
-| shake-shake-26 2x64d, RICAP (beta=0.3)        |        2.29        |     1800    |     35h10m    |
+| shake-shake-26 2x64d, RICAP (beta=0.3)        |        2.29        |     1800    |     35h56m    |
 | shake-shake-26 2x64d, Dual-Cutout (alpha=0.1) |                |     1800    |         |
 | shake-shake-26 2x96d, Cutout 16               |        2.50        |     1800    |     60h20m    |
 | shake-shake-26 2x96d, mixup (alpha=1)         |        2.36        |     1800    |     60h20m    |
