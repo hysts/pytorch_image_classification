@@ -472,6 +472,78 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 
 
 
+### Experiments on batch size and learning rate
+
+* Following experiments are done on CIFAR-10 dataset using GeForce 1080 Ti.
+* Results reported in the table are the test errors at last epochs.
+
+#### linear scaling rule for learning rate
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:----------:|-------------|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |    4096    |   3.2      |    cosine   |     200     |        10.57       |       22m     |
+| ResNet-preact-20 |    2048    |   1.6      |    cosine   |     200     |         8.87       |       21m     |
+| ResNet-preact-20 |    1024    |   0.8      |    cosine   |     200     |         8.40       |       21m     |
+| ResNet-preact-20 |     512    |   0.4      |    cosine   |     200     |         8.22       |       20m     |
+| ResNet-preact-20 |     256    |   0.2      |    cosine   |     200     |         8.61       |       22m     |
+| ResNet-preact-20 |     128    |   0.1      |    cosine   |     200     |         8.09       |       24m     |
+| ResNet-preact-20 |      64    |   0.05     |    cosine   |     200     |         8.22       |       28m     |
+| ResNet-preact-20 |      32    |   0.025    |    cosine   |     200     |         8.00       |       43m     |
+| ResNet-preact-20 |      16    |   0.0125   |    cosine   |     200     |         7.75       |     1h17m     |
+| ResNet-preact-20 |       8    |   0.006125 |    cosine   |     200     |         7.70       |     2h32m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:----------:|-------------|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |    4096    |   3.2      |  multistep  |     200     |        28.97       |       22m     |
+| ResNet-preact-20 |    2048    |   1.6      |  multistep  |     200     |         9.07       |       21m     |
+| ResNet-preact-20 |    1024    |   0.8      |  multistep  |     200     |         8.62       |       21m     |
+| ResNet-preact-20 |     512    |   0.4      |  multistep  |     200     |         8.23       |       20m     |
+| ResNet-preact-20 |     256    |   0.2      |  multistep  |     200     |         8.40       |       21m     |
+| ResNet-preact-20 |     128    |   0.1      |  multistep  |     200     |         8.28       |       24m     |
+| ResNet-preact-20 |      64    |   0.05     |  multistep  |     200     |         8.13       |       28m     |
+| ResNet-preact-20 |      32    |   0.025    |  multistep  |     200     |         7.58       |       43m     |
+| ResNet-preact-20 |      16    |   0.0125   |  multistep  |     200     |         7.93       |     1h18m     |
+| ResNet-preact-20 |       8    |   0.006125 |  multistep  |     200     |         8.31       |     2h34m     |
+
+#### linear scaling + longer training
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:----------:|-------------|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |    4096    |   3.2      |    cosine   |     400     |         8.97       |       44m     |
+| ResNet-preact-20 |    2048    |   1.6      |    cosine   |     400     |         7.85       |       43m     |
+| ResNet-preact-20 |    1024    |   0.8      |    cosine   |     400     |         7.20       |       42m     |
+| ResNet-preact-20 |     512    |   0.4      |    cosine   |     400     |         7.83       |       40m     |
+| ResNet-preact-20 |     256    |   0.2      |    cosine   |     400     |         7.65       |       42m     |
+| ResNet-preact-20 |     128    |   0.1      |    cosine   |     400     |         7.09       |       47m     |
+| ResNet-preact-20 |      64    |   0.05     |    cosine   |     400     |         7.17       |       44m     |
+| ResNet-preact-20 |      32    |   0.025    |    cosine   |     400     |         7.24       |     2h11m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:----------:|-------------|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |    4096    |   3.2      |    cosine   |     800     |         8.14       |     1h29m     |
+| ResNet-preact-20 |    2048    |   1.6      |    cosine   |     800     |         7.74       |     1h23m     |
+| ResNet-preact-20 |    1024    |   0.8      |    cosine   |     800     |         7.15       |     1h31m     |
+| ResNet-preact-20 |     512    |   0.4      |    cosine   |     800     |         7.27       |     1h25m     |
+
+#### Effect of initial learning rate
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:----------:|-------------|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |     128    |   0.4      |    cosine   |     200     |         7.28       |       24m     |
+| ResNet-preact-20 |     128    |   0.2      |    cosine   |     200     |         7.96       |       24m     |
+| ResNet-preact-20 |     128    |   0.1      |    cosine   |     200     |         8.09       |       24m     |
+| ResNet-preact-20 |     128    |   0.05     |    cosine   |     200     |         8.81       |       24m     |
+| ResNet-preact-20 |     128    |   0.025    |    cosine   |     200     |        10.07       |       24m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:----------:|-------------|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |    4096    |   3.2      |    cosine   |     200     |        10.57       |       22m     |
+| ResNet-preact-20 |    4096    |   1.6      |    cosine   |     200     |        10.32       |       22m     |
+| ResNet-preact-20 |    4096    |   0.8      |    cosine   |     200     |        10.71       |       22m     |
+| ResNet-preact-20 |    4096    |   0.4      |    cosine   |     200     |        11.01       |       22m     |
+
+
+
 ## References
 
 * Szegedy, Christian, Vincent Vanhoucke, Sergey Ioffe, Jon Shlens, and Zbigniew Wojna. "Rethinking the Inception Architecture for Computer Vision." The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2016. [link](http://openaccess.thecvf.com/content_cvpr_2016/html/Szegedy_Rethinking_the_Inception_CVPR_2016_paper.html), [arXiv:1512.00567](https://arxiv.org/abs/1512.00567)
@@ -480,14 +552,20 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 * Zagoruyko, Sergey, and Nikos Komodakis. "Wide Residual Networks." Proceedings of the British Machine Vision Conference (BMVC), 2016. [arXiv:1605.07146](https://arxiv.org/abs/1605.07146), [Torch implementation](https://github.com/szagoruyko/wide-residual-networks)
 * Loshchilov, Ilya, and Frank Hutter. "SGDR: Stochastic Gradient Descent with Warm Restarts." In International Conference on Learning Representations (ICLR), 2017. [link](https://openreview.net/forum?id=Skq89Scxx), [arXiv:1608.03983](https://arxiv.org/abs/1608.03983), [Lasagne implementation](https://github.com/loshchil/SGDR)
 * Huang, Gao, Zhuang Liu, Kilian Q Weinberger, and Laurens van der Maaten. "Densely Connected Convolutional Networks." The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2017. [link](http://openaccess.thecvf.com/content_cvpr_2017/html/Huang_Densely_Connected_Convolutional_CVPR_2017_paper.html), [arXiv:1608.06993](https://arxiv.org/abs/1608.06993), [Torch implementation](https://github.com/liuzhuang13/DenseNet)
+* Keskar, Nitish Shirish, Dheevatsa Mudigere, Jorge Nocedal, Mikhail Smelyanskiy, and Ping Tak Peter Tang. "On Large-Batch Training for Deep Learning: Generalization Gap and Sharp Minima." In International Conference on Learning Representations (ICLR), 2017. [link](https://openreview.net/forum?id=H1oyRlYgg), [arXiv:1609.04836](https://arxiv.org/abs/1609.04836)
 * Han, Dongyoon, Jiwhan Kim, and Junmo Kim. "Deep Pyramidal Residual Networks." The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2017. [link](http://openaccess.thecvf.com/content_cvpr_2017/html/Han_Deep_Pyramidal_Residual_CVPR_2017_paper.html), [arXiv:1610.02915](https://arxiv.org/abs/1610.02915), [Torch implementation](https://github.com/jhkim89/PyramidNet), [Caffe implementation](https://github.com/jhkim89/PyramidNet-caffe), [PyTorch implementation](https://github.com/dyhan0920/PyramidNet-PyTorch)
 * Xie, Saining, Ross Girshick, Piotr Dollar, Zhuowen Tu, and Kaiming He. "Aggregated Residual Transformations for Deep Neural Networks." The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2017. [link](http://openaccess.thecvf.com/content_cvpr_2017/html/Xie_Aggregated_Residual_Transformations_CVPR_2017_paper.html), [arXiv:1611.05431](https://arxiv.org/abs/1611.05431), [Torch implementation](https://github.com/facebookresearch/ResNeXt)
 * Gastaldi, Xavier. "Shake-Shake regularization of 3-branch residual networks." In International Conference on Learning Representations (ICLR) Workshop, 2017. [link](https://openreview.net/forum?id=HkO-PCmYl), [arXiv:1705.07485](https://arxiv.org/abs/1705.07485), [Torch implementation](https://github.com/xgastaldi/shake-shake)
+* Goyal, Priya, Piotr Dollar, Ross Girshick, Pieter Noordhuis, Lukasz Wesolowski, Aapo Kyrola, Andrew Tulloch, Yangqing Jia, and Kaiming He. "Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour." arXiv preprint arXiv:1706.02677 (2017). [arXiv:1706.02677](https://arxiv.org/abs/1706.02677)
 * DeVries, Terrance, and Graham W. Taylor. "Improved Regularization of Convolutional Neural Networks with Cutout." arXiv preprint arXiv:1708.04552 (2017). [arXiv:1708.04552](https://arxiv.org/abs/1708.04552), [PyTorch implementation](https://github.com/uoguelph-mlrg/Cutout)
 * Zhong, Zhun, Liang Zheng, Guoliang Kang, Shaozi Li, and Yi Yang. "Random Erasing Data Augmentation." arXiv preprint arXiv:1708.04896 (2017). [arXiv:1708.04896](https://arxiv.org/abs/1708.04896), [PyTorch implementation](https://github.com/zhunzhong07/Random-Erasing)
 * Hu, Jie, Li Shen, and Gang Sun. "Squeeze-and-Excitation Networks." The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2018, pp. 7132-7141. [link](http://openaccess.thecvf.com/content_cvpr_2018/html/Hu_Squeeze-and-Excitation_Networks_CVPR_2018_paper.html), [arXiv:1709.01507](https://arxiv.org/abs/1709.01507), [Caffe implementation](https://github.com/hujie-frank/SENet)
 * Zhang, Hongyi, Moustapha Cisse, Yann N. Dauphin, and David Lopez-Paz. "mixup: Beyond Empirical Risk Minimization." In International Conference on Learning Representations (ICLR), 2017. [link](https://openreview.net/forum?id=r1Ddp1-Rb), [arXiv:1710.09412](https://arxiv.org/abs/1710.09412)
 * Kawaguchi, Kenji, Yoshua Bengio, Vikas Verma, and Leslie Pack Kaelbling. "Towards Understanding Generalization via Analytical Learning Theory." arXiv preprint arXiv:1802.07426 (2018). [arXiv:1802.07426](https://arxiv.org/abs/1802.07426), [PyTorch implementation](https://github.com/Learning-and-Intelligent-Systems/Analytical-Learning-Theory)
 * Recht, Benjamin, Rebecca Roelofs, Ludwig Schmidt, and Vaishaal Shankar. "Do CIFAR-10 Classifiers Generalize to CIFAR-10?" arXiv preprint arXiv:1806.00451 (2018). [arXiv:1806.00451](https://arxiv.org/abs/1806.00451)
+* Shallue, Christopher J., Jaehoon Lee, Joseph Antognini, Jascha Sohl-Dickstein, Roy Frostig, and George E. Dahl. "Measuring the Effects of Data Parallelism on Neural Network Training." arXiv preprint arXiv:1811.03600 (2018). [arXiv:1811.03600](https://arxiv.org/abs/1811.03600)
 * Takahashi, Ryo, Takashi Matsubara, and Kuniaki Uehara. "Data Augmentation using Random Image Cropping and Patching for Deep CNNs." Proceedings of The 10th Asian Conference on Machine Learning (ACML), 2018. [link](http://proceedings.mlr.press/v95/takahashi18a.html), [arXiv:1811.09030](https://arxiv.org/abs/1811.09030)
+* He, Tong, Zhi Zhang, Hang Zhang, Zhongyue Zhang, Junyuan Xie, and Mu Li. "Bag of Tricks for Image Classification with Convolutional Neural Networks." arXiv preprint arXiv:1812.01187 (2018). [arXiv:1812.01187](https://arxiv.org/abs/1812.01187)
+
+
 
