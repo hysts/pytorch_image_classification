@@ -115,6 +115,9 @@ class MNIST(Dataset):
         elif config['dataset'] == 'FashionMNIST':
             self.mean = np.array([0.2860])
             self.std = np.array([0.3530])
+        elif config['dataset'] == 'KMNIST':
+            self.mean = np.array([0.1904])
+            self.std = np.array([0.3475])
         super(MNIST, self).__init__(config)
 
 
@@ -128,11 +131,13 @@ def get_loader(config):
     use_gpu = config['use_gpu']
 
     dataset_name = config['dataset']
-    assert dataset_name in ['CIFAR10', 'CIFAR100', 'MNIST', 'FashionMNIST']
+    assert dataset_name in [
+        'CIFAR10', 'CIFAR100', 'MNIST', 'FashionMNIST', 'KMNIST'
+    ]
 
     if dataset_name in ['CIFAR10', 'CIFAR100']:
         dataset = CIFAR(config)
-    elif dataset_name in ['MNIST', 'FashionMNIST']:
+    elif dataset_name in ['MNIST', 'FashionMNIST', 'KMNIST']:
         dataset = MNIST(config)
 
     train_dataset, test_dataset = dataset.get_datasets()

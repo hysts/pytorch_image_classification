@@ -308,6 +308,25 @@ python -u main.py --arch shake_shake --depth 26 --base_channels 64 --outdir resu
 * GeForce GTX 1080 Ti was used in these experiments.
 
 
+
+## Results on Kuzushiji-MNIST
+
+| Model                                          | Test Error (median of 3 runs) | # of Epochs | Training Time |
+|:-----------------------------------------------|:-----------------------------:|------------:|--------------:|
+| ResNet-preact-20, Cutout 14                    |        0.82 (best 0.67)       |     200     |       24m     |
+| ResNet-preact-20, widening factor 4, Cutout 14 |        0.72 (best 0.67)       |     200     |     1h30m     |
+| PyramidNet-110-270, Cutout 14                  |        0.72 (best 0.70)       |     200     |    10h05m     |
+| shake-shake-26 2x96d (S-S-I), Cutout 14        |        0.66 (best 0.63)       |     200     |     6h46m     |
+
+
+### Note
+
+* Results reported in the table are the test errors at last epochs.
+* All models are trained using cosine annealing with initial learning rate 0.2.
+* GeForce GTX 1080 Ti was used in these experiments.
+
+
+
 ## Experiments
 
 ### Experiment on residual units, learning rate scheduling, and data augmentation

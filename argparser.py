@@ -254,7 +254,7 @@ def _cleanup_args(args):
 
     # standard data augmentation
     if args.use_random_crop is None:
-        if args.dataset in ['CIFAR10', 'CIFAR100', 'FashionMNIST']:
+        if args.dataset in ['CIFAR10', 'CIFAR100', 'FashionMNIST', 'KMNIST']:
             args.use_random_crop = True
         else:
             args.use_random_crop = False

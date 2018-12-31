@@ -112,7 +112,7 @@ def parse_args():
         '--dataset',
         type=str,
         default='CIFAR10',
-        choices=['CIFAR10', 'CIFAR100', 'MNIST', 'FashionMNIST'])
+        choices=['CIFAR10', 'CIFAR100', 'MNIST', 'FashionMNIST', 'KMNIST'])
     parser.add_argument('--num_workers', type=int, default=7)
     # standard data augmentation
     parser.add_argument('--use_random_crop', type=str2bool)
