@@ -480,7 +480,7 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 #### linear scaling rule for learning rate
 
 | Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
-|:----------------:|-----------:|:----------:|-------------|------------:|:------------------:|--------------:|
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
 | ResNet-preact-20 |    4096    |   3.2      |    cosine   |     200     |        10.57       |       22m     |
 | ResNet-preact-20 |    2048    |   1.6      |    cosine   |     200     |         8.87       |       21m     |
 | ResNet-preact-20 |    1024    |   0.8      |    cosine   |     200     |         8.40       |       21m     |
@@ -493,7 +493,7 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 | ResNet-preact-20 |       8    |   0.006125 |    cosine   |     200     |         7.70       |     2h32m     |
 
 | Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
-|:----------------:|-----------:|:----------:|-------------|------------:|:------------------:|--------------:|
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
 | ResNet-preact-20 |    4096    |   3.2      |  multistep  |     200     |        28.97       |       22m     |
 | ResNet-preact-20 |    2048    |   1.6      |  multistep  |     200     |         9.07       |       21m     |
 | ResNet-preact-20 |    1024    |   0.8      |  multistep  |     200     |         8.62       |       21m     |
@@ -508,7 +508,7 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 #### linear scaling + longer training
 
 | Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
-|:----------------:|-----------:|:----------:|-------------|------------:|:------------------:|--------------:|
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
 | ResNet-preact-20 |    4096    |   3.2      |    cosine   |     400     |         8.97       |       44m     |
 | ResNet-preact-20 |    2048    |   1.6      |    cosine   |     400     |         7.85       |       43m     |
 | ResNet-preact-20 |    1024    |   0.8      |    cosine   |     400     |         7.20       |       42m     |
@@ -519,7 +519,7 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 | ResNet-preact-20 |      32    |   0.025    |    cosine   |     400     |         7.24       |     2h11m     |
 
 | Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
-|:----------------:|-----------:|:----------:|-------------|------------:|:------------------:|--------------:|
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
 | ResNet-preact-20 |    4096    |   3.2      |    cosine   |     800     |         8.14       |     1h29m     |
 | ResNet-preact-20 |    2048    |   1.6      |    cosine   |     800     |         7.74       |     1h23m     |
 | ResNet-preact-20 |    1024    |   0.8      |    cosine   |     800     |         7.15       |     1h31m     |
@@ -528,7 +528,7 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 #### Effect of initial learning rate
 
 | Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
-|:----------------:|-----------:|:----------:|-------------|------------:|:------------------:|--------------:|
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
 | ResNet-preact-20 |     128    |   0.4      |    cosine   |     200     |         7.28       |       24m     |
 | ResNet-preact-20 |     128    |   0.2      |    cosine   |     200     |         7.96       |       24m     |
 | ResNet-preact-20 |     128    |   0.1      |    cosine   |     200     |         8.09       |       24m     |
@@ -536,7 +536,7 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 | ResNet-preact-20 |     128    |   0.025    |    cosine   |     200     |        10.07       |       24m     |
 
 | Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
-|:----------------:|-----------:|:----------:|-------------|------------:|:------------------:|--------------:|
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
 | ResNet-preact-20 |    4096    |   3.2      |    cosine   |     200     |        10.57       |       22m     |
 | ResNet-preact-20 |    4096    |   1.6      |    cosine   |     200     |        10.32       |       22m     |
 | ResNet-preact-20 |    4096    |   0.8      |    cosine   |     200     |        10.71       |       22m     |
