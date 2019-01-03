@@ -87,6 +87,10 @@ def _check_optim_config(config):
         for key in ['lr_min']:
             message = 'Key `{}` must be specified.'.format(key)
             assert key in config.keys(), message
+    elif scheduler == 'sgdr':
+        for key in ['lr_min', 'T0', 'Tmult']:
+            message = 'Key `{}` must be specified.'.format(key)
+            assert key in config.keys(), message
 
 
 def _get_optim_config(args):
@@ -102,6 +106,8 @@ def _get_optim_config(args):
         'milestones',
         'lr_decay',
         'lr_min',
+        'T0',
+        'Tmult',
         'betas',
     ]
     json_keys = ['milestones', 'betas']
@@ -249,8 +255,11 @@ def _cleanup_args(args):
     if args.scheduler != 'multistep':
         args.milestones = None
         args.lr_decay = None
-    if args.scheduler != 'cosine':
+    if args.scheduler not in ['cosine', 'sgdr']:
         args.lr_min = None
+    if args.scheduler != 'sgdr':
+        args.T0 = None
+        args.Tmult = None
 
     # standard data augmentation
     if args.use_random_crop is None:

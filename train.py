@@ -98,12 +98,17 @@ def parse_args():
     parser.add_argument('--nesterov', type=str2bool)
     # configuration for learning rate scheduler
     parser.add_argument(
-        '--scheduler', type=str, choices=['none', 'multistep', 'cosine'])
+        '--scheduler',
+        type=str,
+        choices=['none', 'multistep', 'cosine', 'sgdr'])
     # configuration for multi-step scheduler]
     parser.add_argument('--milestones', type=str)
     parser.add_argument('--lr_decay', type=float)
-    # configuration for cosine-annealing scheduler]
+    # configuration for cosine-annealing scheduler and SGDR scheduler
     parser.add_argument('--lr_min', type=float, default=0)
+    # configuration for SGDR scheduler
+    parser.add_argument('--T0', type=int)
+    parser.add_argument('--Tmult', type=int)
     # configuration for Adam
     parser.add_argument('--betas', type=str)
 
@@ -203,7 +208,7 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
             else:
                 data = data.half()
 
-        if optim_config['scheduler'] == 'multistep':
+        if optim_config['scheduler'] in ['multistep', 'sgdr']:
             scheduler.step(epoch - 1)
         elif optim_config['scheduler'] == 'cosine':
             scheduler.step()
@@ -338,13 +343,13 @@ def test(epoch, model, criterion, test_loader, run_config, writer):
             loss_meter.update(loss_, num)
             correct_meter.update(correct_, 1)
 
-    accuracy = correct_meter.sum / len(test_loader.dataset)
+        accuracy = correct_meter.sum / len(test_loader.dataset)
 
-    logger.info('Epoch {} Loss {:.4f} Accuracy {:.4f}'.format(
-        epoch, loss_meter.avg, accuracy))
+        logger.info('Epoch {} Loss {:.4f} Accuracy {:.4f}'.format(
+            epoch, loss_meter.avg, accuracy))
 
-    elapsed = time.time() - start
-    logger.info('Elapsed {:.2f}'.format(elapsed))
+        elapsed = time.time() - start
+        logger.info('Elapsed {:.2f}'.format(elapsed))
 
     if run_config['tensorboard']:
         if epoch > 0:
