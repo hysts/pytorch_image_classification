@@ -517,6 +517,8 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 | ResNet-preact-20 |     128    |   0.1      |    cosine   |     400     |         7.09       |       47m     |
 | ResNet-preact-20 |      64    |   0.05     |    cosine   |     400     |         7.17       |       44m     |
 | ResNet-preact-20 |      32    |   0.025    |    cosine   |     400     |         7.24       |     2h11m     |
+| ResNet-preact-20 |      16    |   0.0125   |    cosine   |     400     |         7.26       |     4h10m     |
+| ResNet-preact-20 |       8    |   0.006125 |    cosine   |     400     |         7.02      |      7h53m    |
 
 | Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
@@ -524,11 +526,63 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 | ResNet-preact-20 |    2048    |   1.6      |    cosine   |     800     |         7.74       |     1h23m     |
 | ResNet-preact-20 |    1024    |   0.8      |    cosine   |     800     |         7.15       |     1h31m     |
 | ResNet-preact-20 |     512    |   0.4      |    cosine   |     800     |         7.27       |     1h25m     |
+| ResNet-preact-20 |     256    |   0.2      |    cosine   |     800     |         7.22       |     1h26m     |
+| ResNet-preact-20 |     128    |   0.1      |    cosine   |     800     |         6.68       |     1h35m     |
+| ResNet-preact-20 |      64    |   0.05     |    cosine   |     800     |         7.18       |     2h20m     |
+| ResNet-preact-20 |      32    |   0.025    |    cosine   |     800     |         7.03       |     4h16m     |
+| ResNet-preact-20 |      16    |   0.0125   |    cosine   |     800     |         6.78       |     8h37m     |
+| ResNet-preact-20 |       8    |   0.006125 |    cosine   |     800     |         6.89       |    16h47m     |
+
+![](figures/experiments_batch_size/longer_training_00.png)
+![](figures/experiments_batch_size/longer_training_01.png)
 
 #### Effect of initial learning rate
 
+![](figures/experiments_batch_size/change_lr.png)
+
 | Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |    4096    |   3.2      |    cosine   |     200     |        10.57       |       22m     |
+| ResNet-preact-20 |    4096    |   1.6      |    cosine   |     200     |        10.32       |       22m     |
+| ResNet-preact-20 |    4096    |   0.8      |    cosine   |     200     |        10.71       |       22m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |    2048    |   3.2      |    cosine   |     200     |        11.34       |       21m     |
+| ResNet-preact-20 |    2048    |   2.4      |    cosine   |     200     |         8.69       |       21m     |
+| ResNet-preact-20 |    2048    |   2.0      |    cosine   |     200     |         8.81       |       21m     |
+| ResNet-preact-20 |    2048    |   1.6      |    cosine   |     200     |         8.73       |       22m     |
+| ResNet-preact-20 |    2048    |   0.8      |    cosine   |     200     |         9.62       |       21m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |    1024    |   3.2      |    cosine   |     200     |         9.12       |       21m     |
+| ResNet-preact-20 |    1024    |   2.4      |    cosine   |     200     |         8.42       |       22m     |
+| ResNet-preact-20 |    1024    |   2.0      |    cosine   |     200     |         8.38       |       22m     |
+| ResNet-preact-20 |    1024    |   1.6      |    cosine   |     200     |         8.07       |       22m     |
+| ResNet-preact-20 |    1024    |   1.2      |    cosine   |     200     |         8.25       |       21m     |
+| ResNet-preact-20 |    1024    |   0.8      |    cosine   |     200     |         8.08       |       22m     |
+| ResNet-preact-20 |    1024    |   0.4      |    cosine   |     200     |         8.49       |       22m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |     512    |   3.2      |    cosine   |     200     |         8.51       |       21m     |
+| ResNet-preact-20 |     512    |   1.6      |    cosine   |     200     |         7.73       |       20m     |
+| ResNet-preact-20 |     512    |   0.8      |    cosine   |     200     |         7.73       |       21m     |
+| ResNet-preact-20 |     512    |   0.4      |    cosine   |     200     |         8.22       |       20m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |     256    |   3.2      |    cosine   |     200     |         9.64       |       22m     |
+| ResNet-preact-20 |     256    |   1.6      |    cosine   |     200     |         8.32       |       22m     |
+| ResNet-preact-20 |     256    |   0.8      |    cosine   |     200     |         7.45       |       21m     |
+| ResNet-preact-20 |     256    |   0.4      |    cosine   |     200     |         7.68       |       22m     |
+| ResNet-preact-20 |     256    |   0.2      |    cosine   |     200     |         8.61       |       22m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |     128    |   1.6      |    cosine   |     200     |         9.03       |       24m     |
+| ResNet-preact-20 |     128    |   0.8      |    cosine   |     200     |         7.54       |       24m     |
 | ResNet-preact-20 |     128    |   0.4      |    cosine   |     200     |         7.28       |       24m     |
 | ResNet-preact-20 |     128    |   0.2      |    cosine   |     200     |         7.96       |       24m     |
 | ResNet-preact-20 |     128    |   0.1      |    cosine   |     200     |         8.09       |       24m     |
@@ -537,10 +591,17 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 
 | Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
-| ResNet-preact-20 |    4096    |   3.2      |    cosine   |     200     |        10.57       |       22m     |
-| ResNet-preact-20 |    4096    |   1.6      |    cosine   |     200     |        10.32       |       22m     |
-| ResNet-preact-20 |    4096    |   0.8      |    cosine   |     200     |        10.71       |       22m     |
-| ResNet-preact-20 |    4096    |   0.4      |    cosine   |     200     |        11.01       |       22m     |
+| ResNet-preact-20 |      64    |   0.4      |    cosine   |     200     |         7.42       |       35m     |
+| ResNet-preact-20 |      64    |   0.2      |    cosine   |     200     |         7.52       |       36m     |
+| ResNet-preact-20 |      64    |   0.1      |    cosine   |     200     |         7.78       |       37m     |
+| ResNet-preact-20 |      64    |   0.05     |    cosine   |     200     |         8.22       |       28m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |      32    |   0.2      |    cosine   |     200     |         7.64       |     1h05m     |
+| ResNet-preact-20 |      32    |   0.1      |    cosine   |     200     |         7.25       |     1h08m     |
+| ResNet-preact-20 |      32    |   0.05     |    cosine   |     200     |         7.45       |     1h07m     |
+| ResNet-preact-20 |      32    |   0.025    |    cosine   |     200     |         8.00       |       43m     |
 
 
 
