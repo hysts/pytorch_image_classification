@@ -91,6 +91,7 @@ def parse_args():
     parser.add_argument('--epochs', type=int)
     parser.add_argument('--batch_size', type=int)
     parser.add_argument('--optimizer', type=str, choices=['sgd', 'adam'])
+    parser.add_argument('--gradient_clip', type=float)
     parser.add_argument('--base_lr', type=float)
     parser.add_argument('--weight_decay', type=float)
     # configuration for SGD
@@ -246,7 +247,9 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
             outputs = model(data)
         loss = criterion(outputs, targets)
         loss.backward()
-
+        if 'gradient_clip' in optim_config.keys():
+            torch.nn.utils.clip_grad_norm_(model.parameters(),
+                                           optim_config['gradient_clip'])
         optimizer.step()
 
         loss_ = loss.item()

@@ -102,6 +102,7 @@ def _get_optim_config(args):
         'weight_decay',
         'momentum',
         'nesterov',
+        'gradient_clip',
         'scheduler',
         'milestones',
         'lr_decay',
