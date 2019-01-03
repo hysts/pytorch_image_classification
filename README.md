@@ -477,7 +477,7 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 * Following experiments are done on CIFAR-10 dataset using GeForce 1080 Ti.
 * Results reported in the table are the test errors at last epochs.
 
-#### linear scaling rule for learning rate
+#### Linear scaling rule for learning rate
 
 | Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
@@ -505,7 +505,7 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 | ResNet-preact-20 |      16    |   0.0125   |  multistep  |     200     |         7.93       |     1h18m     |
 | ResNet-preact-20 |       8    |   0.006125 |  multistep  |     200     |         8.31       |     2h34m     |
 
-#### linear scaling + longer training
+#### Linear scaling + longer training
 
 | Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
@@ -602,6 +602,40 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 | ResNet-preact-20 |      32    |   0.1      |    cosine   |     200     |         7.25       |     1h08m     |
 | ResNet-preact-20 |      32    |   0.05     |    cosine   |     200     |         7.45       |     1h07m     |
 | ResNet-preact-20 |      32    |   0.025    |    cosine   |     200     |         8.00       |       43m     |
+
+#### Good learning rate + longer training
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |    4096    |   1.6      |    cosine   |     800     |         8.36       |     1h33m     |
+| ResNet-preact-20 |    2048    |   1.6      |    cosine   |     800     |         7.53       |     1h27m     |
+| ResNet-preact-20 |    1024    |   1.6      |    cosine   |     800     |         7.30       |     1h30m     |
+| ResNet-preact-20 |    1024    |   0.8      |    cosine   |     800     |         7.42       |     1h30m     |
+| ResNet-preact-20 |     512    |   1.6      |    cosine   |     800     |         6.69       |     1h26m     |
+| ResNet-preact-20 |     512    |   0.8      |    cosine   |     800     |         6.77       |     1h26m     |
+| ResNet-preact-20 |     256    |   0.8      |    cosine   |     800     |         6.84       |     1h28m     |
+| ResNet-preact-20 |     128    |   0.4      |    cosine   |     800     |         6.86       |     1h35m     |
+| ResNet-preact-20 |     128    |   0.2      |    cosine   |     800     |         7.05       |     1h38m     |
+| ResNet-preact-20 |     128    |   0.1      |    cosine   |     800     |         6.68       |     1h35m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |    4096    |   1.6      |    cosine   |    1600     |         8.25       |     3h10m     |
+| ResNet-preact-20 |    2048    |   1.6      |    cosine   |    1600     |         7.34       |     2h50m     |
+| ResNet-preact-20 |    1024    |   1.6      |    cosine   |    1600     |         6.94       |     2h52m     |
+| ResNet-preact-20 |     512    |   1.6      |    cosine   |    1600     |         6.99       |     2h44m     |
+| ResNet-preact-20 |     256    |   0.8      |    cosine   |    1600     |         6.95       |     2h50m     |
+| ResNet-preact-20 |     128    |   0.4      |    cosine   |    1600     |         6.64       |     3h09m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |    4096    |   1.6      |    cosine   |    3200     |         9.52       |     6h15m     |
+| ResNet-preact-20 |    2048    |   1.6      |    cosine   |    3200     |         6.92       |     5h42m     |
+| ResNet-preact-20 |    1024    |   1.6      |    cosine   |    3200     |         6.96       |     5h43m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |    2048    |   1.6      |    cosine   |    6400     |         7.45       |    11h44m     |
 
 
 
