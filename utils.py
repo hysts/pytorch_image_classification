@@ -108,27 +108,25 @@ def _get_optimizer(model_parameters, optim_config):
 
 
 def _get_scheduler(optimizer, optim_config):
-    if optim_config['optimizer'] == 'sgd':
-        if optim_config['scheduler'] == 'multistep':
-            scheduler = torch.optim.lr_scheduler.MultiStepLR(
-                optimizer,
-                milestones=optim_config['milestones'],
-                gamma=optim_config['lr_decay'])
-        elif optim_config['scheduler'] == 'sgdr':
-            scheduler = SGDRScheduler(optimizer, optim_config['T0'],
-                                      optim_config['Tmult'],
-                                      optim_config['lr_min'])
-        elif optim_config['scheduler'] == 'cosine':
-            total_steps = optim_config['epochs'] * \
-                optim_config['steps_per_epoch']
+    if optim_config['scheduler'] == 'multistep':
+        scheduler = torch.optim.lr_scheduler.MultiStepLR(
+            optimizer,
+            milestones=optim_config['milestones'],
+            gamma=optim_config['lr_decay'])
+    elif optim_config['scheduler'] == 'sgdr':
+        scheduler = SGDRScheduler(optimizer, optim_config['T0'],
+                                  optim_config['Tmult'],
+                                  optim_config['lr_min'])
+    elif optim_config['scheduler'] == 'cosine':
+        total_steps = optim_config['epochs'] * optim_config['steps_per_epoch']
 
-            scheduler = torch.optim.lr_scheduler.LambdaLR(
-                optimizer,
-                lr_lambda=lambda step: cosine_annealing(
-                    step,
-                    total_steps,
-                    1,  # since lr_lambda computes multiplicative factor
-                    optim_config['lr_min'] / optim_config['base_lr']))
+        scheduler = torch.optim.lr_scheduler.LambdaLR(
+            optimizer,
+            lr_lambda=lambda step: cosine_annealing(
+                step,
+                total_steps,
+                1,  # since lr_lambda computes multiplicative factor
+                optim_config['lr_min'] / optim_config['base_lr']))
     else:
         scheduler = None
     return scheduler

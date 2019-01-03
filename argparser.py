@@ -248,7 +248,6 @@ def _cleanup_args(args):
     if args.optimizer != 'sgd':
         args.momentum = None
         args.nesterov = None
-        args.scheduler = 'none'
     if args.optimizer != 'adam':
         args.betas = None
 
