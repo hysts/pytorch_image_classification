@@ -11,10 +11,7 @@ import random
 
 import torch
 import torch.nn as nn
-import torch.optim
-import torch.utils.data
-import torch.backends.cudnn
-import torchvision.utils
+import torchvision
 try:
     from tensorboardX import SummaryWriter
     is_tensorboard_available = True
