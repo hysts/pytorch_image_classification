@@ -28,11 +28,6 @@ class LARSOptimizer(torch.optim.Optimizer):
             thresh=thresh)
         super(LARSOptimizer, self).__init__(params, defaults)
 
-    def __setstate__(self, state):
-        super(LARSOptimizer, self).__setstate__(state)
-        for group in self.param_groups:
-            group.setdefault('nesterov', False)
-
     def step(self, closure=None):
         loss = None
         if closure is not None:
