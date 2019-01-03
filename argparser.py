@@ -77,6 +77,11 @@ def _check_optim_config(config):
             message = 'When using Adam, key `{}` must be specified.'.format(
                 key)
             assert key in config.keys(), message
+    elif optimizer == 'lars':
+        for key in ['momentum']:
+            message = 'When using LARS, key `{}` must be specified.'.format(
+                key)
+            assert key in config.keys(), message
 
     scheduler = config['scheduler']
     if scheduler == 'multistep':
@@ -110,6 +115,8 @@ def _get_optim_config(args):
         'T0',
         'Tmult',
         'betas',
+        'lars_eps',
+        'lars_thresh',
     ]
     json_keys = ['milestones', 'betas']
     config = _args2config(args, keys, json_keys)
@@ -245,11 +252,15 @@ def _cleanup_args(args):
         args.se_reduction = None
 
     # optimizer
-    if args.optimizer != 'sgd':
+    if args.optimizer not in ['sgd', 'lars']:
         args.momentum = None
+    if args.optimizer != 'sgd':
         args.nesterov = None
     if args.optimizer != 'adam':
         args.betas = None
+    if args.optimizer != 'lars':
+        args.lars_eps = None
+        args.lars_thresh = None
 
     # scheduler
     if args.scheduler != 'multistep':

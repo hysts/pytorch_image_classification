@@ -9,6 +9,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 import augmentations
+import optim
 
 
 def str2bool(s):
@@ -91,19 +92,28 @@ def cosine_annealing(step, total_steps, lr_max, lr_min):
 
 
 def _get_optimizer(model_parameters, optim_config):
-    if optim_config['optimizer'] == 'sgd':
+    optimizer_name = optim_config['optimizer']
+    if optimizer_name == 'sgd':
         optimizer = torch.optim.SGD(
             model_parameters,
             lr=optim_config['base_lr'],
             momentum=optim_config['momentum'],
             weight_decay=optim_config['weight_decay'],
             nesterov=optim_config['nesterov'])
-    elif optim_config['optimizer'] == 'adam':
+    elif optimizer_name == 'adam':
         optimizer = torch.optim.Adam(
             model_parameters,
             lr=optim_config['base_lr'],
             betas=optim_config['betas'],
             weight_decay=optim_config['weight_decay'])
+    elif optimizer_name == 'lars':
+        optimizer = optim.LARSOptimizer(
+            model_parameters,
+            lr=optim_config['base_lr'],
+            momentum=optim_config['momentum'],
+            weight_decay=optim_config['weight_decay'],
+            eps=optim_config['lars_eps'],
+            thresh=optim_config['lars_thresh'])
     return optimizer
 
 
@@ -118,7 +128,8 @@ def _get_scheduler(optimizer, optim_config):
                                   optim_config['Tmult'],
                                   optim_config['lr_min'])
     elif optim_config['scheduler'] == 'cosine':
-        total_steps = optim_config['epochs'] * optim_config['steps_per_epoch']
+        total_steps = optim_config['epochs'] * \
+            optim_config['steps_per_epoch']
 
         scheduler = torch.optim.lr_scheduler.LambdaLR(
             optimizer,

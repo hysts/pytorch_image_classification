@@ -87,7 +87,8 @@ def parse_args():
     # configuration of optimizer
     parser.add_argument('--epochs', type=int)
     parser.add_argument('--batch_size', type=int)
-    parser.add_argument('--optimizer', type=str, choices=['sgd', 'adam'])
+    parser.add_argument(
+        '--optimizer', type=str, choices=['sgd', 'adam', 'lars'])
     parser.add_argument('--gradient_clip', type=float)
     parser.add_argument('--base_lr', type=float)
     parser.add_argument('--weight_decay', type=float)
@@ -109,6 +110,9 @@ def parse_args():
     parser.add_argument('--Tmult', type=int)
     # configuration for Adam
     parser.add_argument('--betas', type=str)
+    # configuration for LARS
+    parser.add_argument('--lars_eps', type=float, default=1e-9)
+    parser.add_argument('--lars_thresh', type=float, default=1e-2)
 
     # configuration of data loader
     parser.add_argument(
