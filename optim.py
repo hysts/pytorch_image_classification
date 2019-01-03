@@ -7,7 +7,6 @@ class LARSOptimizer(torch.optim.Optimizer):
                  lr,
                  momentum=0,
                  weight_decay=0,
-                 eta=1e-3,
                  eps=1e-9,
                  thresh=1e-2):
 
@@ -23,7 +22,6 @@ class LARSOptimizer(torch.optim.Optimizer):
             lr=lr,
             momentum=momentum,
             weight_decay=weight_decay,
-            eta=eta,
             eps=eps,
             thresh=thresh)
         super(LARSOptimizer, self).__init__(params, defaults)
@@ -37,7 +35,6 @@ class LARSOptimizer(torch.optim.Optimizer):
             weight_decay = group['weight_decay']
             momentum = group['momentum']
             lr = group['lr']
-            eta = group['eta']
             eps = group['eps']
             thresh = group['thresh']
 
@@ -63,7 +60,7 @@ class LARSOptimizer(torch.optim.Optimizer):
                     p.data.add_(-lr, buf)
                 else:
                     grad_norm = torch.norm(d_p)
-                    local_lr = eta * weight_norm / (
+                    local_lr = weight_norm / (
                         eps + grad_norm + weight_decay * weight_norm)
 
                     if weight_decay != 0:

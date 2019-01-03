@@ -111,7 +111,6 @@ def parse_args():
     # configuration for Adam
     parser.add_argument('--betas', type=str)
     # configuration for LARS
-    parser.add_argument('--lars_eta', type=float, default=1e-3)
     parser.add_argument('--lars_eps', type=float, default=1e-9)
     parser.add_argument('--lars_thresh', type=float, default=1e-2)
 

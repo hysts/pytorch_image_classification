@@ -115,7 +115,6 @@ def _get_optim_config(args):
         'T0',
         'Tmult',
         'betas',
-        'lars_eta',
         'lars_eps',
         'lars_thresh',
     ]
@@ -260,7 +259,6 @@ def _cleanup_args(args):
     if args.optimizer != 'adam':
         args.betas = None
     if args.optimizer != 'lars':
-        args.lars_eta = None
         args.lars_eps = None
         args.lars_thresh = None
 

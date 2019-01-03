@@ -112,7 +112,6 @@ def _get_optimizer(model_parameters, optim_config):
             lr=optim_config['base_lr'],
             momentum=optim_config['momentum'],
             weight_decay=optim_config['weight_decay'],
-            eta=optim_config['lars_eta'],
             eps=optim_config['lars_eps'],
             thresh=optim_config['lars_thresh'])
     return optimizer
