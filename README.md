@@ -9,6 +9,7 @@ Following papers are implemented using PyTorch.
 * PyramidNet (1610.02915)
 * ResNeXt (1611.05431)
 * shake-shake (1705.07485)
+* LARS (1708.03888, 1801.03137)
 * Cutout (1708.04552)
 * Random Erasing (1708.04896)
 * SENet (1709.01507)
@@ -637,6 +638,31 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 |:----------------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
 | ResNet-preact-20 |    2048    |   1.6      |    cosine   |    6400     |         7.45       |    11h44m     |
 
+#### LARS
+
+* In the original papers (1708.03888, 1801.03137), they used polynomial decay learning rate scheduling, but cosine annealing is used in these experiments.
+* In this implementation, LARS coefficient is not used, so learning rate should be adjusted accordingly.
+
+```
+$ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --optimizer lars --base_lr 0.02 --batch_size 4096 --epochs 200 --outdir results/experiment00/00
+```
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 run) | Training Time |
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:----------------------------:|--------------:|
+| ResNet-preact-20 |    4096    |   0.005    |    cosine   |     200     |             14.31            |       22m     |
+| ResNet-preact-20 |    4096    |   0.01     |    cosine   |     200     |              9.33            |       22m     |
+| ResNet-preact-20 |    4096    |   0.015    |    cosine   |     200     |              8.47            |       22m     |
+| ResNet-preact-20 |    4096    |   0.02     |    cosine   |     200     |              8.21            |       22m     |
+| ResNet-preact-20 |    4096    |   0.03     |    cosine   |     200     |              8.46            |       22m     |
+| ResNet-preact-20 |    4096    |   0.04     |    cosine   |     200     |              9.58            |       22m     |
+
+| Model            | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 run) | Training Time |
+|:----------------:|-----------:|:-----------|:-----------:|------------:|:----------------------------:|--------------:|
+| ResNet-preact-20 |    4096    |   0.02     |    cosine   |     200     |              8.21            |       22m     |
+| ResNet-preact-20 |    4096    |   0.02     |    cosine   |     400     |              7.53            |       44m     |
+| ResNet-preact-20 |    4096    |   0.02     |    cosine   |     800     |              7.48            |     1h29m     |
+| ResNet-preact-20 |    4096    |   0.02     |    cosine   |    1600     |              7.37 (1 run)    |     2h58m     |
+
 
 
 ## References
@@ -652,10 +678,13 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 * Xie, Saining, Ross Girshick, Piotr Dollar, Zhuowen Tu, and Kaiming He. "Aggregated Residual Transformations for Deep Neural Networks." The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2017. [link](http://openaccess.thecvf.com/content_cvpr_2017/html/Xie_Aggregated_Residual_Transformations_CVPR_2017_paper.html), [arXiv:1611.05431](https://arxiv.org/abs/1611.05431), [Torch implementation](https://github.com/facebookresearch/ResNeXt)
 * Gastaldi, Xavier. "Shake-Shake regularization of 3-branch residual networks." In International Conference on Learning Representations (ICLR) Workshop, 2017. [link](https://openreview.net/forum?id=HkO-PCmYl), [arXiv:1705.07485](https://arxiv.org/abs/1705.07485), [Torch implementation](https://github.com/xgastaldi/shake-shake)
 * Goyal, Priya, Piotr Dollar, Ross Girshick, Pieter Noordhuis, Lukasz Wesolowski, Aapo Kyrola, Andrew Tulloch, Yangqing Jia, and Kaiming He. "Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour." arXiv preprint arXiv:1706.02677 (2017). [arXiv:1706.02677](https://arxiv.org/abs/1706.02677)
+* You, Yang, Igor Gitman, and Boris Ginsburg. "Large Batch Training of Convolutional Networks." arXiv preprint arXiv:1708.03888 (2017). [arXiv:1708.03888](https://arxiv.org/abs/1708.03888)
 * DeVries, Terrance, and Graham W. Taylor. "Improved Regularization of Convolutional Neural Networks with Cutout." arXiv preprint arXiv:1708.04552 (2017). [arXiv:1708.04552](https://arxiv.org/abs/1708.04552), [PyTorch implementation](https://github.com/uoguelph-mlrg/Cutout)
+* Abu-El-Haija, Sami. "Proportionate Gradient Updates with PercentDelta." arXiv preprint arXiv:1708.07227 (2017). [arXiv:1708.07227](https://arxiv.org/abs/1708.07227)
 * Zhong, Zhun, Liang Zheng, Guoliang Kang, Shaozi Li, and Yi Yang. "Random Erasing Data Augmentation." arXiv preprint arXiv:1708.04896 (2017). [arXiv:1708.04896](https://arxiv.org/abs/1708.04896), [PyTorch implementation](https://github.com/zhunzhong07/Random-Erasing)
 * Hu, Jie, Li Shen, and Gang Sun. "Squeeze-and-Excitation Networks." The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2018, pp. 7132-7141. [link](http://openaccess.thecvf.com/content_cvpr_2018/html/Hu_Squeeze-and-Excitation_Networks_CVPR_2018_paper.html), [arXiv:1709.01507](https://arxiv.org/abs/1709.01507), [Caffe implementation](https://github.com/hujie-frank/SENet)
 * Zhang, Hongyi, Moustapha Cisse, Yann N. Dauphin, and David Lopez-Paz. "mixup: Beyond Empirical Risk Minimization." In International Conference on Learning Representations (ICLR), 2017. [link](https://openreview.net/forum?id=r1Ddp1-Rb), [arXiv:1710.09412](https://arxiv.org/abs/1710.09412)
+* Gitman, Igor, Deepak Dilipkumar, and Ben Parr. "Convergence Analysis of Gradient Descent Algorithms with Proportional Updates." arXiv preprint arXiv:1801.03137 (2018). [arXiv:1801.03137](https://arxiv.org/abs/1801.03137) [TensorFlow implementation](https://github.com/bparr/lars/blob/master/lars.py)
 * Kawaguchi, Kenji, Yoshua Bengio, Vikas Verma, and Leslie Pack Kaelbling. "Towards Understanding Generalization via Analytical Learning Theory." arXiv preprint arXiv:1802.07426 (2018). [arXiv:1802.07426](https://arxiv.org/abs/1802.07426), [PyTorch implementation](https://github.com/Learning-and-Intelligent-Systems/Analytical-Learning-Theory)
 * Recht, Benjamin, Rebecca Roelofs, Ludwig Schmidt, and Vaishaal Shankar. "Do CIFAR-10 Classifiers Generalize to CIFAR-10?" arXiv preprint arXiv:1806.00451 (2018). [arXiv:1806.00451](https://arxiv.org/abs/1806.00451)
 * Shallue, Christopher J., Jaehoon Lee, Joseph Antognini, Jascha Sohl-Dickstein, Roy Frostig, and George E. Dahl. "Measuring the Effects of Data Parallelism on Neural Network Training." arXiv preprint arXiv:1811.03600 (2018). [arXiv:1811.03600](https://arxiv.org/abs/1811.03600)
