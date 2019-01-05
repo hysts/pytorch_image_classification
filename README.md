@@ -684,8 +684,7 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 ### Experiments on half-precision, and mixed-precision
 
-* Following experiments are done on CIFAR-10 dataset using GeForce 1080 Ti.
-    * Note that this GPU does not have Tensor Core, so is unabled to fully exploit mixed-precision training.
+* Following experiments are done on CIFAR-10 dataset using GeForce 1080 Ti, which doesn't have Tensor Cores.
 * Results reported in the table are the test errors at last epochs.
 
 #### FP16 training
