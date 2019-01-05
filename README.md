@@ -30,31 +30,31 @@ Following papers are implemented using PyTorch.
 ## Usage
 
 ```
-$ ./main.py --arch resnet_preact --depth 56 --outdir results
+$ ./train.py --arch resnet_preact --depth 56 --outdir results
 ```
 
 ### Use Cutout
 
 ```
-$ ./main.py --arch resnet_preact --depth 56 --outdir results --use_cutout
+$ ./train.py --arch resnet_preact --depth 56 --outdir results --use_cutout
 ```
 
 ### Use RandomErasing
 
 ```
-$ ./main.py --arch resnet_preact --depth 56 --outdir results --use_random_erasing
+$ ./train.py --arch resnet_preact --depth 56 --outdir results --use_random_erasing
 ```
 
 ### Use Mixup
 
 ```
-$ ./main.py --arch resnet_preact --depth 56 --outdir results --use_mixup
+$ ./train.py --arch resnet_preact --depth 56 --outdir results --use_mixup
 ```
 
 ### Use cosine annealing
 
 ```
-$ ./main.py --arch wrn --outdir results --scheduler cosine
+$ ./train.py --arch wrn --outdir results --scheduler cosine
 ```
 
 
@@ -106,7 +106,7 @@ $ ./main.py --arch wrn --outdir results --scheduler cosine
 #### VGG-like
 
 ```
-$ python -u main.py --arch vgg --seed 7 --outdir results/vgg_15_BN_64/00
+$ python -u train.py --arch vgg --seed 7 --outdir results/vgg_15_BN_64/00
 ```
 
 ![](figures/cifar10/VGG-15_BN_64.png)
@@ -114,7 +114,7 @@ $ python -u main.py --arch vgg --seed 7 --outdir results/vgg_15_BN_64/00
 #### ResNet
 
 ```
-$ python -u main.py --arch resnet --depth 110 --block_type basic --seed 7 --outdir results/resnet_basic_110/00
+$ python -u train.py --arch resnet --depth 110 --block_type basic --seed 7 --outdir results/resnet_basic_110/00
 ```
 
 ![](figures/cifar10/ResNet-110_basic.png)
@@ -122,14 +122,14 @@ $ python -u main.py --arch resnet --depth 110 --block_type basic --seed 7 --outd
 #### ResNet-preact
 
 ```
-$ python -u main.py --arch resnet_preact --depth 110 --block_type basic --seed 7 --outdir results/resnet_preact_basic_110/00
+$ python -u train.py --arch resnet_preact --depth 110 --block_type basic --seed 7 --outdir results/resnet_preact_basic_110/00
 ```
 
 ![](figures/cifar10/ResNet-preact-110_basic.png)
 
 
 ```
-$ python -u main.py --arch resnet_preact --depth 164 --block_type bottleneck --seed 7 --outdir results/resnet_preact_bottleneck_164/00
+$ python -u train.py --arch resnet_preact --depth 164 --block_type bottleneck --seed 7 --outdir results/resnet_preact_bottleneck_164/00
 ```
 
 ![](figures/cifar10/ResNet-preact-164_bottleneck.png)
@@ -137,7 +137,7 @@ $ python -u main.py --arch resnet_preact --depth 164 --block_type bottleneck --s
 #### WRN
 
 ```
-$ python -u main.py --arch wrn --depth 28 --widening_factor 10 --seed 7 --outdir results/wrn_28_10/00
+$ python -u train.py --arch wrn --depth 28 --widening_factor 10 --seed 7 --outdir results/wrn_28_10/00
 ```
 
 ![](figures/cifar10/WRN-28-10.png)
@@ -145,7 +145,7 @@ $ python -u main.py --arch wrn --depth 28 --widening_factor 10 --seed 7 --outdir
 #### DenseNet
 
 ```
-$ python -u main.py --arch densenet --depth 100 --block_type bottleneck --growth_rate 12 --compression_rate 0.5 --batch_size 32 --base_lr 0.05 --seed 7 --outdir results/densenet_BC_100_12/00
+$ python -u train.py --arch densenet --depth 100 --block_type bottleneck --growth_rate 12 --compression_rate 0.5 --batch_size 32 --base_lr 0.05 --seed 7 --outdir results/densenet_BC_100_12/00
 ```
 
 ![](figures/cifar10/DenseNet-BC-100_k_12.png)
@@ -153,13 +153,13 @@ $ python -u main.py --arch densenet --depth 100 --block_type bottleneck --growth
 #### PyramidNet
 
 ```
-$ python -u main.py --arch pyramidnet --depth 110 --block_type basic --pyramid_alpha 84 --seed 7 --outdir results/pyramidnet_basic_110_84/00
+$ python -u train.py --arch pyramidnet --depth 110 --block_type basic --pyramid_alpha 84 --seed 7 --outdir results/pyramidnet_basic_110_84/00
 ```
 
 ![](figures/cifar10/PyramidNet-110_alpha_84.png)
 
 ```
-$ python -u main.py --arch pyramidnet --depth 110 --block_type basic --pyramid_alpha 270 --seed 7 --outdir results/pyramidnet_basic_110_270/00
+$ python -u train.py --arch pyramidnet --depth 110 --block_type basic --pyramid_alpha 270 --seed 7 --outdir results/pyramidnet_basic_110_270/00
 ```
 
 ![](figures/cifar10/PyramidNet-110_alpha_270.png)
@@ -167,13 +167,13 @@ $ python -u main.py --arch pyramidnet --depth 110 --block_type basic --pyramid_a
 #### ResNeXt
 
 ```
-$ python -u main.py --arch resnext --depth 29 --cardinality 4 --base_channels 64 --batch_size 32 --base_lr 0.025 --seed 7 --outdir results/resnext_29_4x64d/00
+$ python -u train.py --arch resnext --depth 29 --cardinality 4 --base_channels 64 --batch_size 32 --base_lr 0.025 --seed 7 --outdir results/resnext_29_4x64d/00
 ```
 
 ![](figures/cifar10/ResNeXt-29_4x64d.png)
 
 ```
-$ python -u main.py --arch resnext --depth 29 --cardinality 8 --base_channels 64 --batch_size 64 --base_lr 0.05 --seed 7 --outdir results/resnext_29_8x64d/00
+$ python -u train.py --arch resnext --depth 29 --cardinality 8 --base_channels 64 --batch_size 64 --base_lr 0.05 --seed 7 --outdir results/resnext_29_8x64d/00
 ```
 
 ![](figures/cifar10/ResNeXt-29_8x64d.png)
@@ -181,19 +181,19 @@ $ python -u main.py --arch resnext --depth 29 --cardinality 8 --base_channels 64
 #### shake-shake
 
 ```
-$ python -u main.py --arch shake_shake --depth 26 --base_channels 32 --shake_forward True --shake_backward True --shake_image True --seed 7 --outdir results/shake_shake_26_2x32d_SSI/00
+$ python -u train.py --arch shake_shake --depth 26 --base_channels 32 --shake_forward True --shake_backward True --shake_image True --seed 7 --outdir results/shake_shake_26_2x32d_SSI/00
 ```
 
 ![](figures/cifar10/shake-shake-26_2x32d.png)
 
 ```
-$ python -u main.py --arch shake_shake --depth 26 --base_channels 64 --shake_forward True --shake_backward True --shake_image True --batch_size 64 --base_lr 0.1 --seed 7 --outdir results/shake_shake_26_2x64d_SSI/00
+$ python -u train.py --arch shake_shake --depth 26 --base_channels 64 --shake_forward True --shake_backward True --shake_image True --batch_size 64 --base_lr 0.1 --seed 7 --outdir results/shake_shake_26_2x64d_SSI/00
 ```
 
 ![](figures/cifar10/shake-shake-26_2x64d.png)
 
 ```
-$ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_forward True --shake_backward True --shake_image True --seed 7 --outdir results/shake_shake_26_2x96d_SSI/00
+$ python -u train.py --arch shake_shake --depth 26 --base_channels 96 --shake_forward True --shake_backward True --shake_image True --seed 7 --outdir results/shake_shake_26_2x96d_SSI/00
 ```
 
 ![](figures/cifar10/shake-shake-26_2x96d.png)
@@ -227,13 +227,13 @@ $ python -u main.py --arch shake_shake --depth 26 --base_channels 96 --shake_for
 * GeForce GTX 1080 Ti was used in these experiments, except ones with *, which are done using GeForce GTX 980.
 
 ```
-python -u main.py --arch wrn --depth 28 --outdir results/wrn_28_10_cutout16 --epochs 200 --scheduler cosine --base_lr 0.1 --batch_size 64 --seed 17 --use_cutout --cutout_size 16
+python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_cutout16 --epochs 200 --scheduler cosine --base_lr 0.1 --batch_size 64 --seed 17 --use_cutout --cutout_size 16
 ```
 
 ![](figures/cifar10/WRN-28-10_Cutout_16.png)
 
 ```
-python -u main.py --arch shake_shake --depth 26 --base_channels 64 --outdir results/shake_shake_26_2x64d_SSI_cutout16 --epochs 300 --scheduler cosine --base_lr 0.1 --batch_size 64 --seed 17 --use_cutout --cutout_size 16
+python -u train.py --arch shake_shake --depth 26 --base_channels 64 --outdir results/shake_shake_26_2x64d_SSI_cutout16 --epochs 300 --scheduler cosine --base_lr 0.1 --batch_size 64 --seed 17 --use_cutout --cutout_size 16
 ```
 
 ![](figures/cifar10/shake-shake-26_2x64d_Cutout_16.png)
@@ -374,7 +374,7 @@ ResNet-preact-56 is trained on CIFAR-10 with initial learning rate 0.2 in this e
 
 ##### preactivate shortcut after downsampling
 ```
-$ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, true, true]' --remove_first_relu false --add_last_bn false --seed 7 --outdir results/experiments/00_preact_after_downsampling/00
+$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, true, true]' --remove_first_relu false --add_last_bn false --seed 7 --outdir results/experiments/00_preact_after_downsampling/00
 ```
 
 ![](figures/experiments_resnet/w_1st_ReLU_wo_last_BN_preactivate_after_downsampling.png)
@@ -382,63 +382,63 @@ $ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr
 
 ##### w/ 1st ReLU, w/o last BN
 ```
-$ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu false --add_last_bn false --seed 7 --outdir results/experiments/01_w_relu_wo_bn/00
+$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu false --add_last_bn false --seed 7 --outdir results/experiments/01_w_relu_wo_bn/00
 ```
 
 ![](figures/experiments_resnet/w_1st_ReLU_wo_last_BN.png)
 
 ##### w/o 1st ReLU, w/o last BN
 ```
-$ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn false --seed 7 --outdir results/experiments/02_wo_relu_wo_bn/00
+$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn false --seed 7 --outdir results/experiments/02_wo_relu_wo_bn/00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_wo_last_BN.png)
 
 ##### w/ 1st ReLU, w/ last BN
 ```
-$ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu false --add_last_bn true --seed 7 --outdir results/experiments/03_w_relu_w_bn/00
+$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu false --add_last_bn true --seed 7 --outdir results/experiments/03_w_relu_w_bn/00
 ```
 
 ![](figures/experiments_resnet/w_1st_ReLU_w_last_BN.png)
 
 ##### w/o 1st ReLU, w/ last BN
 ```
-$ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --seed 7 --outdir results/experiments/04_wo_relu_w_bn/00
+$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --seed 7 --outdir results/experiments/04_wo_relu_w_bn/00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN.png)
 
 ##### w/o 1st ReLU, w/ last BN, preactivate shortcut after downsampling
 ```
-$ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, true, true]' --remove_first_relu true --add_last_bn true --seed 7 --outdir results/experiments/05_preact_after_downsampling/00
+$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, true, true]' --remove_first_relu true --add_last_bn true --seed 7 --outdir results/experiments/05_preact_after_downsampling/00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_preactivate_after_downsampling.png)
 
 ##### w/o 1st ReLU, w/ last BN, cosine annealing
 ```
-$ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --scheduler cosine --seed 7 --outdir results/experiments/06_cosine_annealing/00
+$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --scheduler cosine --seed 7 --outdir results/experiments/06_cosine_annealing/00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_Cosine_annealing.png)
 
 ##### w/o 1st ReLU, w/ last BN, Cutout
 ```
-$ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --use_cutout --seed 7 --outdir results/experiments/07_cutout/00
+$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --use_cutout --seed 7 --outdir results/experiments/07_cutout/00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_Cutout.png)
 
 ##### w/o 1st ReLU, w/ last BN, RandomErasing
 ```
-$ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --use_random_erasing --seed 7 --outdir results/experiments/08_random_erasing/00
+$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --use_random_erasing --seed 7 --outdir results/experiments/08_random_erasing/00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_Random_Erasing.png)
 
 ##### w/o 1st ReLU, w/ last BN, Mixup
 ```
-$ python -u main.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --use_mixup --seed 7 --outdir results/experiments/09_mixup/00
+$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --use_mixup --seed 7 --outdir results/experiments/09_mixup/00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_Mixup.png)
