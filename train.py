@@ -17,6 +17,11 @@ try:
     is_tensorboard_available = True
 except Exception:
     is_tensorboard_available = False
+try:
+    import apex
+    is_apex_available = True
+except Exception:
+    is_apex_available = False
 
 from dataloader import get_loader
 import utils
@@ -154,10 +159,15 @@ def parse_args():
     parser.add_argument('--label_smoothing_epsilon', type=float, default=0.1)
     # fp16
     parser.add_argument('--fp16', action='store_true')
+    parser.add_argument('--use_amp', action='store_true')
 
     args = parser.parse_args()
     if not is_tensorboard_available:
         args.tensorboard = False
+    if not is_apex_available:
+        args.use_amp = False
+    if args.use_amp:
+        args.fp16 = True
 
     config = get_config(args)
 
@@ -165,7 +175,7 @@ def parse_args():
 
 
 def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
-          writer):
+          writer, amp_handle):
     global global_step
 
     run_config = config['run_config']
@@ -203,7 +213,7 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
             data1 = data[:, :, :, :w]
             data2 = data[:, :, :, w:]
 
-        if run_config['fp16']:
+        if run_config['fp16'] and not run_config['use_amp']:
             if data_config['use_dual_cutout']:
                 data1 = data1.half()
                 data2 = data2.half()
@@ -247,7 +257,11 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
         else:
             outputs = model(data)
         loss = criterion(outputs, targets)
-        loss.backward()
+        if amp_handle is not None:
+            with amp_handle.scale_loss(loss, optimizer) as scaled_loss:
+                scaled_loss.backward()
+        else:
+            loss.backward()
         if 'gradient_clip' in optim_config.keys():
             torch.nn.utils.clip_grad_norm_(model.parameters(),
                                            optim_config['gradient_clip'])
@@ -329,7 +343,7 @@ def test(epoch, model, criterion, test_loader, run_config, writer):
                         data, normalize=True, scale_each=True)
                     writer.add_image('Test/Image', image, epoch)
 
-            if run_config['fp16']:
+            if run_config['fp16'] and not run_config['use_amp']:
                 data = data.half()
 
             data = data.to(device)
@@ -432,7 +446,7 @@ def main():
     n_params = sum([param.view(-1).size()[0] for param in model.parameters()])
     logger.info('n_params: {}'.format(n_params))
 
-    if run_config['fp16']:
+    if run_config['fp16'] and not run_config['use_amp']:
         model.half()
         for layer in model.modules():
             if isinstance(layer, nn.BatchNorm2d):
@@ -452,6 +466,10 @@ def main():
     optimizer, scheduler = utils.create_optimizer(model.parameters(),
                                                   optim_config)
 
+    # for mixed-precision
+    amp_handle = apex.amp.init(
+        enabled=run_config['use_amp']) if is_apex_available else None
+
     # run test before start training
     if run_config['test_first']:
         test(0, model, test_criterion, test_loader, run_config, writer)
@@ -470,7 +488,7 @@ def main():
         np.random.seed(seed)
         # train
         train_log = train(epoch, model, optimizer, scheduler, train_criterion,
-                          train_loader, config, writer)
+                          train_loader, config, writer, amp_handle)
 
         # test
         test_log = test(epoch, model, test_criterion, test_loader, run_config,

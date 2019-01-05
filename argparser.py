@@ -179,6 +179,7 @@ def _get_run_config(args):
         'test_first',
         'device',
         'fp16',
+        'use_amp',
         'tensorboard',
         'tensorboard_train_images',
         'tensorboard_test_images',
