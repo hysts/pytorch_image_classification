@@ -724,7 +724,7 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 | Model            | precision | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
-| ResNet-preact-20 |   mixed   |    8192    |   1.6      |    cosine   |     200     |        12.76       |       29m     |
+| ResNet-preact-20 |   mixed   |    8192    |   1.6      |    cosine   |     200     |        11.78       |       28m     |
 | ResNet-preact-20 |   mixed   |    4096    |   1.6      |    cosine   |     200     |        10.48       |       27m     |
 | ResNet-preact-20 |   mixed   |    2048    |   1.6      |    cosine   |     200     |         8.98       |       26m     |
 | ResNet-preact-20 |   mixed   |    1024    |   1.6      |    cosine   |     200     |         8.05       |       26m     |
