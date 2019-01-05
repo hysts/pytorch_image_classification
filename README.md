@@ -682,7 +682,25 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 
 
-### Experiments on FP16
+### Experiments on half-precision, and mixed-precision
+
+* Following experiments are done on CIFAR-10 dataset using GeForce 1080 Ti.
+    * Note that this GPU does not have Tensor Core, so is unabled to fully exploit mixed-precision training.
+* Results reported in the table are the test errors at last epochs.
+
+#### FP16 training
+```
+$ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --base_lr 1.6 --batch_size 4096 --epochs 200 --fp16 --outdir results/experiment00/00
+```
+
+#### Mixed-precision training
+
+* This needs [NVIDIA Apex](https://github.com/NVIDIA/apex) to be installed.
+
+```
+$ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --base_lr 1.6 --batch_size 4096 --epochs 200 --use_amp --outdir results/experiment01/00
+```
+
 
 | Model            | precision | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
@@ -703,6 +721,16 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 | ResNet-preact-20 |   FP16    |     512    |   0.8      |    cosine   |     200     |         7.89       |       26m     |
 | ResNet-preact-20 |   FP16    |     256    |   0.8      |    cosine   |     200     |         7.40       |       28m     |
 | ResNet-preact-20 |   FP16    |     128    |   0.4      |    cosine   |     200     |         7.59       |       32m     |
+
+| Model            | precision | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |   mixed   |    9192    |   1.6      |    cosine   |     200     |        12.76       |       29m     |
+| ResNet-preact-20 |   mixed   |    4096    |   1.6      |    cosine   |     200     |        10.48       |       27m     |
+| ResNet-preact-20 |   mixed   |    2048    |   1.6      |    cosine   |     200     |         8.98       |       26m     |
+| ResNet-preact-20 |   mixed   |    1024    |   1.6      |    cosine   |     200     |         8.05       |       26m     |
+| ResNet-preact-20 |   mixed   |     512    |   0.8      |    cosine   |     200     |         7.81       |       28m     |
+| ResNet-preact-20 |   mixed   |     256    |   0.8      |    cosine   |     200     |         7.58       |       32m     |
+| ResNet-preact-20 |   mixed   |     128    |   0.4      |    cosine   |     200     |         7.37       |       41m     |
 
 
 
@@ -740,6 +768,7 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 ### Others
 
 * Loshchilov, Ilya, and Frank Hutter. "SGDR: Stochastic Gradient Descent with Warm Restarts." In International Conference on Learning Representations (ICLR), 2017. [link](https://openreview.net/forum?id=Skq89Scxx), [arXiv:1608.03983](https://arxiv.org/abs/1608.03983), [Lasagne implementation](https://github.com/loshchil/SGDR)
+* Micikevicius, Paulius, Sharan Narang, Jonah Alben, Gregory Diamos, Erich Elsen, David Garcia, Boris Ginsburg, Michael Houston, Oleksii Kuchaiev, Ganesh Venkatesh, and Hao Wu. "Mixed Precision Training." In International Conference on Learning Representations (ICLR), 2018. [link](https://openreview.net/forum?id=r1gs9JgRZ), [arXiv:1710.03740](https://arxiv.org/abs/1710.03740)
 * Recht, Benjamin, Rebecca Roelofs, Ludwig Schmidt, and Vaishaal Shankar. "Do CIFAR-10 Classifiers Generalize to CIFAR-10?" arXiv preprint arXiv:1806.00451 (2018). [arXiv:1806.00451](https://arxiv.org/abs/1806.00451)
 * He, Tong, Zhi Zhang, Hang Zhang, Zhongyue Zhang, Junyuan Xie, and Mu Li. "Bag of Tricks for Image Classification with Convolutional Neural Networks." arXiv preprint arXiv:1812.01187 (2018). [arXiv:1812.01187](https://arxiv.org/abs/1812.01187)
 
