@@ -732,6 +732,19 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 | ResNet-preact-20 |   mixed   |     256    |   0.8      |    cosine   |     200     |         7.58       |       32m     |
 | ResNet-preact-20 |   mixed   |     128    |   0.4      |    cosine   |     200     |         7.37       |       41m     |
 
+#### Results using Tesla V100
+
+| Model            | precision | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |   FP32    |    9192    |   1.6      |    cosine   |     200     |        13.39       |       25m     |
+| ResNet-preact-20 |   FP32    |    4096    |   1.6      |    cosine   |     200     |         9.88       |       19m     |
+| ResNet-preact-20 |   FP32    |    2048    |   1.6      |    cosine   |     200     |         8.87       |       17m     |
+| ResNet-preact-20 |   FP32    |    1024    |   1.6      |    cosine   |     200     |         8.45       |       18m     |
+| ResNet-preact-20 |   mixed   |    9192    |   1.6      |    cosine   |     200     |        13.59       |       25m     |
+| ResNet-preact-20 |   mixed   |    4096    |   1.6      |    cosine   |     200     |        10.16       |       19m     |
+| ResNet-preact-20 |   mixed   |    2048    |   1.6      |    cosine   |     200     |         9.10       |       17m     |
+| ResNet-preact-20 |   mixed   |    1024    |   1.6      |    cosine   |     200     |         7.84       |       16m     |
+
 
 
 ## References
