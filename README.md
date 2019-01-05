@@ -683,6 +683,30 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 
 
+### Experiments on FP16
+
+| Model            | precision | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |   FP32    |    9192    |   1.6      |    cosine   |     200     |                    |               |
+| ResNet-preact-20 |   FP32    |    4096    |   1.6      |    cosine   |     200     |        10.32       |       22m     |
+| ResNet-preact-20 |   FP32    |    2048    |   1.6      |    cosine   |     200     |         8.73       |       22m     |
+| ResNet-preact-20 |   FP32    |    1024    |   1.6      |    cosine   |     200     |         8.07       |       22m     |
+| ResNet-preact-20 |   FP32    |     512    |   0.8      |    cosine   |     200     |         7.73       |       21m     |
+| ResNet-preact-20 |   FP32    |     256    |   0.8      |    cosine   |     200     |         7.45       |       21m     |
+| ResNet-preact-20 |   FP32    |     128    |   0.4      |    cosine   |     200     |         7.28       |       24m     |
+
+| Model            | precision | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
+|:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
+| ResNet-preact-20 |   FP16    |    9192    |   1.6      |    cosine   |     200     |        48.52       |       33m     |
+| ResNet-preact-20 |   FP16    |    4096    |   1.6      |    cosine   |     200     |        49.84       |       28m     |
+| ResNet-preact-20 |   FP16    |    2048    |   1.6      |    cosine   |     200     |        75.63       |       27m     |
+| ResNet-preact-20 |   FP16    |    1024    |   1.6      |    cosine   |     200     |        19.09       |       27m     |
+| ResNet-preact-20 |   FP16    |     512    |   0.8      |    cosine   |     200     |         7.89       |       26m     |
+| ResNet-preact-20 |   FP16    |     256    |   0.8      |    cosine   |     200     |         7.40       |       28m     |
+| ResNet-preact-20 |   FP16    |     128    |   0.4      |    cosine   |     200     |         7.59       |       32m     |
+
+
+
 ## References
 
 ### Model architecture
