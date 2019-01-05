@@ -17,14 +17,13 @@ Following papers are implemented using PyTorch.
 * Dual-Cutout (1802.07426)
 * RICAP (1811.09030)
 
-
-
 ## Requirements
 
 * Python >= 3.6
 * PyTorch >= 1.0.0
 * torchvision
 * [tensorboardX](https://github.com/lanpa/tensorboardX) (optional)
+* [NVIDIA Apex](https://github.com/NVIDIA/apex) (optional)
 
 
 
