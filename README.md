@@ -700,6 +700,7 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --base_lr 1.6 --batch_size 4096 --epochs 200 --use_amp --outdir results/experiment01/00
 ```
 
+#### Results
 
 | Model            | precision | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
