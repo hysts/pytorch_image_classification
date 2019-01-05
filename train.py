@@ -92,6 +92,7 @@ def parse_args():
     # configuration of optimizer
     parser.add_argument('--epochs', type=int)
     parser.add_argument('--batch_size', type=int)
+    parser.add_argument('--ghost_batch_size', type=int)
     parser.add_argument(
         '--optimizer', type=str, choices=['sgd', 'adam', 'lars'])
     parser.add_argument('--gradient_clip', type=float)
@@ -250,22 +251,87 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
 
         optimizer.zero_grad()
 
-        if data_config['use_dual_cutout']:
-            outputs1 = model(data1)
-            outputs2 = model(data2)
-            outputs = (outputs1, outputs2)
+        if 'ghost_batch_size' not in optim_config.keys():
+            if data_config['use_dual_cutout']:
+                outputs1 = model(data1)
+                outputs2 = model(data2)
+                outputs = (outputs1, outputs2)
+            else:
+                outputs = model(data)
+            loss = criterion(outputs, targets)
+            if amp_handle is not None:
+                with amp_handle.scale_loss(loss, optimizer) as scaled_loss:
+                    scaled_loss.backward()
+            else:
+                loss.backward()
+            if 'gradient_clip' in optim_config.keys():
+                torch.nn.utils.clip_grad_norm_(model.parameters(),
+                                               optim_config['gradient_clip'])
+            optimizer.step()
         else:
-            outputs = model(data)
-        loss = criterion(outputs, targets)
-        if amp_handle is not None:
-            with amp_handle.scale_loss(loss, optimizer) as scaled_loss:
-                scaled_loss.backward()
-        else:
-            loss.backward()
-        if 'gradient_clip' in optim_config.keys():
-            torch.nn.utils.clip_grad_norm_(model.parameters(),
-                                           optim_config['gradient_clip'])
-        optimizer.step()
+            batch_size = optim_config['batch_size']
+            ghost_batch_size = optim_config['ghost_batch_size']
+            n_split = batch_size // ghost_batch_size
+
+            if data_config['use_dual_cutout']:
+                data1_chunks = data1.chunk(n_split)
+                data2_chunks = data2.chunk(n_split)
+                target_chunks = targets.chunk(n_split)
+                outputs1 = []
+                outputs2 = []
+                for data1_chunk, data2_chunk, target_chunk in zip(
+                        data1_chunks, data2_chunks, target_chunks):
+                    output1_chunk = model(data1_chunk)
+                    output2_chunk = model(data2_chunk)
+                    outputs1.append(output1_chunk)
+                    outputs2.append(output2_chunk)
+                    output_chunk = (output1_chunk, output2_chunk)
+                    loss = criterion(output_chunk, target_chunk)
+                    if amp_handle is not None:
+                        with amp_handle.scale_loss(loss,
+                                                   optimizer) as scaled_loss:
+                            scaled_loss.backward()
+                    else:
+                        loss.backward()
+                outputs1 = torch.cat(outputs1)
+                outputs2 = torch.cat(outputs2)
+                outputs = (outputs1, outputs2)
+            else:
+                data_chunks = data.chunk(n_split)
+                if data_config['use_mixup']:
+                    targets1, targets2, lam = targets
+                    target_chunks = [
+                        (chunk1, chunk2, lam) for chunk1, chunk2 in zip(
+                            targets1.chunk(n_split), targets2.chunk(n_split))
+                    ]
+                elif data_config['use_ricap']:
+                    target_list, weights = targets
+                    target_list_chunks = list(
+                        zip(*[target.chunk(n_split)
+                              for target in target_list]))
+                    target_chunks = [(chunk, weights)
+                                     for chunk in target_list_chunks]
+                else:
+                    target_chunks = targets.chunk(n_split)
+                outputs = []
+                for data_chunk, target_chunk in zip(data_chunks,
+                                                    target_chunks):
+                    output_chunk = model(data_chunk)
+                    outputs.append(output_chunk)
+                    loss = criterion(output_chunk, target_chunk)
+                    if amp_handle is not None:
+                        with amp_handle.scale_loss(loss,
+                                                   optimizer) as scaled_loss:
+                            scaled_loss.backward()
+                    else:
+                        loss.backward()
+                outputs = torch.cat(outputs)
+            if 'gradient_clip' in optim_config.keys():
+                torch.nn.utils.clip_grad_norm_(model.parameters(),
+                                               optim_config['gradient_clip'])
+            for param in model.parameters():
+                param.grad.data.div_(n_split)
+            optimizer.step()
 
         loss_ = loss.item()
         num = data.size(0)

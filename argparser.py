@@ -102,6 +102,7 @@ def _get_optim_config(args):
     keys = [
         'epochs',
         'batch_size',
+        'ghost_batch_size',
         'optimizer',
         'base_lr',
         'weight_decay',
