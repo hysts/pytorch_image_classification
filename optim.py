@@ -45,35 +45,23 @@ class LARSOptimizer(torch.optim.Optimizer):
                 d_p = p.grad.data
 
                 weight_norm = torch.norm(p.data)
-                if weight_norm < thresh:
-                    if weight_decay != 0:
-                        d_p.add_(weight_decay, p.data)
-                    if momentum != 0:
-                        param_state = self.state[p]
-                        if 'momentum_buffer' not in param_state:
-                            buf = param_state[
-                                'momentum_buffer'] = torch.zeros_like(p.data)
-                            buf.mul_(momentum).add_(d_p)
-                        else:
-                            buf = param_state['momentum_buffer']
-                            buf.mul_(momentum).add_(d_p)
-                    p.data.add_(-lr, buf)
-                else:
-                    grad_norm = torch.norm(d_p)
-                    local_lr = weight_norm / (
-                        eps + grad_norm + weight_decay * weight_norm)
+                grad_norm = torch.norm(d_p)
+                local_lr = weight_norm / (
+                    eps + grad_norm + weight_decay * weight_norm)
+                local_lr = torch.where(weight_norm < thresh,
+                                       torch.ones_like(local_lr), local_lr)
 
-                    if weight_decay != 0:
-                        d_p.add_(weight_decay, p.data)
-                    if momentum != 0:
-                        param_state = self.state[p]
-                        if 'momentum_buffer' not in param_state:
-                            buf = param_state[
-                                'momentum_buffer'] = torch.zeros_like(p.data)
-                            buf.mul_(momentum).add_(lr * local_lr, d_p)
-                        else:
-                            buf = param_state['momentum_buffer']
-                            buf.mul_(momentum).add_(lr * local_lr, d_p)
-                    p.data.add_(-1.0, buf)
+                if weight_decay != 0:
+                    d_p.add_(weight_decay, p.data)
+                if momentum != 0:
+                    param_state = self.state[p]
+                    if 'momentum_buffer' not in param_state:
+                        buf = param_state[
+                            'momentum_buffer'] = torch.zeros_like(p.data)
+                        buf.mul_(momentum).add_(local_lr, d_p)
+                    else:
+                        buf = param_state['momentum_buffer']
+                        buf.mul_(momentum).add_(local_lr, d_p)
+                p.data.add_(-lr, buf)
 
         return loss
