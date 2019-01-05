@@ -58,10 +58,10 @@ class LARSOptimizer(torch.optim.Optimizer):
                     if 'momentum_buffer' not in param_state:
                         buf = param_state[
                             'momentum_buffer'] = torch.zeros_like(p.data)
-                        buf.mul_(momentum).add_(local_lr, d_p)
+                        buf.mul_(momentum).add_(lr * local_lr, d_p)
                     else:
                         buf = param_state['momentum_buffer']
-                        buf.mul_(momentum).add_(local_lr, d_p)
-                p.data.add_(-lr, buf)
+                        buf.mul_(momentum).add_(lr * local_lr, d_p)
+                p.data.add_(-1.0, buf)
 
         return loss
