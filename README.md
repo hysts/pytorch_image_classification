@@ -704,7 +704,7 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 | Model            | precision | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
-| ResNet-preact-20 |   FP32    |    9192    |   1.6      |    cosine   |     200     |                    |               |
+| ResNet-preact-20 |   FP32    |    8192    |   1.6      |    cosine   |     200     |                    |               |
 | ResNet-preact-20 |   FP32    |    4096    |   1.6      |    cosine   |     200     |        10.32       |       22m     |
 | ResNet-preact-20 |   FP32    |    2048    |   1.6      |    cosine   |     200     |         8.73       |       22m     |
 | ResNet-preact-20 |   FP32    |    1024    |   1.6      |    cosine   |     200     |         8.07       |       22m     |
@@ -714,7 +714,7 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 | Model            | precision | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
-| ResNet-preact-20 |   FP16    |    9192    |   1.6      |    cosine   |     200     |        48.52       |       33m     |
+| ResNet-preact-20 |   FP16    |    8192    |   1.6      |    cosine   |     200     |        48.52       |       33m     |
 | ResNet-preact-20 |   FP16    |    4096    |   1.6      |    cosine   |     200     |        49.84       |       28m     |
 | ResNet-preact-20 |   FP16    |    2048    |   1.6      |    cosine   |     200     |        75.63       |       27m     |
 | ResNet-preact-20 |   FP16    |    1024    |   1.6      |    cosine   |     200     |        19.09       |       27m     |
@@ -724,7 +724,7 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 | Model            | precision | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
-| ResNet-preact-20 |   mixed   |    9192    |   1.6      |    cosine   |     200     |        12.76       |       29m     |
+| ResNet-preact-20 |   mixed   |    8192    |   1.6      |    cosine   |     200     |        12.76       |       29m     |
 | ResNet-preact-20 |   mixed   |    4096    |   1.6      |    cosine   |     200     |        10.48       |       27m     |
 | ResNet-preact-20 |   mixed   |    2048    |   1.6      |    cosine   |     200     |         8.98       |       26m     |
 | ResNet-preact-20 |   mixed   |    1024    |   1.6      |    cosine   |     200     |         8.05       |       26m     |
@@ -736,11 +736,11 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 | Model            | precision | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
-| ResNet-preact-20 |   FP32    |    9192    |   1.6      |    cosine   |     200     |        13.39       |       25m     |
+| ResNet-preact-20 |   FP32    |    8192    |   1.6      |    cosine   |     200     |        13.39       |       25m     |
 | ResNet-preact-20 |   FP32    |    4096    |   1.6      |    cosine   |     200     |         9.88       |       19m     |
 | ResNet-preact-20 |   FP32    |    2048    |   1.6      |    cosine   |     200     |         8.87       |       17m     |
 | ResNet-preact-20 |   FP32    |    1024    |   1.6      |    cosine   |     200     |         8.45       |       18m     |
-| ResNet-preact-20 |   mixed   |    9192    |   1.6      |    cosine   |     200     |        13.59       |       25m     |
+| ResNet-preact-20 |   mixed   |    8192    |   1.6      |    cosine   |     200     |        13.59       |       25m     |
 | ResNet-preact-20 |   mixed   |    4096    |   1.6      |    cosine   |     200     |        10.16       |       19m     |
 | ResNet-preact-20 |   mixed   |    2048    |   1.6      |    cosine   |     200     |         9.10       |       17m     |
 | ResNet-preact-20 |   mixed   |    1024    |   1.6      |    cosine   |     200     |         7.84       |       16m     |
