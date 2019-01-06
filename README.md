@@ -533,8 +533,7 @@ $ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_l
 | ResNet-preact-20 |      16    |   0.0125   |    cosine   |     800     |         6.78       |     8h37m     |
 | ResNet-preact-20 |       8    |   0.006125 |    cosine   |     800     |         6.89       |    16h47m     |
 
-![](figures/experiments_batch_size/longer_training_00.png)
-![](figures/experiments_batch_size/longer_training_01.png)
+![](figures/experiments_batch_size/longer_training.png)
 
 #### Effect of initial learning rate
 
