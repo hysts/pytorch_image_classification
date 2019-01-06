@@ -683,6 +683,10 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 #### Ghost BN
 
+```
+$ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --base_lr 1.5 --batch_size 4096 --ghost_batch_size 128 --epochs 200 --outdir results/experiment00/00
+```
+
 | Model            | batch size | ghost batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|-----------:|:----------------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
 | ResNet-preact-20 |    8192    |       N/A        |   1.6      |    cosine   |     200     |        12.35       |       25m*    |
