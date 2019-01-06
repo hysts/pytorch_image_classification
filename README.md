@@ -665,12 +665,12 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 | ResNet-preact-20 |    SGD    |    4096    |   3.2      |    cosine   |     200     |             10.57 (1 run)     |       22m     |
 | ResNet-preact-20 |    SGD    |    4096    |   1.6      |    cosine   |     200     |             10.32 (1 run)     |       22m     |
 | ResNet-preact-20 |    SGD    |    4096    |   0.8      |    cosine   |     200     |             10.71 (1 run)     |       22m     |
-| ResNet-preact-20 |    LARS   |    4096    |   0.005    |    cosine   |     200     |             14.31             |       22m     |
-| ResNet-preact-20 |    LARS   |    4096    |   0.01     |    cosine   |     200     |              9.33             |       22m     |
-| ResNet-preact-20 |    LARS   |    4096    |   0.015    |    cosine   |     200     |              8.47             |       22m     |
-| ResNet-preact-20 |    LARS   |    4096    |   0.02     |    cosine   |     200     |              8.21             |       22m     |
-| ResNet-preact-20 |    LARS   |    4096    |   0.03     |    cosine   |     200     |              8.46             |       22m     |
 | ResNet-preact-20 |    LARS   |    4096    |   0.04     |    cosine   |     200     |              9.58             |       22m     |
+| ResNet-preact-20 |    LARS   |    4096    |   0.03     |    cosine   |     200     |              8.46             |       22m     |
+| ResNet-preact-20 |    LARS   |    4096    |   0.02     |    cosine   |     200     |              8.21             |       22m     |
+| ResNet-preact-20 |    LARS   |    4096    |   0.015    |    cosine   |     200     |              8.47             |       22m     |
+| ResNet-preact-20 |    LARS   |    4096    |   0.01     |    cosine   |     200     |              9.33             |       22m     |
+| ResNet-preact-20 |    LARS   |    4096    |   0.005    |    cosine   |     200     |             14.31             |       22m     |
 
 | Model            | optimizer | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
@@ -679,10 +679,10 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 | ResNet-preact-20 |    SGD    |    2048    |   2.0      |    cosine   |     200     |              8.81 (1 run)     |       21m     |
 | ResNet-preact-20 |    SGD    |    2048    |   1.6      |    cosine   |     200     |              8.73 (1 run)     |       22m     |
 | ResNet-preact-20 |    SGD    |    2048    |   0.8      |    cosine   |     200     |              9.62 (1 run)     |       21m     |
-| ResNet-preact-20 |    LARS   |    2048    |   0.005    |    cosine   |     200     |              9.65             |       22m     |
-| ResNet-preact-20 |    LARS   |    2048    |   0.01     |    cosine   |     200     |              8.07             |       22m     |
-| ResNet-preact-20 |    LARS   |    2048    |   0.02     |    cosine   |     200     |              8.05             |       22m     |
 | ResNet-preact-20 |    LARS   |    2048    |   0.04     |    cosine   |     200     |             11.58             |       21m     |
+| ResNet-preact-20 |    LARS   |    2048    |   0.02     |    cosine   |     200     |              8.05             |       22m     |
+| ResNet-preact-20 |    LARS   |    2048    |   0.01     |    cosine   |     200     |              8.07             |       22m     |
+| ResNet-preact-20 |    LARS   |    2048    |   0.005    |    cosine   |     200     |              9.65             |       22m     |
 
 | Model            | optimizer | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
