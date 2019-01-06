@@ -98,6 +98,7 @@ def parse_args():
     parser.add_argument('--gradient_clip', type=float)
     parser.add_argument('--base_lr', type=float)
     parser.add_argument('--weight_decay', type=float)
+    parser.add_argument('--no_weight_decay_on_bn', action='store_true')
     # configuration for SGD
     parser.add_argument('--momentum', type=float)
     parser.add_argument('--nesterov', type=str2bool)
@@ -528,9 +529,27 @@ def main():
         config['data_config'])
 
     # create optimizer
+    if optim_config['no_weight_decay_on_bn']:
+        params = [
+            {
+                'params': [
+                    param for name, param in model.named_parameters()
+                    if 'bn' not in name
+                ]
+            },
+            {
+                'params': [
+                    param for name, param in model.named_parameters()
+                    if 'bn' in name
+                ],
+                'weight_decay':
+                0
+            },
+        ]
+    else:
+        params = model.parameters()
     optim_config['steps_per_epoch'] = len(train_loader)
-    optimizer, scheduler = utils.create_optimizer(model.parameters(),
-                                                  optim_config)
+    optimizer, scheduler = utils.create_optimizer(params, optim_config)
 
     # for mixed-precision
     amp_handle = apex.amp.init(
