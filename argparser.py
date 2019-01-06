@@ -106,6 +106,7 @@ def _get_optim_config(args):
         'optimizer',
         'base_lr',
         'weight_decay',
+        'no_weight_decay_on_bn',
         'momentum',
         'nesterov',
         'gradient_clip',
