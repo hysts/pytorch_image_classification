@@ -702,6 +702,8 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 #### Results
 
+![](figures/experiments_mixed_precision/mixed_precision.png)
+
 | Model            | precision | batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:------------------:|--------------:|
 | ResNet-preact-20 |   FP32    |    8192    |   1.6      |    cosine   |     200     |                    |               |
