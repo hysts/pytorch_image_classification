@@ -645,6 +645,8 @@ $ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_l
 $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --optimizer lars --base_lr 0.02 --batch_size 4096 --epochs 200 --outdir results/experiment00/00
 ```
 
+![](figures/experiments_lars/lars.png)
+
 | Model            | optimizer | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
 | ResNet-preact-20 |    SGD    |    4096    |   3.2      |    cosine   |     200     |             10.57 (1 run)     |       22m     |
