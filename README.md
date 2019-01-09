@@ -686,6 +686,52 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 | Model            | optimizer | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
+| ResNet-preact-20 |    SGD    |    1024    |   3.2      |    cosine   |     200     |              9.12 (1 run)     |       21m     |
+| ResNet-preact-20 |    SGD    |    1024    |   2.4      |    cosine   |     200     |              8.42 (1 run)     |       22m     |
+| ResNet-preact-20 |    SGD    |    1024    |   2.0      |    cosine   |     200     |              8.38 (1 run)     |       22m     |
+| ResNet-preact-20 |    SGD    |    1024    |   1.6      |    cosine   |     200     |              8.07 (1 run)     |       22m     |
+| ResNet-preact-20 |    SGD    |    1024    |   1.2      |    cosine   |     200     |              8.25 (1 run)     |       21m     |
+| ResNet-preact-20 |    SGD    |    1024    |   0.8      |    cosine   |     200     |              8.08 (1 run)     |       22m     |
+| ResNet-preact-20 |    SGD    |    1024    |   0.4      |    cosine   |     200     |              8.49 (1 run)     |       22m     |
+| ResNet-preact-20 |    LARS   |    1024    |   0.02     |    cosine   |     200     |              9.30             |       22m     |
+| ResNet-preact-20 |    LARS   |    1024    |   0.01     |    cosine   |     200     |              7.68             |       22m     |
+| ResNet-preact-20 |    LARS   |    1024    |   0.005    |    cosine   |     200     |              8.88             |       23m     |
+
+| Model            | optimizer | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
+|:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
+| ResNet-preact-20 |    SGD    |     512    |   3.2      |    cosine   |     200     |              8.51 (1 run)     |       21m     |
+| ResNet-preact-20 |    SGD    |     512    |   1.6      |    cosine   |     200     |              7.73 (1 run)     |       20m     |
+| ResNet-preact-20 |    SGD    |     512    |   0.8      |    cosine   |     200     |              7.73 (1 run)     |       21m     |
+| ResNet-preact-20 |    SGD    |     512    |   0.4      |    cosine   |     200     |              8.22 (1 run)     |       20m     |
+| ResNet-preact-20 |    LARS   |     512    |   0.015    |    cosine   |     200     |              9.84             |       23m     |
+| ResNet-preact-20 |    LARS   |     512    |   0.01     |    cosine   |     200     |              8.05             |       23m     |
+| ResNet-preact-20 |    LARS   |     512    |   0.0075   |    cosine   |     200     |              7.58             |       23m     |
+| ResNet-preact-20 |    LARS   |     512    |   0.005    |    cosine   |     200     |              7.96             |       23m     |
+| ResNet-preact-20 |    LARS   |     512    |   0.0025   |    cosine   |     200     |              8.83             |       23m     |
+
+| Model            | optimizer | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
+|:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
+| ResNet-preact-20 |    SGD    |     256    |   3.2      |    cosine   |     200     |              9.64 (1 run)     |       22m     |
+| ResNet-preact-20 |    SGD    |     256    |   1.6      |    cosine   |     200     |              8.32 (1 run)     |       22m     |
+| ResNet-preact-20 |    SGD    |     256    |   0.8      |    cosine   |     200     |              7.45 (1 run)     |       21m     |
+| ResNet-preact-20 |    SGD    |     256    |   0.4      |    cosine   |     200     |              7.68 (1 run)     |       22m     |
+| ResNet-preact-20 |    SGD    |     256    |   0.2      |    cosine   |     200     |              8.61 (1 run)     |       22m     |
+| ResNet-preact-20 |    LARS   |     256    |   0.01     |    cosine   |     200     |              8.95             |       27m     |
+| ResNet-preact-20 |    LARS   |     256    |   0.005    |    cosine   |     200     |              7.75             |       28m     |
+| ResNet-preact-20 |    LARS   |     256    |   0.0025   |    cosine   |     200     |              8.21             |       28m     |
+
+| Model            | optimizer | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
+|:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
+| ResNet-preact-20 |    SGD    |     128    |   1.6      |    cosine   |     200     |              9.03 (1 run)     |       24m     |
+| ResNet-preact-20 |    SGD    |     128    |   0.8      |    cosine   |     200     |              7.54 (1 run)     |       24m     |
+| ResNet-preact-20 |    SGD    |     128    |   0.4      |    cosine   |     200     |              7.28 (1 run)     |       24m     |
+| ResNet-preact-20 |    SGD    |     128    |   0.2      |    cosine   |     200     |              7.96 (1 run)     |       24m     |
+| ResNet-preact-20 |    LARS   |     128    |   0.005    |    cosine   |     200     |              7.96             |       37m     |
+| ResNet-preact-20 |    LARS   |     128    |   0.0025   |    cosine   |     200     |              7.98             |       37m     |
+| ResNet-preact-20 |    LARS   |     128    |   0.00125  |    cosine   |     200     |              9.21             |       37m     |
+
+| Model            | optimizer | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
+|:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
 | ResNet-preact-20 |    SGD    |    4096    |   1.6      |    cosine   |     200     |             10.32 (1 run)     |       22m     |
 | ResNet-preact-20 |    SGD    |    4096    |   1.6      |    cosine   |     800     |              8.36 (1 run)     |     1h33m     |
 | ResNet-preact-20 |    SGD    |    4096    |   1.6      |    cosine   |    1600     |              8.25 (1 run)     |     3h10m     |
