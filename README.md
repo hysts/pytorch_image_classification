@@ -663,7 +663,7 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 | Model            | optimizer | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
 | ResNet-preact-20 |    SGD    |    4096    |   3.2      |    cosine   |     200     |             10.57 (1 run)     |       22m     |
-| ResNet-preact-20 |    SGD    |    4096    |   1.6      |    cosine   |     200     |             10.32 (1 run)     |       22m     |
+| ResNet-preact-20 |    SGD    |    4096    |   1.6      |    cosine   |     200     |             10.20             |       22m     |
 | ResNet-preact-20 |    SGD    |    4096    |   0.8      |    cosine   |     200     |             10.71 (1 run)     |       22m     |
 | ResNet-preact-20 |    LARS   |    4096    |   0.04     |    cosine   |     200     |              9.58             |       22m     |
 | ResNet-preact-20 |    LARS   |    4096    |   0.03     |    cosine   |     200     |              8.46             |       22m     |
@@ -732,7 +732,7 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 | Model            | optimizer | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
 |:----------------:|:---------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
-| ResNet-preact-20 |    SGD    |    4096    |   1.6      |    cosine   |     200     |             10.32 (1 run)     |       22m     |
+| ResNet-preact-20 |    SGD    |    4096    |   1.6      |    cosine   |     200     |             10.20             |       22m     |
 | ResNet-preact-20 |    SGD    |    4096    |   1.6      |    cosine   |     800     |              8.36 (1 run)     |     1h33m     |
 | ResNet-preact-20 |    SGD    |    4096    |   1.6      |    cosine   |    1600     |              8.25 (1 run)     |     3h10m     |
 | ResNet-preact-20 |    LARS   |    4096    |   0.02     |    cosine   |     200     |              8.21             |       22m     |
@@ -774,6 +774,25 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 | ResNet-preact-20 |    4096    |       128        |   1.6      |    cosine   |    1600     |         8.95       |     3h15m     |
 | ResNet-preact-20 |    2048    |       128        |   1.6      |    cosine   |    1600     |         7.23       |     3h05m     |
 | ResNet-preact-20 |    1024    |       128        |   1.6      |    cosine   |    1600     |         7.08       |     2h59m     |
+
+#### No weight decay on BN
+
+```
+$ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --base_lr 1.6 --batch_size 4096 --no_weight_decay_on_bn --weight_decay 5e-4 --epochs 200 --outdir results/experiment00/00
+```
+
+| Model            | weight decay on BN | weight decay | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
+|:----------------:|:------------------:|-------------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
+| ResNet-preact-20 |        yes         |     5e-4     |    4096    |   1.6      |    cosine   |     200     |              10.81            |       22m     |
+| ResNet-preact-20 |        yes         |     4e-4     |    4096    |   1.6      |    cosine   |     200     |              10.88            |       22m     |
+| ResNet-preact-20 |        yes         |     3e-4     |    4096    |   1.6      |    cosine   |     200     |              10.96            |       22m     |
+| ResNet-preact-20 |        yes         |     2e-4     |    4096    |   1.6      |    cosine   |     200     |               9.30            |       22m     |
+| ResNet-preact-20 |        yes         |     1e-4     |    4096    |   1.6      |    cosine   |     200     |              10.20            |       22m     |
+| ResNet-preact-20 |        no          |     5e-4     |    4096    |   1.6      |    cosine   |     200     |               8.78            |       22m     |
+| ResNet-preact-20 |        no          |     4e-4     |    4096    |   1.6      |    cosine   |     200     |               9.83            |       22m     |
+| ResNet-preact-20 |        no          |     3e-4     |    4096    |   1.6      |    cosine   |     200     |               9.90            |       22m     |
+| ResNet-preact-20 |        no          |     2e-4     |    4096    |   1.6      |    cosine   |     200     |               9.64            |       22m     |
+| ResNet-preact-20 |        no          |     1e-4     |    4096    |   1.6      |    cosine   |     200     |              10.12            |       22m     |
 
 
 
