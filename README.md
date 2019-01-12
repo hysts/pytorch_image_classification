@@ -781,6 +781,8 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --base_lr 1.6 --batch_size 4096 --no_weight_decay_on_bn --weight_decay 5e-4 --epochs 200 --outdir results/experiment00/00
 ```
 
+![](figures/experiments_no_weight_decay_on_bn/no_weight_decay_on_bn.png)
+
 | Model            | weight decay on BN | weight decay | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
 |:----------------:|:------------------:|-------------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
 | ResNet-preact-20 |        yes         |     5e-4     |    4096    |   1.6      |    cosine   |     200     |              10.81            |       22m     |
@@ -792,7 +794,33 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 | ResNet-preact-20 |        no          |     4e-4     |    4096    |   1.6      |    cosine   |     200     |               9.83            |       22m     |
 | ResNet-preact-20 |        no          |     3e-4     |    4096    |   1.6      |    cosine   |     200     |               9.90            |       22m     |
 | ResNet-preact-20 |        no          |     2e-4     |    4096    |   1.6      |    cosine   |     200     |               9.64            |       22m     |
-| ResNet-preact-20 |        no          |     1e-4     |    4096    |   1.6      |    cosine   |     200     |              10.12            |       22m     |
+| ResNet-preact-20 |        no          |     1e-4     |    4096    |   1.6      |    cosine   |     200     |              10.38            |       22m     |
+
+| Model            | weight decay on BN | weight decay | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
+|:----------------:|:------------------:|-------------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
+| ResNet-preact-20 |        yes         |     5e-4     |    2048    |   1.6      |    cosine   |     200     |               8.46            |       20m     |
+| ResNet-preact-20 |        yes         |     4e-4     |    2048    |   1.6      |    cosine   |     200     |               8.35            |       20m     |
+| ResNet-preact-20 |        yes         |     3e-4     |    2048    |   1.6      |    cosine   |     200     |               7.76            |       20m     |
+| ResNet-preact-20 |        yes         |     2e-4     |    2048    |   1.6      |    cosine   |     200     |               8.09            |       20m     |
+| ResNet-preact-20 |        yes         |     1e-4     |    2048    |   1.6      |    cosine   |     200     |               8.83            |       20m     |
+| ResNet-preact-20 |        no          |     5e-4     |    2048    |   1.6      |    cosine   |     200     |               8.49            |       20m     |
+| ResNet-preact-20 |        no          |     4e-4     |    2048    |   1.6      |    cosine   |     200     |               7.98            |       20m     |
+| ResNet-preact-20 |        no          |     3e-4     |    2048    |   1.6      |    cosine   |     200     |               8.26            |       20m     |
+| ResNet-preact-20 |        no          |     2e-4     |    2048    |   1.6      |    cosine   |     200     |               8.47            |       20m     |
+| ResNet-preact-20 |        no          |     1e-4     |    2048    |   1.6      |    cosine   |     200     |               9.27            |       20m     |
+
+| Model            | weight decay on BN | weight decay | batch size | initial lr | lr schedule | # of Epochs | Test Error (median of 3 runs) | Training Time |
+|:----------------:|:------------------:|-------------:|-----------:|:-----------|:-----------:|------------:|:-----------------------------:|--------------:|
+| ResNet-preact-20 |        yes         |     5e-4     |    1024    |   1.6      |    cosine   |     200     |               8.45            |       21m     |
+| ResNet-preact-20 |        yes         |     4e-4     |    1024    |   1.6      |    cosine   |     200     |               7.91            |       21m     |
+| ResNet-preact-20 |        yes         |     3e-4     |    1024    |   1.6      |    cosine   |     200     |               7.81            |       21m     |
+| ResNet-preact-20 |        yes         |     2e-4     |    1024    |   1.6      |    cosine   |     200     |               7.69            |       21m     |
+| ResNet-preact-20 |        yes         |     1e-4     |    1024    |   1.6      |    cosine   |     200     |               8.26            |       21m     |
+| ResNet-preact-20 |        no          |     5e-4     |    1024    |   1.6      |    cosine   |     200     |               8.08            |       21m     |
+| ResNet-preact-20 |        no          |     4e-4     |    1024    |   1.6      |    cosine   |     200     |               7.73            |       21m     |
+| ResNet-preact-20 |        no          |     3e-4     |    1024    |   1.6      |    cosine   |     200     |               7.92            |       21m     |
+| ResNet-preact-20 |        no          |     2e-4     |    1024    |   1.6      |    cosine   |     200     |               7.93            |       21m     |
+| ResNet-preact-20 |        no          |     1e-4     |    1024    |   1.6      |    cosine   |     200     |               8.53            |       21m     |
 
 
 
