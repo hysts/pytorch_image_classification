@@ -171,8 +171,8 @@ def onehot_encoding(label, n_classes):
 
 
 def cross_entropy_loss(input, target, reduction):
-    input = F.log_softmax(input, dim=1)
-    loss = -input * target
+    logp = F.log_softmax(input, dim=1)
+    loss = torch.sum(-logp * target, dim=1)
     if reduction == 'none':
         return loss
     elif reduction == 'mean':
