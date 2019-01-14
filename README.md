@@ -462,15 +462,17 @@ $ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_l
 | Model                                              | Test Error (median of 3 runs) | # of Epochs | Training Time |
 |:---------------------------------------------------|:-----------------------------:|------------:|--------------:|
 | ResNet-preact-20                                   |             7.60              |     200     |       24m     |
-| ResNet-preact-20, label smoothing (epsilon=0.001)  |             7.41              |     200     |       25m     |
-| ResNet-preact-20, label smoothing (epsilon=0.1)    |             7.53              |     200     |       25m     |
+| ResNet-preact-20, label smoothing (epsilon=0.001)  |             7.51              |     200     |       25m     |
+| ResNet-preact-20, label smoothing (epsilon=0.01)    |            7.21              |     200     |       25m     |
+| ResNet-preact-20, label smoothing (epsilon=0.1)    |             7.57              |     200     |       25m     |
 | ResNet-preact-20, mixup (alpha=1)                  |             7.24              |     200     |       26m     |
 | ResNet-preact-20, RICAP (beta=0.3), w/ random crop |             6.88              |     200     |       28m     |
 | ResNet-preact-20, RICAP (beta=0.3)                 |             6.77              |     200     |       28m     |
 | ResNet-preact-20, Dual-Cutout 16 (alpha=0.1)       |             6.24              |     200     |       45m     |
 | ResNet-preact-20                                   |             7.05              |     400     |       49m     |
-| ResNet-preact-20, label smoothing (epsilon=0.001)  |             7.05              |     400     |       49m     |
-| ResNet-preact-20, label smoothing (epsilon=0.1)    |             7.13              |     400     |       49m     |
+| ResNet-preact-20, label smoothing (epsilon=0.001)  |             7.20              |     400     |       49m     |
+| ResNet-preact-20, label smoothing (epsilon=0.01)   |             6.97              |     400     |       49m     |
+| ResNet-preact-20, label smoothing (epsilon=0.1)    |             7.16              |     400     |       49m     |
 | ResNet-preact-20, mixup (alpha=1)                  |             6.66              |     400     |       51m     |
 | ResNet-preact-20, RICAP (beta=0.3), w/ random crop |             6.30              |     400     |       56m     |
 | ResNet-preact-20, RICAP (beta=0.3)                 |             6.19              |     400     |       56m     |
