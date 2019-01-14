@@ -201,6 +201,18 @@ $ python -u train.py --arch shake_shake --depth 26 --base_channels 96 --shake_fo
 
 ### Results
 
+| Model                      | Test Error (1 run) | # of Epochs | Training Time |
+|:---------------------------|:------------------:|------------:|--------------:|
+| WRN-20-4                   |        4.91        |      200    |      1h26m    |
+| WRN-20-4                   |        4.01        |      400    |      2h53m    |
+| WRN-20-4                   |        3.99        |     1800    |     12h53m    |
+| WRN-20-4, Cutout 16        |        3.71        |      200    |      1h26m    |
+| WRN-20-4, Cutout 16        |        3.46        |      400    |      2h53m    |
+| WRN-20-4, Cutout 16        |        3.76        |     1800    |     12h53m    |
+| WRN-20-4, RICAP (beta=0.3) |        3.45        |      200    |      1h26m    |
+| WRN-20-4, RICAP (beta=0.3) |        3.11        |      400    |      2h53m    |
+| WRN-20-4, RICAP (beta=0.3) |        3.15        |     1800    |     12h53m    |
+
 | Model                                         | Test Error (1 run) | # of Epochs | Training Time |
 |:----------------------------------------------|:------------------:|------------:|--------------:|
 | WRN-28-10, Cutout 16                          |        3.19        |      200    |     16h23m*   |
