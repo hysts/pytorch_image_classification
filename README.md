@@ -231,6 +231,8 @@ $ python -u train.py --arch shake_shake --depth 26 --base_channels 96 --shake_fo
 | shake-shake-26 2x96d, mixup (alpha=1)         |        2.36        |     1800    |     60h20m    |
 | shake-shake-26 2x96d, RICAP (beta=0.3)        |        2.10        |     1800    |     60h20m    |
 | shake-shake-26 2x96d, Dual-Cutout (alpha=0.1) |        2.41        |     1800    |    113h09m    |
+| shake-shake-26 2x128d, Cutout 16              |        2.58        |     1800    |     85h04m    |
+| shake-shake-26 2x128d, Cutout 16              |        1.97        |     1800    |     85h06m    |
 
 #### Note
 
