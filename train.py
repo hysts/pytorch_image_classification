@@ -183,7 +183,7 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
     run_config = config['run_config']
     optim_config = config['optim_config']
     data_config = config['data_config']
-    device = run_config['device']
+    device = torch.device(run_config['device'])
 
     logger.info('Train {}'.format(epoch))
 
@@ -234,11 +234,12 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
                 lr = optim_config['base_lr']
             writer.add_scalar('Train/LearningRate', lr, global_step)
 
-        if data_config['use_dual_cutout']:
-            data1 = data1.to(device)
-            data2 = data2.to(device)
-        else:
-            data = data.to(device)
+        if torch.cuda.device_count() == 1:
+            if data_config['use_dual_cutout']:
+                data1 = data1.to(device)
+                data2 = data2.to(device)
+            else:
+                data = data.to(device)
 
         if data_config['use_mixup']:
             t1, t2, lam = targets
@@ -395,7 +396,7 @@ def train(epoch, model, optimizer, scheduler, criterion, train_loader, config,
 def test(epoch, model, criterion, test_loader, run_config, writer):
     logger.info('Test {}'.format(epoch))
 
-    device = run_config['device']
+    device = torch.device(run_config['device'])
 
     model.eval()
 
@@ -519,8 +520,8 @@ def main():
             if isinstance(layer, nn.BatchNorm2d):
                 layer.float()
 
-    device = run_config['device']
-    if device is not 'cpu' and torch.cuda.device_count() > 1:
+    device = torch.device(run_config['device'])
+    if device.type is 'cuda' and torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
     model.to(device)
     logger.info('Done')
