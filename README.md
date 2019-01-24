@@ -274,12 +274,12 @@ python -u train.py --arch shake_shake --depth 26 --base_channels 64 --outdir res
 python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap/00 --epochs 200 --scheduler cosine --base_lr 0.3 --batch_size 256 --seed 7 --use_ricap --use_random_crop False
 ```
 
-##### Using 2 GPU
+##### Using 2 GPUs
 ```
 python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap/01 --epochs 200 --scheduler cosine --base_lr 0.4 --batch_size 512 --seed 7 --use_ricap --use_random_crop False
 ```
 
-##### Using 4 GPU
+##### Using 4 GPUs
 ```
 python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap/02 --epochs 200 --scheduler cosine --base_lr 0.6 --batch_size 1024 --seed 7 --use_ricap --use_random_crop False
 ```
