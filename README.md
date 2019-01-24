@@ -256,11 +256,12 @@ python -u train.py --arch shake_shake --depth 26 --base_channels 64 --outdir res
 
 ### Results using multi-GPU
 
-| Model                       | #GPUs | Test Error (1 run) | # of Epochs | Training Time* |
-|:----------------------------|-------|:------------------:|------------:|---------------:|
-| WRN-28-10, RICAP (beta=0.3) |   1   |        3.14        |      200    |      3h33m     |
-| WRN-28-10, RICAP (beta=0.3) |   4   |        3.03        |      200    |      1h24m     |
-| WRN-28-10, RICAP (beta=0.3) |   8   |        2.85        |      200    |        43m     |
+| Model                       | base lr | batch size | #GPUs | Test Error (1 run) | # of Epochs | Training Time* |
+|:----------------------------|--------:|-----------:|:-----:|:------------------:|------------:|---------------:|
+| WRN-28-10, RICAP (beta=0.3) |   0.3   |     256    |   1   |        2.71        |      200    |      3h33m     |
+| WRN-28-10, RICAP (beta=0.3) |   0.4   |     512    |   2   |        2.68        |      200    |      2h20m     |
+| WRN-28-10, RICAP (beta=0.3) |   0.6   |    1024    |   4   |        3.01        |      200    |      1h24m     |
+| WRN-28-10, RICAP (beta=0.3) |   0.8   |    2048    |   8   |        2.85        |      200    |        43m     |
 
 #### Note
 
@@ -270,17 +271,22 @@ python -u train.py --arch shake_shake --depth 26 --base_channels 64 --outdir res
 
 ##### Using 1 GPU
 ```
-python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap --epochs 200 --scheduler cosine --base_lr 0.4 --batch_size 256 --seed 7 --use_ricap --use_random_crop False
+python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap/00 --epochs 200 --scheduler cosine --base_lr 0.3 --batch_size 256 --seed 7 --use_ricap --use_random_crop False
+```
+
+##### Using 2 GPU
+```
+python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap/01 --epochs 200 --scheduler cosine --base_lr 0.4 --batch_size 512 --seed 7 --use_ricap --use_random_crop False
 ```
 
 ##### Using 4 GPU
 ```
-python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap --epochs 200 --scheduler cosine --base_lr 0.4 --batch_size 1024 --seed 7 --use_ricap --use_random_crop False
+python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap/02 --epochs 200 --scheduler cosine --base_lr 0.6 --batch_size 1024 --seed 7 --use_ricap --use_random_crop False
 ```
 
 ##### Using 8 GPUs
 ```
-python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap --epochs 200 --scheduler cosine --base_lr 0.8 --batch_size 2048 --seed 7 --use_ricap --use_random_crop False
+python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap/03 --epochs 200 --scheduler cosine --base_lr 0.8 --batch_size 2048 --seed 7 --use_ricap --use_random_crop False
 ```
 
 
