@@ -521,7 +521,7 @@ def main():
                 layer.float()
 
     device = torch.device(run_config['device'])
-    if device.type is 'cuda' and torch.cuda.device_count() > 1:
+    if device.type == 'cuda' and torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
     model.to(device)
     logger.info('Done')
