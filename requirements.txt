@@ -1,0 +1,7 @@
+numpy
+torch
+torchvision
+tensorboardX
+tqdm
+yacs
+git+https://github.com/NVIDIA/apex.git#egg=apex

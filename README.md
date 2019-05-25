@@ -16,45 +16,22 @@ Following papers are implemented using PyTorch.
 * Mixup (1710.09412)
 * Dual-Cutout (1802.07426)
 * RICAP (1811.09030)
+* CutMix (1905.04899)
 
 ## Requirements
 
-* Python >= 3.6
-* PyTorch >= 1.0.0
+* Python >= 3.7
+* PyTorch >= 1.1.0
 * torchvision
-* [tensorboardX](https://github.com/lanpa/tensorboardX) (optional)
-* [NVIDIA Apex](https://github.com/NVIDIA/apex) (optional)
+* [tensorboardX](https://github.com/lanpa/tensorboardX)
+* [NVIDIA Apex](https://github.com/NVIDIA/apex)
 
 
 
 ## Usage
 
-```
-$ ./train.py --arch resnet_preact --depth 56 --outdir results
-```
-
-### Use Cutout
-
-```
-$ ./train.py --arch resnet_preact --depth 56 --outdir results --use_cutout
-```
-
-### Use RandomErasing
-
-```
-$ ./train.py --arch resnet_preact --depth 56 --outdir results --use_random_erasing
-```
-
-### Use Mixup
-
-```
-$ ./train.py --arch resnet_preact --depth 56 --outdir results --use_mixup
-```
-
-### Use cosine annealing
-
-```
-$ ./train.py --arch wrn --outdir results --scheduler cosine
+```bash
+python train.py --config configs/resnet_preact.yaml
 ```
 
 
@@ -105,95 +82,131 @@ $ ./train.py --arch wrn --outdir results --scheduler cosine
 
 #### VGG-like
 
-```
-$ python -u train.py --arch vgg --seed 7 --outdir results/vgg_15_BN_64/00
+```bash
+python train.py --config configs/vgg.yaml
 ```
 
 ![](figures/cifar10/VGG-15_BN_64.png)
 
+
 #### ResNet
 
-```
-$ python -u train.py --arch resnet --depth 110 --block_type basic --seed 7 --outdir results/resnet_basic_110/00
+```bash
+python train.py --config configs/resnet.yaml
 ```
 
 ![](figures/cifar10/ResNet-110_basic.png)
 
+
 #### ResNet-preact
 
-```
-$ python -u train.py --arch resnet_preact --depth 110 --block_type basic --seed 7 --outdir results/resnet_preact_basic_110/00
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    train.output_dir experiments/resnet_preact_basic_110/exp00
 ```
 
 ![](figures/cifar10/ResNet-preact-110_basic.png)
 
 
-```
-$ python -u train.py --arch resnet_preact --depth 164 --block_type bottleneck --seed 7 --outdir results/resnet_preact_bottleneck_164/00
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    model.resnet_preact.depth 164 \
+    model.resnet_preact.block_type bottleneck \
+    train.output_dir experiments/resnet_preact_bottleneck_164/exp00
 ```
 
 ![](figures/cifar10/ResNet-preact-164_bottleneck.png)
 
+
 #### WRN
 
-```
-$ python -u train.py --arch wrn --depth 28 --widening_factor 10 --seed 7 --outdir results/wrn_28_10/00
+```bash
+python train.py --config configs/wrn.yaml
 ```
 
 ![](figures/cifar10/WRN-28-10.png)
 
+
 #### DenseNet
 
-```
-$ python -u train.py --arch densenet --depth 100 --block_type bottleneck --growth_rate 12 --compression_rate 0.5 --batch_size 32 --base_lr 0.05 --seed 7 --outdir results/densenet_BC_100_12/00
+```bash
+python train.py --config configs/densenet.yaml
 ```
 
 ![](figures/cifar10/DenseNet-BC-100_k_12.png)
 
+
 #### PyramidNet
 
-```
-$ python -u train.py --arch pyramidnet --depth 110 --block_type basic --pyramid_alpha 84 --seed 7 --outdir results/pyramidnet_basic_110_84/00
+```bash
+python train.py --config configs/pyramidnet.yaml \
+    model.pyramidnet.depth 110 \
+    model.pyramidnet.block_type basic \
+    model.pyramidnet.alpha 84 \
+    train.output_dir experiments/pyramidnet_basic_110_84/exp00
 ```
 
 ![](figures/cifar10/PyramidNet-110_alpha_84.png)
 
-```
-$ python -u train.py --arch pyramidnet --depth 110 --block_type basic --pyramid_alpha 270 --seed 7 --outdir results/pyramidnet_basic_110_270/00
+```bash
+python train.py --config configs/pyramidnet.yaml \
+    model.pyramidnet.depth 110 \
+    model.pyramidnet.block_type basic \
+    model.pyramidnet.alpha 270 \
+    train.output_dir experiments/pyramidnet_basic_110_270/exp00
 ```
 
 ![](figures/cifar10/PyramidNet-110_alpha_270.png)
 
+
 #### ResNeXt
 
-```
-$ python -u train.py --arch resnext --depth 29 --cardinality 4 --base_channels 64 --batch_size 32 --base_lr 0.025 --seed 7 --outdir results/resnext_29_4x64d/00
+```bash
+python train.py --config configs/resnext.yaml \
+    model.resnext.cardinality 4 \
+    train.batch_size 32 \
+    train.base_lr 0.025 \
+    train.output_dir experiments/resnext_29_4x64d/exp00
 ```
 
 ![](figures/cifar10/ResNeXt-29_4x64d.png)
 
-```
-$ python -u train.py --arch resnext --depth 29 --cardinality 8 --base_channels 64 --batch_size 64 --base_lr 0.05 --seed 7 --outdir results/resnext_29_8x64d/00
+```bash
+python train.py --config configs/resnext.yaml \
+    train.batch_size 64 \
+    train.base_lr 0.05 \
+    train.output_dir experiments/resnext_29_8x64d/exp00
 ```
 
 ![](figures/cifar10/ResNeXt-29_8x64d.png)
 
+
 #### shake-shake
 
-```
-$ python -u train.py --arch shake_shake --depth 26 --base_channels 32 --shake_forward True --shake_backward True --shake_image True --seed 7 --outdir results/shake_shake_26_2x32d_SSI/00
+```bash
+python train.py --config configs/shake_shake.yaml \
+    model.shake_shake.base_channels 32 \
+    train.output_dir experiments/shake_shake_26_2x32d_SSI/exp00
 ```
 
 ![](figures/cifar10/shake-shake-26_2x32d.png)
 
-```
-$ python -u train.py --arch shake_shake --depth 26 --base_channels 64 --shake_forward True --shake_backward True --shake_image True --batch_size 64 --base_lr 0.1 --seed 7 --outdir results/shake_shake_26_2x64d_SSI/00
+```bash
+python train.py --config configs/shake_shake.yaml \
+    model.shake_shake.base_channels 64 \
+    train.batch_size 64 \
+    train.base_lr 0.1 \
+    train.output_dir experiments/shake_shake_26_2x64d_SSI/exp00
 ```
 
 ![](figures/cifar10/shake-shake-26_2x64d.png)
 
-```
-$ python -u train.py --arch shake_shake --depth 26 --base_channels 96 --shake_forward True --shake_backward True --shake_image True --seed 7 --outdir results/shake_shake_26_2x96d_SSI/00
+```bash
+python train.py --config configs/shake_shake.yaml \
+    model.shake_shake.base_channels 96 \
+    train.batch_size 64 \
+    train.base_lr 0.1 \
+    train.output_dir experiments/shake_shake_26_2x96d_SSI/exp00
 ```
 
 ![](figures/cifar10/shake-shake-26_2x96d.png)
@@ -215,7 +228,7 @@ $ python -u train.py --arch shake_shake --depth 26 --base_channels 96 --shake_fo
 
 | Model                                         | Test Error (1 run) | # of Epochs | Training Time |
 |:----------------------------------------------|:------------------:|------------:|--------------:|
-| WRN-28-10, Cutout 16                          |        3.19        |      200    |     16h23m*   |
+| WRN-28-10, Cutout 16                          |        3.19        |      200    |      6h35m    |
 | WRN-28-10, mixup (alpha=1)                    |        3.32        |      200    |      6h35m    |
 | WRN-28-10, RICAP (beta=0.3)                   |        2.83        |      200    |      6h35m    |
 | WRN-28-10, Dual-Cutout (alpha=0.1)            |        2.87        |      200    |     12h42m    |
@@ -240,14 +253,24 @@ $ python -u train.py --arch shake_shake --depth 26 --base_channels 96 --shake_fo
 * All models are trained using cosine annealing with initial learning rate 0.2.
 * GeForce GTX 1080 Ti was used in these experiments, except ones with *, which are done using GeForce GTX 980.
 
-```
-python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_cutout16 --epochs 200 --scheduler cosine --base_lr 0.1 --batch_size 64 --seed 17 --use_cutout --cutout_size 16
+```bash
+python train.py --config configs/wrn.yaml \
+    train.batch_size 64 \
+    train.output_dir experiments/wrn_28_10_cutout16 \
+    scheduler.type cosine \
+    augmentation.use_cutout True
 ```
 
 ![](figures/cifar10/WRN-28-10_Cutout_16.png)
 
-```
-python -u train.py --arch shake_shake --depth 26 --base_channels 64 --outdir results/shake_shake_26_2x64d_SSI_cutout16 --epochs 300 --scheduler cosine --base_lr 0.1 --batch_size 64 --seed 17 --use_cutout --cutout_size 16
+```bash
+python train.py --config configs/shake_shake.yaml \
+    model.shake_shake.base_channels 64 \
+    train.batch_size 64 \
+    train.base_lr 0.1 \
+    scheduler.epochs 300 \
+    train.output_dir experiments/shake_shake_26_2x64d_SSI_cutout16/exp00 \
+    augmentation.use_cutout True
 ```
 
 ![](figures/cifar10/shake-shake-26_2x64d_Cutout_16.png)
@@ -270,23 +293,61 @@ python -u train.py --arch shake_shake --depth 26 --base_channels 64 --outdir res
     * The code was slightly modified so that test was run only at the last epoch.
 
 ##### Using 1 GPU
-```
-python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap/00 --epochs 200 --scheduler cosine --base_lr 0.3 --batch_size 256 --seed 7 --use_ricap --use_random_crop False
+
+```bash
+python train.py --config configs/wrn.yaml \
+    train.base_lr 0.3 \
+    train.batch_size 256 \
+    scheduler.epochs 200 \
+    scheduler.type cosine \
+    train.output_dir experiments/wrn_28_10_ricap_1gpu/exp00 \
+    augmentation.use_ricap True \
+    augmentation.use_random_crop False
 ```
 
 ##### Using 2 GPUs
-```
-python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap/01 --epochs 200 --scheduler cosine --base_lr 0.4 --batch_size 512 --seed 7 --use_ricap --use_random_crop False
+
+```bash
+python -m torch.distributed.launch --nproc_per_node 2 \
+    train.py --config configs/wrn.yaml \
+    train.distributed True \
+    train.base_lr 0.4 \
+    train.batch_size 256 \
+    scheduler.epochs 200 \
+    scheduler.type cosine \
+    train.output_dir experiments/wrn_28_10_ricap_2gpus/exp00 \
+    augmentation.use_ricap True \
+    augmentation.use_random_crop False
 ```
 
 ##### Using 4 GPUs
-```
-python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap/02 --epochs 200 --scheduler cosine --base_lr 0.6 --batch_size 1024 --seed 7 --use_ricap --use_random_crop False
+
+```bash
+python -m torch.distributed.launch --nproc_per_node 4 \
+    train.py --config configs/wrn.yaml \
+    train.distributed True \
+    train.base_lr 0.6 \
+    train.batch_size 256 \
+    scheduler.epochs 200 \
+    scheduler.type cosine \
+    train.output_dir experiments/wrn_28_10_ricap_4gpus/exp00 \
+    augmentation.use_ricap True \
+    augmentation.use_random_crop False
 ```
 
 ##### Using 8 GPUs
-```
-python -u train.py --arch wrn --depth 28 --outdir results/wrn_28_10_ricap/03 --epochs 200 --scheduler cosine --base_lr 0.8 --batch_size 2048 --seed 7 --use_ricap --use_random_crop False
+
+```bash
+python -m torch.distributed.launch --nproc_per_node 8 \
+    train.py --config configs/wrn.yaml \
+    train.distributed True \
+    train.base_lr 0.8 \
+    train.batch_size 256 \
+    scheduler.epochs 200 \
+    scheduler.type cosine \
+    train.output_dir experiments/wrn_28_10_ricap_8gpus/exp00 \
+    augmentation.use_ricap True \
+    augmentation.use_random_crop False
 ```
 
 
@@ -423,72 +484,146 @@ ResNet-preact-56 is trained on CIFAR-10 with initial learning rate 0.2 in this e
 
 
 ##### preactivate shortcut after downsampling
-```
-$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, true, true]' --remove_first_relu false --add_last_bn false --seed 7 --outdir results/experiments/00_preact_after_downsampling/00
+
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    train.base_lr 0.2 \
+    model.resnet_preact.depth 56 \
+    model.resnet_preact.preact_stage '[True, True, True]' \
+    model.resnet_preact.remove_first_relu False \
+    model.resnet_preact.add_last_bn False \
+    train.output_dir experiments/resnet_preact_after_downsampling/exp00
 ```
 
 ![](figures/experiments_resnet/w_1st_ReLU_wo_last_BN_preactivate_after_downsampling.png)
 
 
 ##### w/ 1st ReLU, w/o last BN
-```
-$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu false --add_last_bn false --seed 7 --outdir results/experiments/01_w_relu_wo_bn/00
+
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    train.base_lr 0.2 \
+    model.resnet_preact.depth 56 \
+    model.resnet_preact.preact_stage '[True, False, False]' \
+    model.resnet_preact.remove_first_relu False \
+    model.resnet_preact.add_last_bn False \
+    train.output_dir experiments/resnet_preact_w_relu_wo_bn/exp00
 ```
 
 ![](figures/experiments_resnet/w_1st_ReLU_wo_last_BN.png)
 
 ##### w/o 1st ReLU, w/o last BN
-```
-$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn false --seed 7 --outdir results/experiments/02_wo_relu_wo_bn/00
+
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    train.base_lr 0.2 \
+    model.resnet_preact.depth 56 \
+    model.resnet_preact.preact_stage '[True, False, False]' \
+    model.resnet_preact.remove_first_relu True \
+    model.resnet_preact.add_last_bn False \
+    train.output_dir experiments/resnet_preact_wo_relu_wo_bn/exp00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_wo_last_BN.png)
 
 ##### w/ 1st ReLU, w/ last BN
-```
-$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu false --add_last_bn true --seed 7 --outdir results/experiments/03_w_relu_w_bn/00
+
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    train.base_lr 0.2 \
+    model.resnet_preact.depth 56 \
+    model.resnet_preact.preact_stage '[True, False, False]' \
+    model.resnet_preact.remove_first_relu False \
+    model.resnet_preact.add_last_bn True \
+    train.output_dir experiments/resnet_preact_w_relu_w_bn/exp00
 ```
 
 ![](figures/experiments_resnet/w_1st_ReLU_w_last_BN.png)
 
 ##### w/o 1st ReLU, w/ last BN
-```
-$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --seed 7 --outdir results/experiments/04_wo_relu_w_bn/00
+
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    train.base_lr 0.2 \
+    model.resnet_preact.depth 56 \
+    model.resnet_preact.preact_stage '[True, False, False]' \
+    model.resnet_preact.remove_first_relu True \
+    model.resnet_preact.add_last_bn True \
+    train.output_dir experiments/resnet_preact_wo_relu_w_bn/exp00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN.png)
 
 ##### w/o 1st ReLU, w/ last BN, preactivate shortcut after downsampling
-```
-$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, true, true]' --remove_first_relu true --add_last_bn true --seed 7 --outdir results/experiments/05_preact_after_downsampling/00
+
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    train.base_lr 0.2 \
+    model.resnet_preact.depth 56 \
+    model.resnet_preact.preact_stage '[True, True, True]' \
+    model.resnet_preact.remove_first_relu True \
+    model.resnet_preact.add_last_bn True \
+    train.output_dir experiments/resnet_preact_after_downsampling_wo_relu_w_bn/exp00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_preactivate_after_downsampling.png)
 
 ##### w/o 1st ReLU, w/ last BN, cosine annealing
-```
-$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --scheduler cosine --seed 7 --outdir results/experiments/06_cosine_annealing/00
+
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    train.base_lr 0.2 \
+    model.resnet_preact.depth 56 \
+    model.resnet_preact.preact_stage '[True, False, False]' \
+    model.resnet_preact.remove_first_relu True \
+    model.resnet_preact.add_last_bn True \
+    scheduler.type cosine \
+    train.output_dir experiments/resnet_preact_wo_relu_w_bn_cosine/exp00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_Cosine_annealing.png)
 
 ##### w/o 1st ReLU, w/ last BN, Cutout
-```
-$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --use_cutout --seed 7 --outdir results/experiments/07_cutout/00
+
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    train.base_lr 0.2 \
+    model.resnet_preact.depth 56 \
+    model.resnet_preact.preact_stage '[True, False, False]' \
+    model.resnet_preact.remove_first_relu True \
+    model.resnet_preact.add_last_bn True \
+    augmentation.use_cutout True \
+    train.output_dir experiments/resnet_preact_wo_relu_w_bn_cutout/exp00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_Cutout.png)
 
 ##### w/o 1st ReLU, w/ last BN, RandomErasing
-```
-$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --use_random_erasing --seed 7 --outdir results/experiments/08_random_erasing/00
+
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    train.base_lr 0.2 \
+    model.resnet_preact.depth 56 \
+    model.resnet_preact.preact_stage '[True, False, False]' \
+    model.resnet_preact.remove_first_relu True \
+    model.resnet_preact.add_last_bn True \
+    augmentation.use_random_erasing True \
+    train.output_dir experiments/resnet_preact_wo_relu_w_bn_random_erasing/exp00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_Random_Erasing.png)
 
 ##### w/o 1st ReLU, w/ last BN, Mixup
-```
-$ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_lr 0.2 --preact_stage '[true, false, false]' --remove_first_relu true --add_last_bn true --use_mixup --seed 7 --outdir results/experiments/09_mixup/00
+
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    train.base_lr 0.2 \
+    model.resnet_preact.depth 56 \
+    model.resnet_preact.preact_stage '[True, False, False]' \
+    model.resnet_preact.remove_first_relu True \
+    model.resnet_preact.add_last_bn True \
+    augmentation.use_mixup True \
+    train.output_dir experiments/resnet_preact_wo_relu_w_bn_mixup/exp00
 ```
 
 ![](figures/experiments_resnet/wo_1st_ReLU_w_last_BN_Mixup.png)
@@ -706,8 +841,14 @@ $ python -u train.py --arch resnet_preact --depth 56 --block_type basic --base_l
 * In the original papers (1708.03888, 1801.03137), they used polynomial decay learning rate scheduling, but cosine annealing is used in these experiments.
 * In this implementation, LARS coefficient is not used, so learning rate should be adjusted accordingly.
 
-```
-$ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --optimizer lars --base_lr 0.02 --batch_size 4096 --epochs 200 --outdir results/experiment00/00
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    model.resnet_preact.depth 20 \
+    train.optimizer lars \
+    train.base_lr 0.02 \
+    train.batch_size 4096 \
+    scheduler.type cosine \
+    train.output_dir experiments/resnet_preact_lars/exp00
 ```
 
 ![](figures/experiments_lars/lars.png)
@@ -794,8 +935,14 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 #### Ghost BN
 
-```
-$ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --base_lr 1.5 --batch_size 4096 --ghost_batch_size 128 --epochs 200 --outdir results/experiment00/00
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    model.resnet_preact.depth 20 \
+    train.base_lr 1.5 \
+    train.batch_size 4096 \
+    train.subdivision 32 \
+    scheduler.type cosine \
+    train.output_dir experiments/resnet_preact_ghost_batch/exp00
 ```
 
 | Model            | batch size | ghost batch size | initial lr | lr schedule | # of Epochs | Test Error (1 run) | Training Time |
@@ -829,8 +976,15 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 #### No weight decay on BN
 
-```
-$ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --base_lr 1.6 --batch_size 4096 --no_weight_decay_on_bn --weight_decay 5e-4 --epochs 200 --outdir results/experiment00/00
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    model.resnet_preact.depth 20 \
+    train.base_lr 1.6 \
+    train.batch_size 4096 \
+    train.no_weight_decay_on_bn True \
+    train.weight_decay 5e-4 \
+    scheduler.type cosine \
+    train.output_dir experiments/resnet_preact_no_weight_decay_on_bn/exp00
 ```
 
 ![](figures/experiments_no_weight_decay_on_bn/no_weight_decay_on_bn.png)
@@ -878,20 +1032,32 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 
 ### Experiments on half-precision, and mixed-precision
 
+* Following experiments need [NVIDIA Apex](https://github.com/NVIDIA/apex).
 * Following experiments are done on CIFAR-10 dataset using GeForce 1080 Ti, which doesn't have Tensor Cores.
 * Results reported in the table are the test errors at last epochs.
 
 #### FP16 training
-```
-$ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --base_lr 1.6 --batch_size 4096 --epochs 200 --fp16 --outdir results/experiment00/00
+
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    model.resnet_preact.depth 20 \
+    train.base_lr 1.6 \
+    train.batch_size 4096 \
+    train.precision O3 \
+    scheduler.type cosine \
+    train.output_dir experiments/resnet_preact_fp16/exp00
 ```
 
 #### Mixed-precision training
 
-* This needs [NVIDIA Apex](https://github.com/NVIDIA/apex) to be installed.
-
-```
-$ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_type basic --seed 7 --scheduler cosine --base_lr 1.6 --batch_size 4096 --epochs 200 --use_amp --outdir results/experiment01/00
+```bash
+python train.py --config configs/resnet_preact.yaml \
+    model.resnet_preact.depth 20 \
+    train.base_lr 1.6 \
+    train.batch_size 4096 \
+    train.precision O1 \
+    scheduler.type cosine \
+    train.output_dir experiments/resnet_preact_mixed_precision/exp00
 ```
 
 #### Results
@@ -965,6 +1131,7 @@ $ python -u train.py --dataset CIFAR10 --arch resnet_preact --depth 20 --block_t
 * Zhang, Hongyi, Moustapha Cisse, Yann N. Dauphin, and David Lopez-Paz. "mixup: Beyond Empirical Risk Minimization." In International Conference on Learning Representations (ICLR), 2017. [link](https://openreview.net/forum?id=r1Ddp1-Rb), [arXiv:1710.09412](https://arxiv.org/abs/1710.09412)
 * Kawaguchi, Kenji, Yoshua Bengio, Vikas Verma, and Leslie Pack Kaelbling. "Towards Understanding Generalization via Analytical Learning Theory." arXiv preprint arXiv:1802.07426 (2018). [arXiv:1802.07426](https://arxiv.org/abs/1802.07426), [PyTorch implementation](https://github.com/Learning-and-Intelligent-Systems/Analytical-Learning-Theory)
 * Takahashi, Ryo, Takashi Matsubara, and Kuniaki Uehara. "Data Augmentation using Random Image Cropping and Patching for Deep CNNs." Proceedings of The 10th Asian Conference on Machine Learning (ACML), 2018. [link](http://proceedings.mlr.press/v95/takahashi18a.html), [arXiv:1811.09030](https://arxiv.org/abs/1811.09030)
+* Yun, Sangdoo, Dongyoon Han, Seong Joon Oh, Sanghyuk Chun, Junsuk Choe, and Youngjoon Yoo. "CutMix: Regularization Strategy to Train Strong Classifiers with Localizable Features." arXiv preprint arXiv:1905.04899 (2019). [arXiv:1905.04899](https://arxiv.org/abs/1905.04899)
 
 ### Large batch
 

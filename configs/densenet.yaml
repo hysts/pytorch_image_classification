@@ -1,0 +1,64 @@
+device: cuda
+dataset:
+  name: CIFAR10
+model:
+  name: densenet
+  init_mode: kaiming_fan_out
+  densenet:
+    depth: 100
+    block_type: bottleneck
+    growth_rate: 12
+    drop_rate: 0.0
+    compression_rate: 0.5
+train:
+  seed: 0
+  precision: O0
+  batch_size: 64
+  subdivision: 1
+  optimizer: sgd
+  base_lr: 0.1
+  momentum: 0.9
+  nesterov: True
+  weight_decay: 1e-4
+  output_dir: experiments/densenet/exp00
+  log_period: 100
+  checkpoint_period: 100
+  val_ratio: 0.1
+  use_tensorboard: True
+  distributed: False
+  dataloader:
+    num_workers: 2
+    drop_last: True
+    pin_memory: False
+validation:
+  batch_size: 256
+  dataloader:
+    num_workers: 2
+    drop_last: False
+    pin_memory: False
+scheduler:
+  epochs: 300
+  type: multistep
+  milestones: [150, 225]
+  lr_decay: 0.1
+augmentation:
+  use_random_crop: True
+  use_random_horizontal_flip: True
+  use_cutout: False
+  use_random_erasing: False
+  use_dual_cutout: False
+  use_mixup: False
+  use_ricap: False
+  use_label_smoothing: False
+  random_crop:
+    padding: 4
+    fill: 0
+    padding_mode: constant
+  random_horizontal_flip:
+    prob: 0.5
+tensorboard:
+  train_images: False
+  val_images: False
+  model_params: False
+
+
