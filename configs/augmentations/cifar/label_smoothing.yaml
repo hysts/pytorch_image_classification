@@ -1,0 +1,4 @@
+augmentation:
+  use_label_smoothing: True
+  label_smoothing:
+    epsilon: 0.1

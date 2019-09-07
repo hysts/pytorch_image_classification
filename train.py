@@ -9,7 +9,6 @@ import numpy as np
 import torch
 import torch.distributed as dist
 import torchvision
-from tensorboardX import SummaryWriter
 
 from pytorch_image_classification import (
     apply_data_parallel_wrapper,
@@ -24,8 +23,10 @@ from pytorch_image_classification import (
 from pytorch_image_classification.utils import (
     AverageMeter,
     CheckPointer,
+    DummyWriter,
     compute_accuracy,
     create_logger,
+    create_tensorboard_writer,
     find_config_diff,
     get_env_info,
     get_rank,
@@ -33,6 +34,8 @@ from pytorch_image_classification.utils import (
     set_seed,
     setup_cudnn,
 )
+
+global_step = 0
 
 
 def load_config():
@@ -95,7 +98,9 @@ def send_targets_to_device(config, targets, device):
 
 
 def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
-          logger, writer):
+          logger, tensorboard_writer, tensorboard_writer2):
+    global global_step
+
     logger.info(f'Train {epoch}')
 
     device = torch.device(config.device)
@@ -103,17 +108,19 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
     model.train()
 
     loss_meter = AverageMeter()
-    accuracy_meter = AverageMeter()
+    acc1_meter = AverageMeter()
+    acc5_meter = AverageMeter()
     start = time.time()
     for step, (data, targets) in enumerate(train_loader):
         step += 1
+        global_step += 1
 
         if get_rank() == 0 and step == 1:
             if config.tensorboard.train_images:
                 image = torchvision.utils.make_grid(data,
                                                     normalize=True,
                                                     scale_each=True)
-                writer.add_image('Train/Image', image, epoch)
+                tensorboard_writer.add_image('Train/Image', image, epoch)
 
         data = data.to(device)
         targets = send_targets_to_device(config, targets, device)
@@ -149,26 +156,37 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
                 param.grad.data.div_(config.train.subdivision)
         optimizer.step()
 
-        accuracy = compute_accuracy(config, outputs, targets)
+        acc1, acc5 = compute_accuracy(config,
+                                      outputs,
+                                      targets,
+                                      augmentation=True,
+                                      topk=(1, 5))
 
         loss = sum(losses)
         if config.train.distributed:
             loss_all_reduce = dist.all_reduce(loss,
                                               op=dist.ReduceOp.SUM,
                                               async_op=True)
-            acc_all_reduce = dist.all_reduce(accuracy,
-                                             op=dist.ReduceOp.SUM,
-                                             async_op=True)
+            acc1_all_reduce = dist.all_reduce(acc1,
+                                              op=dist.ReduceOp.SUM,
+                                              async_op=True)
+            acc5_all_reduce = dist.all_reduce(acc5,
+                                              op=dist.ReduceOp.SUM,
+                                              async_op=True)
             loss_all_reduce.wait()
-            acc_all_reduce.wait()
+            acc1_all_reduce.wait()
+            acc5_all_reduce.wait()
             loss.div_(dist.get_world_size())
-            accuracy.div_(dist.get_world_size())
+            acc1.div_(dist.get_world_size())
+            acc5.div_(dist.get_world_size())
         loss = loss.item()
-        accuracy = accuracy.item()
+        acc1 = acc1.item()
+        acc5 = acc5.item()
 
         num = data.size(0)
         loss_meter.update(loss, num)
-        accuracy_meter.update(accuracy, num)
+        acc1_meter.update(acc1, num)
+        acc5_meter.update(acc5, num)
 
         torch.cuda.synchronize()
 
@@ -180,8 +198,18 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
                     f'Step {step}/{len(train_loader)} '
                     f'lr {scheduler.get_lr()[0]:.6f} '
                     f'loss {loss_meter.val:.4f} ({loss_meter.avg:.4f}) '
-                    'accuracy '
-                    f'{accuracy_meter.val:.4f} ({accuracy_meter.avg:.4f})')
+                    f'acc@1 {acc1_meter.val:.4f} ({acc1_meter.avg:.4f}) '
+                    f'acc@5 {acc5_meter.val:.4f} ({acc5_meter.avg:.4f})')
+
+                tensorboard_writer2.add_scalar('Train/RunningLoss',
+                                               loss_meter.avg, global_step)
+                tensorboard_writer2.add_scalar('Train/RunningAcc1',
+                                               acc1_meter.avg, global_step)
+                tensorboard_writer2.add_scalar('Train/RunningAcc5',
+                                               acc5_meter.avg, global_step)
+                tensorboard_writer2.add_scalar('Train/RunningLearningRate',
+                                               scheduler.get_lr()[0],
+                                               global_step)
 
         scheduler.step()
 
@@ -189,13 +217,16 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
         elapsed = time.time() - start
         logger.info(f'Elapsed {elapsed:.2f}')
 
-        writer.add_scalar('Train/Loss', loss_meter.avg, epoch)
-        writer.add_scalar('Train/Accuracy', accuracy_meter.avg, epoch)
-        writer.add_scalar('Train/Time', elapsed, epoch)
-        writer.add_scalar('Train/LearningRate', scheduler.get_lr()[0], epoch)
+        tensorboard_writer.add_scalar('Train/Loss', loss_meter.avg, epoch)
+        tensorboard_writer.add_scalar('Train/Acc1', acc1_meter.avg, epoch)
+        tensorboard_writer.add_scalar('Train/Acc5', acc5_meter.avg, epoch)
+        tensorboard_writer.add_scalar('Train/Time', elapsed, epoch)
+        tensorboard_writer.add_scalar('Train/LearningRate',
+                                      scheduler.get_lr()[0], epoch)
 
 
-def validate(epoch, config, model, loss_func, val_loader, logger, writer):
+def validate(epoch, config, model, loss_func, val_loader, logger,
+             tensorboard_writer):
     logger.info(f'Val {epoch}')
 
     device = torch.device(config.device)
@@ -203,7 +234,8 @@ def validate(epoch, config, model, loss_func, val_loader, logger, writer):
     model.eval()
 
     loss_meter = AverageMeter()
-    correct_meter = AverageMeter()
+    acc1_meter = AverageMeter()
+    acc5_meter = AverageMeter()
     start = time.time()
     with torch.no_grad():
         for step, (data, targets) in enumerate(val_loader):
@@ -213,7 +245,7 @@ def validate(epoch, config, model, loss_func, val_loader, logger, writer):
                         image = torchvision.utils.make_grid(data,
                                                             normalize=True,
                                                             scale_each=True)
-                        writer.add_image('Val/Image', image, epoch)
+                        tensorboard_writer.add_image('Val/Image', image, epoch)
 
             data = data.to(device)
             targets = targets.to(device)
@@ -221,45 +253,56 @@ def validate(epoch, config, model, loss_func, val_loader, logger, writer):
             outputs = model(data)
             loss = loss_func(outputs, targets)
 
-            _, preds = torch.max(outputs, dim=1)
-
-            correct = preds.eq(targets).sum()
-            num = data.size(0)
+            acc1, acc5 = compute_accuracy(config,
+                                          outputs,
+                                          targets,
+                                          augmentation=False,
+                                          topk=(1, 5))
 
             if config.train.distributed:
                 loss_all_reduce = dist.all_reduce(loss,
                                                   op=dist.ReduceOp.SUM,
                                                   async_op=True)
-                correct_all_reduce = dist.all_reduce(correct,
-                                                     op=dist.ReduceOp.SUM,
-                                                     async_op=True)
+                acc1_all_reduce = dist.all_reduce(acc1,
+                                                  op=dist.ReduceOp.SUM,
+                                                  async_op=True)
+                acc5_all_reduce = dist.all_reduce(acc5,
+                                                  op=dist.ReduceOp.SUM,
+                                                  async_op=True)
                 loss_all_reduce.wait()
-                correct_all_reduce.wait()
+                acc1_all_reduce.wait()
+                acc5_all_reduce.wait()
                 loss.div_(dist.get_world_size())
+                acc1.div_(dist.get_world_size())
+                acc5.div_(dist.get_world_size())
             loss = loss.item()
-            correct = correct.item()
+            acc1 = acc1.item()
+            acc5 = acc5.item()
 
+            num = data.size(0)
             loss_meter.update(loss, num)
-            correct_meter.update(correct, 1)
+            acc1_meter.update(acc1, num)
+            acc5_meter.update(acc5, num)
 
             torch.cuda.synchronize()
 
-        accuracy = correct_meter.sum / len(val_loader.dataset)
-
-        logger.info(
-            f'Epoch {epoch} loss {loss_meter.avg:.4f} accuracy {accuracy:.4f}')
+        logger.info(f'Epoch {epoch} '
+                    f'loss {loss_meter.avg:.4f} '
+                    f'acc@1 {acc1_meter.avg:.4f} '
+                    f'acc@5 {acc5_meter.avg:.4f}')
 
         elapsed = time.time() - start
         logger.info(f'Elapsed {elapsed:.2f}')
 
     if get_rank() == 0:
         if epoch > 0:
-            writer.add_scalar('Val/Loss', loss_meter.avg, epoch)
-        writer.add_scalar('Val/Accuracy', accuracy, epoch)
-        writer.add_scalar('Val/Time', elapsed, epoch)
+            tensorboard_writer.add_scalar('Val/Loss', loss_meter.avg, epoch)
+        tensorboard_writer.add_scalar('Val/Acc1', acc1_meter.avg, epoch)
+        tensorboard_writer.add_scalar('Val/Acc5', acc5_meter.avg, epoch)
+        tensorboard_writer.add_scalar('Val/Time', elapsed, epoch)
         if config.tensorboard.model_params:
             for name, param in model.named_parameters():
-                writer.add_histogram(name, param, epoch)
+                tensorboard_writer.add_histogram(name, param, epoch)
 
 
 def main():
@@ -323,54 +366,56 @@ def main():
     start_epoch = config.train.start_epoch
     scheduler.last_epoch = start_epoch
     if config.train.resume:
-        checkpoint_config, start_epoch = checkpointer.load()
+        checkpoint_config, start_epoch, global_step_ = checkpointer.load()
+        global global_step
+        global_step = global_step_
         config.defrost()
         config.merge_from_other_cfg(checkpoint_config)
-        config.train.start_epoch = start_epoch
         config.freeze()
     elif config.train.checkpoint != '':
-        _, start_epoch = checkpointer.load(config.train.checkpoint)
-        config.defrost()
-        config.train.start_epoch = start_epoch
-        config.freeze()
-        for index in range(len(scheduler.base_lrs)):
-            scheduler.base_lrs[index] = config.train.base_lr
-        save_config(config, output_dir)
+        checkpointer.load(config.train.checkpoint,
+                          load_optimizer=False,
+                          load_scheduler=False)
 
     if get_rank() == 0 and config.train.use_tensorboard:
-        if start_epoch > 0:
-            writer = SummaryWriter(output_dir.as_posix(),
-                                   purge_step=start_epoch + 1)
-        else:
-            writer = SummaryWriter(output_dir.as_posix())
+        tensorboard_writer = create_tensorboard_writer(
+            config, output_dir, purge_step=config.train.start_epoch + 1)
+        tensorboard_writer2 = create_tensorboard_writer(
+            config, output_dir / 'running', purge_step=global_step + 1)
     else:
-        writer = None
+        tensorboard_writer = DummyWriter()
+        tensorboard_writer2 = DummyWriter()
 
     train_loss, val_loss = create_loss(config)
 
     if (config.train.val_period > 0 and start_epoch == 0
             and config.train.val_first):
-        validate(0, config, model, val_loss, val_loader, logger, writer)
+        validate(0, config, model, val_loss, val_loader, logger,
+                 tensorboard_writer)
 
     for epoch, seed in enumerate(epoch_seeds[start_epoch:], start_epoch):
         epoch += 1
 
         np.random.seed(seed)
         train(epoch, config, model, optimizer, scheduler, train_loss,
-              train_loader, logger, writer)
+              train_loader, logger, tensorboard_writer, tensorboard_writer2)
 
         if config.train.val_period > 0 and (epoch %
                                             config.train.val_period == 0):
             validate(epoch, config, model, val_loss, val_loader, logger,
-                     writer)
+                     tensorboard_writer)
 
         if (epoch % config.train.checkpoint_period == 0) or (
                 epoch == config.scheduler.epochs):
-            checkpoint_config = {'epoch': epoch, 'config': config.as_dict()}
+            checkpoint_config = {
+                'epoch': epoch,
+                'global_step': global_step,
+                'config': config.as_dict(),
+            }
             checkpointer.save(f'checkpoint_{epoch:05d}', **checkpoint_config)
 
-    if writer is not None:
-        writer.close()
+    tensorboard_writer.close()
+    tensorboard_writer2.close()
 
 
 if __name__ == '__main__':

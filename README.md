@@ -21,7 +21,7 @@ Following papers are implemented using PyTorch.
 ## Requirements
 
 * Python >= 3.7
-* PyTorch >= 1.1.0
+* PyTorch >= 1.2.0
 * torchvision
 * [tensorboardX](https://github.com/lanpa/tensorboardX)
 * [NVIDIA Apex](https://github.com/NVIDIA/apex)
@@ -31,7 +31,7 @@ Following papers are implemented using PyTorch.
 ## Usage
 
 ```bash
-python train.py --config configs/resnet_preact.yaml
+python train.py --config configs/cifar/resnet_preact.yaml
 ```
 
 
@@ -83,7 +83,7 @@ python train.py --config configs/resnet_preact.yaml
 #### VGG-like
 
 ```bash
-python train.py --config configs/vgg.yaml
+python train.py --config configs/cifar/vgg.yaml
 ```
 
 ![](figures/cifar10/VGG-15_BN_64.png)
@@ -92,7 +92,7 @@ python train.py --config configs/vgg.yaml
 #### ResNet
 
 ```bash
-python train.py --config configs/resnet.yaml
+python train.py --config configs/cifar/resnet.yaml
 ```
 
 ![](figures/cifar10/ResNet-110_basic.png)
@@ -101,7 +101,7 @@ python train.py --config configs/resnet.yaml
 #### ResNet-preact
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     train.output_dir experiments/resnet_preact_basic_110/exp00
 ```
 
@@ -109,7 +109,7 @@ python train.py --config configs/resnet_preact.yaml \
 
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     model.resnet_preact.depth 164 \
     model.resnet_preact.block_type bottleneck \
     train.output_dir experiments/resnet_preact_bottleneck_164/exp00
@@ -121,7 +121,7 @@ python train.py --config configs/resnet_preact.yaml \
 #### WRN
 
 ```bash
-python train.py --config configs/wrn.yaml
+python train.py --config configs/cifar/wrn.yaml
 ```
 
 ![](figures/cifar10/WRN-28-10.png)
@@ -130,7 +130,7 @@ python train.py --config configs/wrn.yaml
 #### DenseNet
 
 ```bash
-python train.py --config configs/densenet.yaml
+python train.py --config configs/cifar/densenet.yaml
 ```
 
 ![](figures/cifar10/DenseNet-BC-100_k_12.png)
@@ -139,7 +139,7 @@ python train.py --config configs/densenet.yaml
 #### PyramidNet
 
 ```bash
-python train.py --config configs/pyramidnet.yaml \
+python train.py --config configs/cifar/pyramidnet.yaml \
     model.pyramidnet.depth 110 \
     model.pyramidnet.block_type basic \
     model.pyramidnet.alpha 84 \
@@ -149,7 +149,7 @@ python train.py --config configs/pyramidnet.yaml \
 ![](figures/cifar10/PyramidNet-110_alpha_84.png)
 
 ```bash
-python train.py --config configs/pyramidnet.yaml \
+python train.py --config configs/cifar/pyramidnet.yaml \
     model.pyramidnet.depth 110 \
     model.pyramidnet.block_type basic \
     model.pyramidnet.alpha 270 \
@@ -162,7 +162,7 @@ python train.py --config configs/pyramidnet.yaml \
 #### ResNeXt
 
 ```bash
-python train.py --config configs/resnext.yaml \
+python train.py --config configs/cifar/resnext.yaml \
     model.resnext.cardinality 4 \
     train.batch_size 32 \
     train.base_lr 0.025 \
@@ -172,7 +172,7 @@ python train.py --config configs/resnext.yaml \
 ![](figures/cifar10/ResNeXt-29_4x64d.png)
 
 ```bash
-python train.py --config configs/resnext.yaml \
+python train.py --config configs/cifar/resnext.yaml \
     train.batch_size 64 \
     train.base_lr 0.05 \
     train.output_dir experiments/resnext_29_8x64d/exp00
@@ -184,16 +184,16 @@ python train.py --config configs/resnext.yaml \
 #### shake-shake
 
 ```bash
-python train.py --config configs/shake_shake.yaml \
-    model.shake_shake.base_channels 32 \
+python train.py --config configs/cifar/shake_shake.yaml \
+    model.shake_shake.initial_channels 32 \
     train.output_dir experiments/shake_shake_26_2x32d_SSI/exp00
 ```
 
 ![](figures/cifar10/shake-shake-26_2x32d.png)
 
 ```bash
-python train.py --config configs/shake_shake.yaml \
-    model.shake_shake.base_channels 64 \
+python train.py --config configs/cifar/shake_shake.yaml \
+    model.shake_shake.initial_channels 64 \
     train.batch_size 64 \
     train.base_lr 0.1 \
     train.output_dir experiments/shake_shake_26_2x64d_SSI/exp00
@@ -202,8 +202,8 @@ python train.py --config configs/shake_shake.yaml \
 ![](figures/cifar10/shake-shake-26_2x64d.png)
 
 ```bash
-python train.py --config configs/shake_shake.yaml \
-    model.shake_shake.base_channels 96 \
+python train.py --config configs/cifar/shake_shake.yaml \
+    model.shake_shake.initial_channels 96 \
     train.batch_size 64 \
     train.base_lr 0.1 \
     train.output_dir experiments/shake_shake_26_2x96d_SSI/exp00
@@ -254,7 +254,7 @@ python train.py --config configs/shake_shake.yaml \
 * GeForce GTX 1080 Ti was used in these experiments, except ones with *, which are done using GeForce GTX 980.
 
 ```bash
-python train.py --config configs/wrn.yaml \
+python train.py --config configs/cifar/wrn.yaml \
     train.batch_size 64 \
     train.output_dir experiments/wrn_28_10_cutout16 \
     scheduler.type cosine \
@@ -264,8 +264,8 @@ python train.py --config configs/wrn.yaml \
 ![](figures/cifar10/WRN-28-10_Cutout_16.png)
 
 ```bash
-python train.py --config configs/shake_shake.yaml \
-    model.shake_shake.base_channels 64 \
+python train.py --config configs/cifar/shake_shake.yaml \
+    model.shake_shake.initial_channels 64 \
     train.batch_size 64 \
     train.base_lr 0.1 \
     scheduler.epochs 300 \
@@ -295,7 +295,7 @@ python train.py --config configs/shake_shake.yaml \
 ##### Using 1 GPU
 
 ```bash
-python train.py --config configs/wrn.yaml \
+python train.py --config configs/cifar/wrn.yaml \
     train.base_lr 0.3 \
     train.batch_size 256 \
     scheduler.epochs 200 \
@@ -309,7 +309,7 @@ python train.py --config configs/wrn.yaml \
 
 ```bash
 python -m torch.distributed.launch --nproc_per_node 2 \
-    train.py --config configs/wrn.yaml \
+    train.py --config configs/cifar/wrn.yaml \
     train.distributed True \
     train.base_lr 0.4 \
     train.batch_size 256 \
@@ -324,7 +324,7 @@ python -m torch.distributed.launch --nproc_per_node 2 \
 
 ```bash
 python -m torch.distributed.launch --nproc_per_node 4 \
-    train.py --config configs/wrn.yaml \
+    train.py --config configs/cifar/wrn.yaml \
     train.distributed True \
     train.base_lr 0.6 \
     train.batch_size 256 \
@@ -339,7 +339,7 @@ python -m torch.distributed.launch --nproc_per_node 4 \
 
 ```bash
 python -m torch.distributed.launch --nproc_per_node 8 \
-    train.py --config configs/wrn.yaml \
+    train.py --config configs/cifar/wrn.yaml \
     train.distributed True \
     train.base_lr 0.8 \
     train.batch_size 256 \
@@ -486,7 +486,7 @@ ResNet-preact-56 is trained on CIFAR-10 with initial learning rate 0.2 in this e
 ##### preactivate shortcut after downsampling
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     train.base_lr 0.2 \
     model.resnet_preact.depth 56 \
     model.resnet_preact.preact_stage '[True, True, True]' \
@@ -501,7 +501,7 @@ python train.py --config configs/resnet_preact.yaml \
 ##### w/ 1st ReLU, w/o last BN
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     train.base_lr 0.2 \
     model.resnet_preact.depth 56 \
     model.resnet_preact.preact_stage '[True, False, False]' \
@@ -515,7 +515,7 @@ python train.py --config configs/resnet_preact.yaml \
 ##### w/o 1st ReLU, w/o last BN
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     train.base_lr 0.2 \
     model.resnet_preact.depth 56 \
     model.resnet_preact.preact_stage '[True, False, False]' \
@@ -529,7 +529,7 @@ python train.py --config configs/resnet_preact.yaml \
 ##### w/ 1st ReLU, w/ last BN
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     train.base_lr 0.2 \
     model.resnet_preact.depth 56 \
     model.resnet_preact.preact_stage '[True, False, False]' \
@@ -543,7 +543,7 @@ python train.py --config configs/resnet_preact.yaml \
 ##### w/o 1st ReLU, w/ last BN
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     train.base_lr 0.2 \
     model.resnet_preact.depth 56 \
     model.resnet_preact.preact_stage '[True, False, False]' \
@@ -557,7 +557,7 @@ python train.py --config configs/resnet_preact.yaml \
 ##### w/o 1st ReLU, w/ last BN, preactivate shortcut after downsampling
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     train.base_lr 0.2 \
     model.resnet_preact.depth 56 \
     model.resnet_preact.preact_stage '[True, True, True]' \
@@ -571,7 +571,7 @@ python train.py --config configs/resnet_preact.yaml \
 ##### w/o 1st ReLU, w/ last BN, cosine annealing
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     train.base_lr 0.2 \
     model.resnet_preact.depth 56 \
     model.resnet_preact.preact_stage '[True, False, False]' \
@@ -586,7 +586,7 @@ python train.py --config configs/resnet_preact.yaml \
 ##### w/o 1st ReLU, w/ last BN, Cutout
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     train.base_lr 0.2 \
     model.resnet_preact.depth 56 \
     model.resnet_preact.preact_stage '[True, False, False]' \
@@ -601,7 +601,7 @@ python train.py --config configs/resnet_preact.yaml \
 ##### w/o 1st ReLU, w/ last BN, RandomErasing
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     train.base_lr 0.2 \
     model.resnet_preact.depth 56 \
     model.resnet_preact.preact_stage '[True, False, False]' \
@@ -616,7 +616,7 @@ python train.py --config configs/resnet_preact.yaml \
 ##### w/o 1st ReLU, w/ last BN, Mixup
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     train.base_lr 0.2 \
     model.resnet_preact.depth 56 \
     model.resnet_preact.preact_stage '[True, False, False]' \
@@ -842,7 +842,7 @@ python train.py --config configs/resnet_preact.yaml \
 * In this implementation, LARS coefficient is not used, so learning rate should be adjusted accordingly.
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     model.resnet_preact.depth 20 \
     train.optimizer lars \
     train.base_lr 0.02 \
@@ -936,7 +936,7 @@ python train.py --config configs/resnet_preact.yaml \
 #### Ghost BN
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     model.resnet_preact.depth 20 \
     train.base_lr 1.5 \
     train.batch_size 4096 \
@@ -977,7 +977,7 @@ python train.py --config configs/resnet_preact.yaml \
 #### No weight decay on BN
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     model.resnet_preact.depth 20 \
     train.base_lr 1.6 \
     train.batch_size 4096 \
@@ -1039,7 +1039,7 @@ python train.py --config configs/resnet_preact.yaml \
 #### FP16 training
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     model.resnet_preact.depth 20 \
     train.base_lr 1.6 \
     train.batch_size 4096 \
@@ -1051,7 +1051,7 @@ python train.py --config configs/resnet_preact.yaml \
 #### Mixed-precision training
 
 ```bash
-python train.py --config configs/resnet_preact.yaml \
+python train.py --config configs/cifar/resnet_preact.yaml \
     model.resnet_preact.depth 20 \
     train.base_lr 1.6 \
     train.batch_size 4096 \

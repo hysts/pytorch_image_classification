@@ -238,7 +238,6 @@ class AdaBound(torch.optim.Optimizer):
     .. Adaptive Gradient Methods with Dynamic Bound of Learning Rate:
         https://openreview.net/forum?id=Bkg3g2R9FX
     """
-
     def __init__(self,
                  params,
                  lr=1e-3,
@@ -381,7 +380,6 @@ class AdaBoundW(torch.optim.Optimizer):
     .. Adaptive Gradient Methods with Dynamic Bound of Learning Rate:
         https://openreview.net/forum?id=Bkg3g2R9FX
     """
-
     def __init__(self,
                  params,
                  lr=1e-3,

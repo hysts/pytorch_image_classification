@@ -1,9 +1,19 @@
 from typing import Tuple, Union
 
 import numpy as np
+import PIL.Image
 import torch
 import torchvision
 import yacs.config
+
+
+class CenterCrop:
+    def __init__(self, config: yacs.config.CfgNode):
+        self.transform = torchvision.transforms.CenterCrop(
+            config.dataset.image_size)
+
+    def __call__(self, data: PIL.Image.Image) -> PIL.Image.Image:
+        return self.transform(data)
 
 
 class Normalize:
@@ -11,7 +21,7 @@ class Normalize:
         self.mean = np.array(mean)
         self.std = np.array(std)
 
-    def __call__(self, image: np.ndarray) -> np.ndarray:
+    def __call__(self, image: PIL.Image.Image) -> np.ndarray:
         image = np.asarray(image).astype(np.float32) / 255.
         image = (image - self.mean) / self.std
         return image
@@ -25,7 +35,16 @@ class RandomCrop:
             fill=config.augmentation.random_crop.fill,
             padding_mode=config.augmentation.random_crop.padding_mode)
 
-    def __call__(self, data: np.ndarray) -> np.ndarray:
+    def __call__(self, data: PIL.Image.Image) -> PIL.Image.Image:
+        return self.transform(data)
+
+
+class RandomResizeCrop:
+    def __init__(self, config: yacs.config.CfgNode):
+        self.transform = torchvision.transforms.RandomResizedCrop(
+            config.dataset.image_size)
+
+    def __call__(self, data: PIL.Image.Image) -> PIL.Image.Image:
         return self.transform(data)
 
 
@@ -34,7 +53,15 @@ class RandomHorizontalFlip:
         self.transform = torchvision.transforms.RandomHorizontalFlip(
             config.augmentation.random_horizontal_flip.prob)
 
-    def __call__(self, data: np.ndarray) -> np.ndarray:
+    def __call__(self, data: PIL.Image.Image) -> PIL.Image.Image:
+        return self.transform(data)
+
+
+class Resize:
+    def __init__(self, config: yacs.config.CfgNode):
+        self.transform = torchvision.transforms.Resize(config.tta.resize)
+
+    def __call__(self, data: PIL.Image.Image) -> PIL.Image.Image:
         return self.transform(data)
 
 

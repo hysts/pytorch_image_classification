@@ -1,0 +1,7 @@
+augmentation:
+  use_random_erasing: True
+  random_erasing:
+    prob: 0.5
+    area_ratio_range: [0.02, 0.4]
+    min_aspect_ratio: 0.3
+    max_attempt: 20

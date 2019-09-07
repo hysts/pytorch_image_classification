@@ -1,22 +1,37 @@
 import torch
 
 
-def compute_accuracy(config, outputs, targets, topk=(1, )):
-    if config.augmentation.use_mixup or config.augmentation.use_cutmix:
-        targets1, targets2, lam = targets
-        acc = lam * accuracy(outputs, targets1)[0] + (1 - lam) * accuracy(
-            outputs, targets2)[0]
-    elif config.augmentation.use_ricap:
-        acc = sum([
-            weight * accuracy(outputs, labels)[0]
-            for labels, weight in zip(*targets)
-        ])
-    elif config.augmentation.use_dual_cutout:
-        outputs1, outputs2 = outputs[:, 0], outputs[:, 1]
-        acc = accuracy((outputs1 + outputs2) / 2, targets)[0]
+def compute_accuracy(config, outputs, targets, augmentation, topk=(1, )):
+    if augmentation:
+        if config.augmentation.use_mixup or config.augmentation.use_cutmix:
+            targets1, targets2, lam = targets
+            accs1 = accuracy(outputs, targets1, topk)
+            accs2 = accuracy(outputs, targets2, topk)
+            accs = tuple([
+                lam * acc1 + (1 - lam) * acc2
+                for acc1, acc2 in zip(accs1, accs2)
+            ])
+        elif config.augmentation.use_ricap:
+            weights = []
+            accs_all = []
+            for labels, weight in zip(*targets):
+                weights.append(weight)
+                accs_all.append(accuracy(outputs, labels, topk))
+            accs = []
+            for i in range(len(accs_all[0])):
+                acc = 0
+                for weight, accs_list in zip(weights, accs_all):
+                    acc += weight * accs_list[i]
+                accs.append(acc)
+            accs = tuple(accs)
+        elif config.augmentation.use_dual_cutout:
+            outputs1, outputs2 = outputs[:, 0], outputs[:, 1]
+            accs = accuracy((outputs1 + outputs2) / 2, targets, topk)
+        else:
+            accs = accuracy(outputs, targets, topk)
     else:
-        acc = accuracy(outputs, targets, topk)[0]
-    return acc
+        accs = accuracy(outputs, targets, topk)
+    return accs
 
 
 def accuracy(outputs, targets, topk=(1, )):

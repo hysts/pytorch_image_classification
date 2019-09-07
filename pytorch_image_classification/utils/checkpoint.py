@@ -49,7 +49,7 @@ class CheckPointer:
         torch.save(checkpoint, outpath)
         self.tag_last_checkpoint(outpath)
 
-    def load(self, path=None):
+    def load(self, path=None, load_optimizer=True, load_scheduler=True):
         if path is None and self.has_checkpoint():
             path = self.get_checkpoint_filepath()
         if isinstance(path, str):
@@ -61,10 +61,12 @@ class CheckPointer:
         checkpoint = self._load_checkpoint(path)
 
         self.load_checkpoint(checkpoint)
-        if 'optimizer' in checkpoint.keys() and self.optimizer is not None:
+        if load_optimizer and 'optimizer' in checkpoint.keys(
+        ) and self.optimizer is not None:
             self.logger.info(f'Loading optimizer from {path.as_posix()}')
             self.optimizer.load_state_dict(checkpoint['optimizer'])
-        if 'scheduler' in checkpoint.keys() and self.scheduler is not None:
+        if load_scheduler and 'scheduler' in checkpoint.keys(
+        ) and self.scheduler is not None:
             self.logger.info(f'Loading scheduler from {path.as_posix()}')
             self.scheduler.load_state_dict(checkpoint['scheduler'])
 
@@ -73,7 +75,8 @@ class CheckPointer:
             config = ConfigNode(checkpoint['config'])
         else:
             config = default_config
-        return config, checkpoint.get('epoch', 0)
+        return config, checkpoint.get('epoch',
+                                      0), checkpoint.get('global_step', 0)
 
     def has_checkpoint(self):
         if self.checkpoint_dir is None:

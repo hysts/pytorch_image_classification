@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .initializer import create_initializer
+from ..initializer import create_initializer
 
 
 class BasicBlock(nn.Module):

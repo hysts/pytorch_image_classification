@@ -29,13 +29,13 @@ class LabelSmoothingLoss:
         self.epsilon = config.augmentation.label_smoothing.epsilon
         self.reduction = reduction
 
-    def __call__(self, preds: torch.Tensor,
+    def __call__(self, predictions: torch.Tensor,
                  targets: torch.Tensor) -> torch.Tensor:
-        device = preds.device
+        device = predictions.device
 
-        onehot = onehot_encoding(targets,
-                                 self.n_classes).type_as(preds).to(device)
+        onehot = onehot_encoding(
+            targets, self.n_classes).type_as(predictions).to(device)
         targets = onehot * (1 - self.epsilon) + torch.ones_like(onehot).to(
             device) * self.epsilon / self.n_classes
-        loss = cross_entropy_loss(preds, targets, self.reduction)
+        loss = cross_entropy_loss(predictions, targets, self.reduction)
         return loss

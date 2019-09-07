@@ -2,31 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
-def initialize_weights(module):
-    if isinstance(module, nn.Conv2d):
-        nn.init.kaiming_normal_(module.weight.data, mode='fan_out')
-    elif isinstance(module, nn.BatchNorm2d):
-        module.weight.data.fill_(1)
-        module.bias.data.zero_()
-    elif isinstance(module, nn.Linear):
-        module.bias.data.zero_()
-
-
-class SELayer(nn.Module):
-    def __init__(self, in_channels, reduction):
-        super().__init__()
-        mid_channels = in_channels // reduction
-
-        self.fc1 = nn.Linear(in_channels, mid_channels)
-        self.fc2 = nn.Linear(mid_channels, in_channels)
-
-    def forward(self, x):
-        n_batches, n_channels, _, _ = x.size()
-        y = F.adaptive_avg_pool2d(x, output_size=1).view(n_batches, n_channels)
-        y = F.relu(self.fc1(y), inplace=True)
-        y = F.sigmoid(self.fc2(y)).view(n_batches, n_channels, 1, 1)
-        return x * y
+from ..initializer import create_initializer
 
 
 class BasicBlock(nn.Module):
@@ -38,7 +14,6 @@ class BasicBlock(nn.Module):
                  stride,
                  remove_first_relu,
                  add_last_bn,
-                 se_reduction,
                  preact=False):
         super().__init__()
 
@@ -64,8 +39,6 @@ class BasicBlock(nn.Module):
 
         if add_last_bn:
             self.bn3 = nn.BatchNorm2d(out_channels)
-
-        self.se = SELayer(out_channels, se_reduction)
 
         self.shortcut = nn.Sequential()
         if in_channels != out_channels:
@@ -97,7 +70,6 @@ class BasicBlock(nn.Module):
         if self._add_last_bn:
             y = self.bn3(y)
 
-        y = self.se(y)
         y += self.shortcut(x)
         return y
 
@@ -111,7 +83,6 @@ class BottleneckBlock(nn.Module):
                  stride,
                  remove_first_relu,
                  add_last_bn,
-                 se_reduction,
                  preact=False):
         super().__init__()
 
@@ -147,8 +118,6 @@ class BottleneckBlock(nn.Module):
         if add_last_bn:
             self.bn4 = nn.BatchNorm2d(out_channels)
 
-        self.se = SELayer(out_channels, se_reduction)
-
         self.shortcut = nn.Sequential()  # identity
         if in_channels != out_channels:
             self.shortcut.add_module(
@@ -181,7 +150,6 @@ class BottleneckBlock(nn.Module):
         if self._add_last_bn:
             y = self.bn4(y)
 
-        y = self.se(y)
         y += self.shortcut(x)
         return y
 
@@ -190,13 +158,13 @@ class Network(nn.Module):
     def __init__(self, config):
         super().__init__()
 
-        base_channels = config.model.se_resnet_preact.base_channels
-        block_type = config.model.se_resnet_preact.block_type
-        depth = config.model.se_resnet_preact.depth
-        self._remove_first_relu = config.model.se_resnet_preact.remove_first_relu
-        self._add_last_bn = config.model.se_resnet_preact.add_last_bn
-        preact_stage = config.model.se_resnet_preact.preact_stage
-        se_reduction = config.model.se_resnet_preact.se_reduction
+        model_config = config.model.resnet_preact
+        initial_channels = model_config.initial_channels
+        self._remove_first_relu = model_config.remove_first_relu
+        self._add_last_bn = model_config.add_last_bn
+        block_type = model_config.block_type
+        depth = model_config.depth
+        preact_stage = model_config.preact_stage
 
         assert block_type in ['basic', 'bottleneck']
         if block_type == 'basic':
@@ -209,9 +177,9 @@ class Network(nn.Module):
             assert n_blocks_per_stage * 9 + 2 == depth
 
         n_channels = [
-            base_channels,
-            base_channels * 2 * block.expansion,
-            base_channels * 4 * block.expansion,
+            initial_channels,
+            initial_channels * 2 * block.expansion,
+            initial_channels * 4 * block.expansion,
         ]
 
         self.conv = nn.Conv2d(config.dataset.n_channels,
@@ -226,21 +194,18 @@ class Network(nn.Module):
                                        n_blocks_per_stage,
                                        block,
                                        stride=1,
-                                       se_reduction=se_reduction,
                                        preact=preact_stage[0])
         self.stage2 = self._make_stage(n_channels[0],
                                        n_channels[1],
                                        n_blocks_per_stage,
                                        block,
                                        stride=2,
-                                       se_reduction=se_reduction,
                                        preact=preact_stage[1])
         self.stage3 = self._make_stage(n_channels[1],
                                        n_channels[2],
                                        n_blocks_per_stage,
                                        block,
                                        stride=2,
-                                       se_reduction=se_reduction,
                                        preact=preact_stage[2])
         self.bn = nn.BatchNorm2d(n_channels[2])
 
@@ -256,10 +221,11 @@ class Network(nn.Module):
         self.fc = nn.Linear(self.feature_size, config.dataset.n_classes)
 
         # initialize weights
-        self.apply(initialize_weights)
+        initializer = create_initializer(config.model.init_mode)
+        self.apply(initializer)
 
     def _make_stage(self, in_channels, out_channels, n_blocks, block, stride,
-                    se_reduction, preact):
+                    preact):
         stage = nn.Sequential()
         for index in range(n_blocks):
             block_name = f'block{index + 1}'
@@ -271,7 +237,6 @@ class Network(nn.Module):
                           stride=stride,
                           remove_first_relu=self._remove_first_relu,
                           add_last_bn=self._add_last_bn,
-                          se_reduction=se_reduction,
                           preact=preact))
             else:
                 stage.add_module(
@@ -281,7 +246,6 @@ class Network(nn.Module):
                           stride=1,
                           remove_first_relu=self._remove_first_relu,
                           add_last_bn=self._add_last_bn,
-                          se_reduction=se_reduction,
                           preact=False))
         return stage
 

@@ -2,11 +2,12 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .initializer import create_initializer
-from .functions.shake_shake_function import (get_alpha_beta, shake_function)
+from ..initializer import create_initializer
 
 
-class ResidualPath(nn.Module):
+class BasicBlock(nn.Module):
+    expansion = 1
+
     def __init__(self, in_channels, out_channels, stride):
         super().__init__()
 
@@ -14,10 +15,9 @@ class ResidualPath(nn.Module):
             in_channels,
             out_channels,
             kernel_size=3,
-            stride=stride,
+            stride=stride,  # downsample with first conv
             padding=1,
-            bias=False,
-        )
+            bias=False)
         self.bn1 = nn.BatchNorm2d(out_channels)
         self.conv2 = nn.Conv2d(out_channels,
                                out_channels,
@@ -27,92 +27,106 @@ class ResidualPath(nn.Module):
                                bias=False)
         self.bn2 = nn.BatchNorm2d(out_channels)
 
-    def forward(self, x):
-        x = F.relu(x, inplace=False)
-        x = F.relu(self.bn1(self.conv1(x)), inplace=False)
-        x = self.bn2(self.conv2(x))
-        return x
-
-
-class DownsamplingShortcut(nn.Module):
-    def __init__(self, in_channels):
-        super().__init__()
-        self.conv1 = nn.Conv2d(in_channels,
-                               in_channels,
-                               kernel_size=1,
-                               stride=1,
-                               padding=0,
-                               bias=False)
-        self.conv2 = nn.Conv2d(in_channels,
-                               in_channels,
-                               kernel_size=1,
-                               stride=1,
-                               padding=0,
-                               bias=False)
-        self.bn = nn.BatchNorm2d(in_channels * 2)
-
-    def forward(self, x):
-        x = F.relu(x, inplace=False)
-        y1 = F.avg_pool2d(x, kernel_size=1, stride=2, padding=0)
-        y1 = self.conv1(y1)
-
-        y2 = F.pad(x[:, :, 1:, 1:], (0, 1, 0, 1))
-        y2 = F.avg_pool2d(y2, kernel_size=1, stride=2, padding=0)
-        y2 = self.conv2(y2)
-
-        z = torch.cat([y1, y2], dim=1)
-        z = self.bn(z)
-
-        return z
-
-
-class BasicBlock(nn.Module):
-    def __init__(self, in_channels, out_channels, stride, shake_config):
-        super().__init__()
-
-        self.shake_config = shake_config
-
-        self.residual_path1 = ResidualPath(in_channels, out_channels, stride)
-        self.residual_path2 = ResidualPath(in_channels, out_channels, stride)
-
         self.shortcut = nn.Sequential()
         if in_channels != out_channels:
-            self.shortcut.add_module('downsample',
-                                     DownsamplingShortcut(in_channels))
+            self.shortcut.add_module(
+                'conv',
+                nn.Conv2d(
+                    in_channels,
+                    out_channels,
+                    kernel_size=1,
+                    stride=stride,  # downsample
+                    padding=0,
+                    bias=False))
+            self.shortcut.add_module('bn', nn.BatchNorm2d(out_channels))  # BN
 
     def forward(self, x):
-        x1 = self.residual_path1(x)
-        x2 = self.residual_path2(x)
+        y = F.relu(self.bn1(self.conv1(x)), inplace=True)
+        y = self.bn2(self.conv2(y))
+        y += self.shortcut(x)
+        y = F.relu(y, inplace=True)  # apply ReLU after addition
+        return y
 
-        if self.training:
-            shake_config = self.shake_config
-        else:
-            shake_config = (False, False, False)
 
-        alpha, beta = get_alpha_beta(x.size(0), shake_config, x.device)
-        y = shake_function(x1, x2, alpha, beta)
+class BottleneckBlock(nn.Module):
+    expansion = 4
 
-        return self.shortcut(x) + y
+    def __init__(self, in_channels, out_channels, stride):
+        super().__init__()
+
+        bottleneck_channels = out_channels // self.expansion
+
+        self.conv1 = nn.Conv2d(in_channels,
+                               bottleneck_channels,
+                               kernel_size=1,
+                               stride=1,
+                               padding=0,
+                               bias=False)
+        self.bn1 = nn.BatchNorm2d(bottleneck_channels)
+
+        self.conv2 = nn.Conv2d(
+            bottleneck_channels,
+            bottleneck_channels,
+            kernel_size=3,
+            stride=stride,  # downsample with 3x3 conv
+            padding=1,
+            bias=False)
+        self.bn2 = nn.BatchNorm2d(bottleneck_channels)
+
+        self.conv3 = nn.Conv2d(bottleneck_channels,
+                               out_channels,
+                               kernel_size=1,
+                               stride=1,
+                               padding=0,
+                               bias=False)
+        self.bn3 = nn.BatchNorm2d(out_channels)
+
+        self.shortcut = nn.Sequential()  # identity
+        if in_channels != out_channels:
+            self.shortcut.add_module(
+                'conv',
+                nn.Conv2d(
+                    in_channels,
+                    out_channels,
+                    kernel_size=1,
+                    stride=stride,  # downsample
+                    padding=0,
+                    bias=False))
+            self.shortcut.add_module('bn', nn.BatchNorm2d(out_channels))  # BN
+
+    def forward(self, x):
+        y = F.relu(self.bn1(self.conv1(x)), inplace=True)
+        y = F.relu(self.bn2(self.conv2(y)), inplace=True)
+        y = self.bn3(self.conv3(y))  # not apply ReLU
+        y += self.shortcut(x)
+        y = F.relu(y, inplace=True)  # apply ReLU after addition
+        return y
 
 
 class Network(nn.Module):
     def __init__(self, config):
         super().__init__()
 
-        model_config = config.model.shake_shake
+        model_config = config.model.resnet
         depth = model_config.depth
-        base_channels = model_config.base_channels
-        self.shake_config = [
-            model_config.shake_forward,
-            model_config.shake_backward,
-            model_config.shake_image,
+        initial_channels = model_config.initial_channels
+        block_type = model_config.block_type
+
+        assert block_type in ['basic', 'bottleneck']
+        if block_type == 'basic':
+            block = BasicBlock
+            n_blocks_per_stage = (depth - 2) // 6
+            assert n_blocks_per_stage * 6 + 2 == depth
+        else:
+            block = BottleneckBlock
+            n_blocks_per_stage = (depth - 2) // 9
+            assert n_blocks_per_stage * 9 + 2 == depth
+
+        n_channels = [
+            initial_channels,
+            initial_channels * 2 * block.expansion,
+            initial_channels * 4 * block.expansion,
         ]
-
-        block = BasicBlock
-        n_blocks_per_stage = (depth - 2) // 6
-        assert n_blocks_per_stage * 6 + 2 == depth
-
-        n_channels = [base_channels, base_channels * 2, base_channels * 4]
 
         self.conv = nn.Conv2d(config.dataset.n_channels,
                               n_channels[0],
@@ -120,7 +134,7 @@ class Network(nn.Module):
                               stride=1,
                               padding=1,
                               bias=False)
-        self.bn = nn.BatchNorm2d(base_channels)
+        self.bn = nn.BatchNorm2d(initial_channels)
 
         self.stage1 = self._make_stage(n_channels[0],
                                        n_channels[0],
@@ -159,18 +173,11 @@ class Network(nn.Module):
             block_name = f'block{index + 1}'
             if index == 0:
                 stage.add_module(
-                    block_name,
-                    block(in_channels,
-                          out_channels,
-                          stride=stride,
-                          shake_config=self.shake_config))
+                    block_name, block(in_channels, out_channels,
+                                      stride=stride))
             else:
-                stage.add_module(
-                    block_name,
-                    block(out_channels,
-                          out_channels,
-                          stride=1,
-                          shake_config=self.shake_config))
+                stage.add_module(block_name,
+                                 block(out_channels, out_channels, stride=1))
         return stage
 
     def _forward_conv(self, x):

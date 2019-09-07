@@ -1,47 +1,48 @@
 device: cuda
 dataset:
-  name: CIFAR10
+  name: ImageNet
+  dataset_dir: ~/datasets/ImageNet
+  image_size: 224
+  n_channels: 3
+  n_classes: 1000
 model:
-  name: se_resnet_preact
+  type: imagenet
+  name: resnet
   init_mode: kaiming_fan_out
-  resnet_preact:
-    depth: 110
-    base_channels: 16
-    se_reduction: 16
+  resnet:
+    initial_channels: 64
     block_type: basic
-    remove_first_relu: True
-    add_last_bn: True
-    preact_stage: [True, False, False]
+    n_blocks: [3, 4, 6, 3]
 train:
+  resume: False
   seed: 0
   precision: O0
-  batch_size: 128
+  batch_size: 256
   subdivision: 1
   optimizer: sgd
-  base_lr: 0.1
+  base_lr: 0.2
   momentum: 0.9
   nesterov: True
   weight_decay: 1e-4
-  output_dir: experiments/se_resnet_preact/exp00
-  log_period: 100
-  checkpoint_period: 100
-  val_ratio: 0.1
+  output_dir: experiments/imagenet/resnet_34/exp00
+  log_period: 10
+  checkpoint_period: 10
   use_tensorboard: True
   distributed: False
   dataloader:
-    num_workers: 2
+    num_workers: 8
     drop_last: True
-    pin_memory: False
+    pin_memory: True
 validation:
-  batch_size: 256
+  batch_size: 1024
   dataloader:
-    num_workers: 2
+    num_workers: 8
     drop_last: False
-    pin_memory: False
+    pin_memory: True
 scheduler:
-  epochs: 160
+  epochs: 90
   type: multistep
-  milestones: [80, 120]
+  milestones: [30, 60]
   lr_decay: 0.1
 augmentation:
   use_random_crop: True
@@ -51,17 +52,13 @@ augmentation:
   use_dual_cutout: False
   use_mixup: False
   use_ricap: False
+  use_cutmix: False
   use_label_smoothing: False
-  random_crop:
-    padding: 4
-    fill: 0
-    padding_mode: constant
-  random_horizontal_flip:
-    prob: 0.5
+tta:
+  use_resize: True
+  use_center_crop: True
+  resize: 256
 tensorboard:
   train_images: False
   val_images: False
   model_params: False
-
-
-

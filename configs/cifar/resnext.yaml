@@ -2,13 +2,14 @@ device: cuda
 dataset:
   name: CIFAR10
 model:
-  name: pyramidnet
+  type: cifar
+  name: resnext
   init_mode: kaiming_fan_out
-  pyramidnet:
-    depth: 272
-    base_channels: 16
-    block_type: bottleneck
-    alpha: 200
+  resnext:
+    depth: 29
+    initial_channels: 64
+    cardinality: 8
+    base_channels: 64
 train:
   seed: 0
   precision: O0
@@ -18,11 +19,12 @@ train:
   base_lr: 0.1
   momentum: 0.9
   nesterov: True
-  weight_decay: 1e-4
-  output_dir: experiments/pyramidnet/exp00
+  weight_decay: 5e-4
+  output_dir: experiments/cifar10/resnext/exp00
   log_period: 100
   checkpoint_period: 100
   val_ratio: 0.1
+  use_test_as_val: False
   use_tensorboard: True
   distributed: False
   dataloader:
@@ -48,6 +50,7 @@ augmentation:
   use_dual_cutout: False
   use_mixup: False
   use_ricap: False
+  use_cutmix: False
   use_label_smoothing: False
   random_crop:
     padding: 4
@@ -59,5 +62,6 @@ tensorboard:
   train_images: False
   val_images: False
   model_params: False
+
 
 

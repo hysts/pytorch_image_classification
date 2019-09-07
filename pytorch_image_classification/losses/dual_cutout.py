@@ -9,8 +9,9 @@ class DualCutoutLoss:
         self.alpha = config.augmentation.cutout.dual_cutout_alpha
         self.loss_func = nn.CrossEntropyLoss(reduction=reduction)
 
-    def __call__(self, preds: torch.Tensor,
+    def __call__(self, predictions: torch.Tensor,
                  targets: torch.Tensor) -> torch.Tensor:
-        preds1, preds2 = preds[:, 0], preds[:, 1]
-        return (self.loss_func(preds1, targets) + self.loss_func(
-            preds2, targets)) * 0.5 + self.alpha * F.mse_loss(preds1, preds2)
+        predictions1, predictions2 = predictions[:, 0], predictions[:, 1]
+        return (self.loss_func(predictions1, targets) + self.loss_func(
+            predictions2, targets)) * 0.5 + self.alpha * F.mse_loss(
+                predictions1, predictions2)

@@ -1,5 +1,7 @@
 from typing import Tuple, Union
 
+import pathlib
+
 import torch
 import torchvision
 import yacs.config
@@ -24,7 +26,7 @@ class SubsetDataset(Dataset):
         return len(self.subset_dataset)
 
 
-def create_dataset(config: yacs.config,
+def create_dataset(config: yacs.config.CfgNode,
                    is_train: bool) -> Union[Tuple[Dataset, Dataset], Dataset]:
     if config.dataset.name in [
             'CIFAR10',
@@ -72,5 +74,14 @@ def create_dataset(config: yacs.config,
                              transform=transform,
                              download=True)
             return dataset
+    elif config.dataset.name == 'ImageNet':
+        dataset_dir = pathlib.Path(config.dataset.dataset_dir).expanduser()
+        train_transform = create_transform(config, is_train=True)
+        val_transform = create_transform(config, is_train=False)
+        train_dataset = torchvision.datasets.ImageFolder(
+            dataset_dir / 'train', transform=train_transform)
+        val_dataset = torchvision.datasets.ImageFolder(dataset_dir / 'val',
+                                                       transform=val_transform)
+        return train_dataset, val_dataset
     else:
         raise ValueError()

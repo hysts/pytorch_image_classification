@@ -2,26 +2,27 @@ device: cuda
 dataset:
   name: CIFAR10
 model:
-  name: resnext
+  type: cifar
+  name: shake_shake
   init_mode: kaiming_fan_out
-  resnext:
-    depth: 29
-    base_channels: 64
-    cardinality: 8
+  shake_shake:
+    depth: 26
+    initial_channels: 96
 train:
   seed: 0
   precision: O0
   batch_size: 128
   subdivision: 1
   optimizer: sgd
-  base_lr: 0.1
+  base_lr: 0.2
   momentum: 0.9
   nesterov: True
-  weight_decay: 5e-4
-  output_dir: experiments/resnext/exp00
+  weight_decay: 1e-4
+  output_dir: experiments/cifar10/shake_shake/exp00
   log_period: 100
   checkpoint_period: 100
   val_ratio: 0.1
+  use_test_as_val: False
   use_tensorboard: True
   distributed: False
   dataloader:
@@ -35,10 +36,9 @@ validation:
     drop_last: False
     pin_memory: False
 scheduler:
-  epochs: 300
-  type: multistep
-  milestones: [150, 225]
-  lr_decay: 0.1
+  epochs: 1800
+  type: cosine
+  lr_min_factor: 0.
 augmentation:
   use_random_crop: True
   use_random_horizontal_flip: True
@@ -47,6 +47,7 @@ augmentation:
   use_dual_cutout: False
   use_mixup: False
   use_ricap: False
+  use_cutmix: False
   use_label_smoothing: False
   random_crop:
     padding: 4

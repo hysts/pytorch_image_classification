@@ -16,6 +16,9 @@ config.dataset.n_channels = 3
 config.dataset.n_classes = 10
 
 config.model = ConfigNode()
+# options: 'cifar', 'imagenet'
+# Use 'cifar' for small input images
+config.model.type = 'cifar'
 config.model.name = 'resnet_preact'
 config.model.init_mode = 'kaiming_fan_out'
 
@@ -25,55 +28,61 @@ config.model.vgg.n_layers = [2, 2, 3, 3, 3]
 config.model.vgg.use_bn = True
 
 config.model.resnet = ConfigNode()
-config.model.resnet.depth = 110
+config.model.resnet.depth = 110  # for cifar type model
+config.model.resnet.n_blocks = [2, 2, 2, 2]  # for imagenet type model
 config.model.resnet.block_type = 'basic'
-config.model.resnet.base_channels = 16
+config.model.resnet.initial_channels = 16
 
 config.model.resnet_preact = ConfigNode()
-config.model.resnet_preact.depth = 110
+config.model.resnet_preact.depth = 110  # for cifar type model
+config.model.resnet_preact.n_blocks = [2, 2, 2, 2]  # for imagenet type model
 config.model.resnet_preact.block_type = 'basic'
-config.model.resnet_preact.base_channels = 16
+config.model.resnet_preact.initial_channels = 16
 config.model.resnet_preact.remove_first_relu = False
 config.model.resnet_preact.add_last_bn = False
 config.model.resnet_preact.preact_stage = [True, True, True]
 
 config.model.wrn = ConfigNode()
-config.model.wrn.depth = 28
-config.model.wrn.base_channels = 16
+config.model.wrn.depth = 28  # for cifar type model
+config.model.wrn.initial_channels = 16
 config.model.wrn.widening_factor = 10
 config.model.wrn.drop_rate = 0.0
 
 config.model.densenet = ConfigNode()
-config.model.densenet.depth = 100
+config.model.densenet.depth = 100  # for cifar type model
+config.model.densenet.n_blocks = [6, 12, 24, 16]  # for imagenet type model
 config.model.densenet.block_type = 'bottleneck'
 config.model.densenet.growth_rate = 12
 config.model.densenet.drop_rate = 0.0
 config.model.densenet.compression_rate = 0.5
 
 config.model.pyramidnet = ConfigNode()
-config.model.pyramidnet.depth = 272
-config.model.pyramidnet.base_channels = 16
+config.model.pyramidnet.depth = 272  # for cifar type model
+config.model.pyramidnet.n_blocks = [3, 24, 36, 3]  # for imagenet type model
+config.model.pyramidnet.initial_channels = 16
 config.model.pyramidnet.block_type = 'bottleneck'
 config.model.pyramidnet.alpha = 200
 
 config.model.resnext = ConfigNode()
-config.model.resnext.depth = 29
-config.model.resnext.base_channels = 64
+config.model.resnext.depth = 29  # for cifar type model
+config.model.resnext.n_blocks = [3, 4, 6, 3]  # for imagenet type model
+config.model.resnext.initial_channels = 64
 config.model.resnext.cardinality = 8
+config.model.resnext.base_channels = 4
 
 config.model.shake_shake = ConfigNode()
-config.model.shake_shake.depth = 26
-config.model.shake_shake.base_channels = 96
+config.model.shake_shake.depth = 26  # for cifar type model
+config.model.shake_shake.initial_channels = 96
 config.model.shake_shake.shake_forward = True
 config.model.shake_shake.shake_backward = True
 config.model.shake_shake.shake_image = True
 
 config.model.se_resnet_preact = ConfigNode()
-config.model.se_resnet_preact.depth = 110
-config.model.se_resnet_preact.base_channels = 16
+config.model.se_resnet_preact.depth = 110  # for cifar type model
+config.model.se_resnet_preact.initial_channels = 16
 config.model.se_resnet_preact.se_reduction = 16
 config.model.se_resnet_preact.block_type = 'basic'
-config.model.se_resnet_preact.base_channels = 16
+config.model.se_resnet_preact.initial_channels = 16
 config.model.se_resnet_preact.remove_first_relu = False
 config.model.se_resnet_preact.add_last_bn = False
 config.model.se_resnet_preact.preact_stage = [True, True, True]
@@ -213,6 +222,11 @@ config.augmentation.cutmix.alpha = 1.0
 
 config.augmentation.label_smoothing = ConfigNode()
 config.augmentation.label_smoothing.epsilon = 0.1
+
+config.tta = ConfigNode()
+config.tta.use_resize = False
+config.tta.use_center_crop = False
+config.tta.resize = 256
 
 # test config
 config.test = ConfigNode()

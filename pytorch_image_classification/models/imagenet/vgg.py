@@ -1,7 +1,8 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
-from .initializer import create_initializer
+from ..initializer import create_initializer
 
 
 class Network(nn.Module):
@@ -33,7 +34,9 @@ class Network(nn.Module):
             self.feature_size = self._forward_conv(dummy_data).view(
                 -1).shape[0]
 
-        self.fc = nn.Linear(self.feature_size, config.dataset.n_classes)
+        self.fc1 = nn.Linear(self.feature_size, 4096)
+        self.fc2 = nn.Linear(4096, 4096)
+        self.fc3 = nn.Linear(4096, config.dataset.n_classes)
 
         # initialize weights
         initializer = create_initializer(config.model.init_mode)
@@ -76,5 +79,9 @@ class Network(nn.Module):
     def forward(self, x):
         x = self._forward_conv(x)
         x = x.view(x.size(0), -1)
-        x = self.fc(x)
+        x = F.dropout(F.relu(self.fc1(x), inplace=True),
+                      training=self.training)
+        x = F.dropout(F.relu(self.fc2(x), inplace=True),
+                      training=self.training)
+        x = self.fc3(x)
         return x

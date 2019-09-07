@@ -2,44 +2,35 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .initializer import create_initializer
+from ..initializer import create_initializer
 
 
-class BottleneckBlock(nn.Module):
-    expansion = 4
-
-    def __init__(self, in_channels, out_channels, stride, cardinality):
+class BasicBlock(nn.Module):
+    def __init__(self, in_channels, out_channels, stride, drop_rate):
         super().__init__()
 
-        bottleneck_channels = cardinality * out_channels // self.expansion
+        self.drop_rate = drop_rate
 
-        self.conv1 = nn.Conv2d(in_channels,
-                               bottleneck_channels,
-                               kernel_size=1,
-                               stride=1,
-                               padding=0,
-                               bias=False)
-        self.bn1 = nn.BatchNorm2d(bottleneck_channels)
+        self._preactivate_both = (in_channels != out_channels)
 
-        self.conv2 = nn.Conv2d(
-            bottleneck_channels,
-            bottleneck_channels,
+        self.bn1 = nn.BatchNorm2d(in_channels)
+        self.conv1 = nn.Conv2d(
+            in_channels,
+            out_channels,
             kernel_size=3,
-            stride=stride,  # downsample with 3x3 conv
+            stride=stride,  # downsample with first conv
             padding=1,
-            groups=cardinality,
             bias=False)
-        self.bn2 = nn.BatchNorm2d(bottleneck_channels)
 
-        self.conv3 = nn.Conv2d(bottleneck_channels,
+        self.bn2 = nn.BatchNorm2d(out_channels)
+        self.conv2 = nn.Conv2d(out_channels,
                                out_channels,
-                               kernel_size=1,
+                               kernel_size=3,
                                stride=1,
-                               padding=0,
+                               padding=1,
                                bias=False)
-        self.bn3 = nn.BatchNorm2d(out_channels)
 
-        self.shortcut = nn.Sequential()  # identity
+        self.shortcut = nn.Sequential()
         if in_channels != out_channels:
             self.shortcut.add_module(
                 'conv',
@@ -50,14 +41,25 @@ class BottleneckBlock(nn.Module):
                     stride=stride,  # downsample
                     padding=0,
                     bias=False))
-            self.shortcut.add_module('bn', nn.BatchNorm2d(out_channels))  # BN
 
     def forward(self, x):
-        y = F.relu(self.bn1(self.conv1(x)), inplace=True)
-        y = F.relu(self.bn2(self.conv2(y)), inplace=True)
-        y = self.bn3(self.conv3(y))  # not apply ReLU
+        if self._preactivate_both:
+            x = F.relu(self.bn1(x),
+                       inplace=True)  # shortcut after preactivation
+            y = self.conv1(x)
+        else:
+            y = F.relu(self.bn1(x),
+                       inplace=True)  # preactivation only for residual path
+            y = self.conv1(y)
+        if self.drop_rate > 0:
+            y = F.dropout(y,
+                          p=self.drop_rate,
+                          training=self.training,
+                          inplace=False)
+
+        y = F.relu(self.bn2(y), inplace=True)
+        y = self.conv2(y)
         y += self.shortcut(x)
-        y = F.relu(y, inplace=True)  # apply ReLU after addition
         return y
 
 
@@ -65,19 +67,20 @@ class Network(nn.Module):
     def __init__(self, config):
         super().__init__()
 
-        model_config = config.model.resnext
+        model_config = config.model.wrn
         depth = model_config.depth
-        base_channels = model_config.base_channels
-        self.cardinality = model_config.cardinality
+        initial_channels = model_config.initial_channels
+        widening_factor = model_config.widening_factor
+        drop_rate = model_config.drop_rate
 
-        n_blocks_per_stage = (depth - 2) // 9
-        assert n_blocks_per_stage * 9 + 2 == depth
-        block = BottleneckBlock
+        block = BasicBlock
+        n_blocks_per_stage = (depth - 4) // 6
+        assert n_blocks_per_stage * 6 + 4 == depth
 
         n_channels = [
-            base_channels, base_channels * block.expansion,
-            base_channels * 2 * block.expansion,
-            base_channels * 4 * block.expansion
+            initial_channels, initial_channels * widening_factor,
+            initial_channels * 2 * widening_factor,
+            initial_channels * 4 * widening_factor,
         ]
 
         self.conv = nn.Conv2d(config.dataset.n_channels,
@@ -86,20 +89,26 @@ class Network(nn.Module):
                               stride=1,
                               padding=1,
                               bias=False)
-        self.bn = nn.BatchNorm2d(n_channels[0])
 
         self.stage1 = self._make_stage(n_channels[0],
                                        n_channels[1],
                                        n_blocks_per_stage,
-                                       stride=1)
+                                       block,
+                                       stride=1,
+                                       drop_rate=drop_rate)
         self.stage2 = self._make_stage(n_channels[1],
                                        n_channels[2],
                                        n_blocks_per_stage,
-                                       stride=2)
+                                       block,
+                                       stride=2,
+                                       drop_rate=drop_rate)
         self.stage3 = self._make_stage(n_channels[2],
                                        n_channels[3],
                                        n_blocks_per_stage,
-                                       stride=2)
+                                       block,
+                                       stride=2,
+                                       drop_rate=drop_rate)
+        self.bn = nn.BatchNorm2d(n_channels[3])
 
         # compute conv feature size
         with torch.no_grad():
@@ -116,33 +125,33 @@ class Network(nn.Module):
         initializer = create_initializer(config.model.init_mode)
         self.apply(initializer)
 
-    def _make_stage(self, in_channels, out_channels, n_blocks, stride):
+    def _make_stage(self, in_channels, out_channels, n_blocks, block, stride,
+                    drop_rate):
         stage = nn.Sequential()
         for index in range(n_blocks):
             block_name = f'block{index + 1}'
             if index == 0:
                 stage.add_module(
                     block_name,
-                    BottleneckBlock(
-                        in_channels,
-                        out_channels,
-                        stride,  # downsample
-                        self.cardinality))
+                    block(in_channels,
+                          out_channels,
+                          stride=stride,
+                          drop_rate=drop_rate))
             else:
                 stage.add_module(
                     block_name,
-                    BottleneckBlock(
-                        out_channels,
-                        out_channels,
-                        1,  # no downsampling
-                        self.cardinality))
+                    block(out_channels,
+                          out_channels,
+                          stride=1,
+                          drop_rate=drop_rate))
         return stage
 
     def _forward_conv(self, x):
-        x = F.relu(self.bn(self.conv(x)), inplace=True)
+        x = self.conv(x)
         x = self.stage1(x)
         x = self.stage2(x)
         x = self.stage3(x)
+        x = F.relu(self.bn(x), inplace=True)
         x = F.adaptive_avg_pool2d(x, output_size=1)
         return x
 

@@ -13,13 +13,13 @@ def create_initializer(mode: str) -> Callable:
                                         mode=mode,
                                         nonlinearity='relu')
             elif isinstance(module, nn.BatchNorm2d):
-                nn.init.constant_(module.weight.data, 1)
-                nn.init.constant_(module.bias.data, 0)
+                nn.init.ones_(module.weight.data)
+                nn.init.zeros_(module.bias.data)
             elif isinstance(module, nn.Linear):
                 nn.init.kaiming_normal_(module.weight.data,
                                         mode=mode,
                                         nonlinearity='relu')
-                nn.init.constant_(module.bias.data, 0)
+                nn.init.zeros_(module.bias.data)
     else:
         raise ValueError()
 

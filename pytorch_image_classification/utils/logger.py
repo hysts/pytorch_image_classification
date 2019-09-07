@@ -11,6 +11,7 @@ def create_logger(name: str,
                   filename: str = 'log.txt') -> logging.Logger:
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
+    logger.propagate = False
     if distributed_rank > 0:
         return logger
 
