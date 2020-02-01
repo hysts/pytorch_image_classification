@@ -28,6 +28,7 @@ from pytorch_image_classification.utils import (
     AverageMeter,
     DummyWriter,
     compute_accuracy,
+    count_op,
     create_logger,
     create_tensorboard_writer,
     find_config_diff,
@@ -349,8 +350,9 @@ def main():
     train_loader, val_loader = create_dataloader(config, is_train=True)
 
     model = create_model(config)
-    n_params = sum([param.view(-1).size()[0] for param in model.parameters()])
-    logger.info(f'n_params: {n_params}')
+    flops, n_params = count_op(config, model)
+    logger.info(f'FLOPs  : {flops}')
+    logger.info(f'#params: {n_params}')
 
     optimizer = create_optimizer(config, model)
     model, optimizer = apex.amp.initialize(model,
