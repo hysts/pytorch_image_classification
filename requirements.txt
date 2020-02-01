@@ -6,3 +6,4 @@ fvcore
 tqdm
 yacs
 git+https://github.com/NVIDIA/apex.git#egg=apex
+termcolor
