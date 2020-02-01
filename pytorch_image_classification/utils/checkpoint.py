@@ -11,13 +11,13 @@ from pytorch_image_classification.config.config_node import ConfigNode
 
 class CheckPointer:
     def __init__(
-            self,
-            model,
-            optimizer=None,
-            scheduler=None,
-            checkpoint_dir=None,
-            logger=None,
-            distributed_rank=0,
+        self,
+        model,
+        optimizer=None,
+        scheduler=None,
+        checkpoint_dir=None,
+        logger=None,
+        distributed_rank=0,
     ):
         self.model = model
         self.optimizer = optimizer

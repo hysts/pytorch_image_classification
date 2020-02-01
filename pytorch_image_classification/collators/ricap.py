@@ -5,8 +5,9 @@ import torch
 import yacs.config
 
 
-def ricap(batch: Tuple[torch.Tensor, torch.Tensor], beta: float
-          ) -> Tuple[torch.Tensor, Tuple[List[torch.Tensor], List[float]]]:
+def ricap(
+    batch: Tuple[torch.Tensor, torch.Tensor], beta: float
+) -> Tuple[torch.Tensor, Tuple[List[torch.Tensor], List[float]]]:
     data, targets = batch
     image_h, image_w = data.shape[2:]
     ratio = np.random.beta(beta, beta, size=2)
@@ -39,7 +40,7 @@ class RICAPCollator:
         self.beta = config.augmentation.ricap.beta
 
     def __call__(
-            self, batch: List[Tuple[torch.Tensor, int]]
+        self, batch: List[Tuple[torch.Tensor, int]]
     ) -> Tuple[torch.Tensor, Tuple[List[torch.Tensor], List[float]]]:
         batch = torch.utils.data.dataloader.default_collate(batch)
         batch = ricap(batch, self.beta)

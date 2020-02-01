@@ -66,8 +66,9 @@ class Resize:
 
 
 class ToTensor:
-    def __call__(self, data: Union[np.ndarray, Tuple[np.ndarray, ...]]
-                 ) -> Union[torch.Tensor, Tuple[torch.Tensor, ...]]:
+    def __call__(
+        self, data: Union[np.ndarray, Tuple[np.ndarray, ...]]
+    ) -> Union[torch.Tensor, Tuple[torch.Tensor, ...]]:
         if isinstance(data, tuple):
             return tuple([self._to_tensor(image) for image in data])
         else:

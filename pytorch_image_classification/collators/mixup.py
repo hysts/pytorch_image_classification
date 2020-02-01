@@ -5,8 +5,9 @@ import torch
 import yacs.config
 
 
-def mixup(batch: Tuple[torch.Tensor, torch.Tensor], alpha: float
-          ) -> Tuple[torch.Tensor, Tuple[torch.Tensor, torch.Tensor, float]]:
+def mixup(
+    batch: Tuple[torch.Tensor, torch.Tensor], alpha: float
+) -> Tuple[torch.Tensor, Tuple[torch.Tensor, torch.Tensor, float]]:
     data, targets = batch
     indices = torch.randperm(data.size(0))
     shuffled_data = data[indices]
@@ -24,7 +25,7 @@ class MixupCollator:
         self.alpha = config.augmentation.mixup.alpha
 
     def __call__(
-            self, batch: List[Tuple[torch.Tensor, int]]
+        self, batch: List[Tuple[torch.Tensor, int]]
     ) -> Tuple[torch.Tensor, Tuple[torch.Tensor, torch.Tensor, float]]:
         batch = torch.utils.data.dataloader.default_collate(batch)
         batch = mixup(batch, self.alpha)

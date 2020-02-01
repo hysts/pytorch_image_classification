@@ -78,7 +78,8 @@ class Network(nn.Module):
         assert n_blocks_per_stage * 6 + 4 == depth
 
         n_channels = [
-            initial_channels, initial_channels * widening_factor,
+            initial_channels,
+            initial_channels * widening_factor,
             initial_channels * 2 * widening_factor,
             initial_channels * 4 * widening_factor,
         ]

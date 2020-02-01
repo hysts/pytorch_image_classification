@@ -6,8 +6,8 @@ from pytorch_image_classification import get_default_config
 from pytorch_image_classification.config.config_node import ConfigNode
 
 
-def find_config_diff(config: yacs.config.CfgNode
-                     ) -> Optional[yacs.config.CfgNode]:
+def find_config_diff(
+        config: yacs.config.CfgNode) -> Optional[yacs.config.CfgNode]:
     def _find_diff(node: yacs.config.CfgNode,
                    default_node: yacs.config.CfgNode):
         root_node = ConfigNode()

@@ -18,8 +18,8 @@ from .cutout import Cutout, DualCutout
 from .random_erasing import RandomErasing
 
 
-def _get_dataset_stats(config: yacs.config.CfgNode
-                       ) -> Tuple[np.ndarray, np.ndarray]:
+def _get_dataset_stats(
+        config: yacs.config.CfgNode) -> Tuple[np.ndarray, np.ndarray]:
     name = config.dataset.name
     if name == 'CIFAR10':
         # RGB

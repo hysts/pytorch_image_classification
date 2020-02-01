@@ -5,8 +5,9 @@ import torch
 import yacs.config
 
 
-def cutmix(batch: Tuple[torch.Tensor, torch.Tensor], alpha: float
-           ) -> Tuple[torch.Tensor, Tuple[torch.Tensor, torch.Tensor, float]]:
+def cutmix(
+    batch: Tuple[torch.Tensor, torch.Tensor], alpha: float
+) -> Tuple[torch.Tensor, Tuple[torch.Tensor, torch.Tensor, float]]:
     data, targets = batch
 
     indices = torch.randperm(data.size(0))
@@ -36,7 +37,7 @@ class CutMixCollator:
         self.alpha = config.augmentation.cutmix.alpha
 
     def __call__(
-            self, batch: List[Tuple[torch.Tensor, int]]
+        self, batch: List[Tuple[torch.Tensor, int]]
     ) -> Tuple[torch.Tensor, Tuple[torch.Tensor, torch.Tensor, float]]:
         batch = torch.utils.data.dataloader.default_collate(batch)
         batch = cutmix(batch, self.alpha)
