@@ -21,9 +21,8 @@ Following papers are implemented using PyTorch.
 ## Requirements
 
 * Python >= 3.7
-* PyTorch >= 1.2.0
+* PyTorch >= 1.4.0
 * torchvision
-* [tensorboardX](https://github.com/lanpa/tensorboardX)
 * [NVIDIA Apex](https://github.com/NVIDIA/apex)
 
 

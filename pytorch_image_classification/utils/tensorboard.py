@@ -1,6 +1,6 @@
 import pathlib
 
-from tensorboardX import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 import yacs.config
 
 
@@ -145,6 +145,9 @@ class DummyWriter(SummaryWriter):
         pass
 
     def add_custom_scalars(self, layout):
+        pass
+
+    def flush(self):
         pass
 
     def close(self):

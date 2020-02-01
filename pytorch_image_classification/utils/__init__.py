@@ -1,4 +1,3 @@
-from .checkpoint import CheckPointer
 from .dist import get_rank
 from .diff_config import find_config_diff
 from .env_info import get_env_info

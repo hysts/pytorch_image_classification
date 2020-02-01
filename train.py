@@ -10,6 +10,8 @@ import torch
 import torch.distributed as dist
 import torchvision
 
+from fvcore.common.checkpoint import Checkpointer
+
 from pytorch_image_classification import (
     apply_data_parallel_wrapper,
     create_dataloader,
@@ -20,9 +22,9 @@ from pytorch_image_classification import (
     get_default_config,
     update_config,
 )
+from pytorch_image_classification.config.config_node import ConfigNode
 from pytorch_image_classification.utils import (
     AverageMeter,
-    CheckPointer,
     DummyWriter,
     compute_accuracy,
     create_logger,
@@ -101,7 +103,7 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
           logger, tensorboard_writer, tensorboard_writer2):
     global global_step
 
-    logger.info(f'Train {epoch}')
+    logger.info(f'Train {epoch} {global_step}')
 
     device = torch.device(config.device)
 
@@ -196,7 +198,7 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
                 logger.info(
                     f'Epoch {epoch} '
                     f'Step {step}/{len(train_loader)} '
-                    f'lr {scheduler.get_lr()[0]:.6f} '
+                    f'lr {scheduler.get_last_lr()[0]:.6f} '
                     f'loss {loss_meter.val:.4f} ({loss_meter.avg:.4f}) '
                     f'acc@1 {acc1_meter.val:.4f} ({acc1_meter.avg:.4f}) '
                     f'acc@5 {acc5_meter.val:.4f} ({acc5_meter.avg:.4f})')
@@ -208,7 +210,7 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
                 tensorboard_writer2.add_scalar('Train/RunningAcc5',
                                                acc5_meter.avg, global_step)
                 tensorboard_writer2.add_scalar('Train/RunningLearningRate',
-                                               scheduler.get_lr()[0],
+                                               scheduler.get_last_lr()[0],
                                                global_step)
 
         scheduler.step()
@@ -222,7 +224,7 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
         tensorboard_writer.add_scalar('Train/Acc5', acc5_meter.avg, epoch)
         tensorboard_writer.add_scalar('Train/Time', elapsed, epoch)
         tensorboard_writer.add_scalar('Train/LearningRate',
-                                      scheduler.get_lr()[0], epoch)
+                                      scheduler.get_last_lr()[0], epoch)
 
 
 def validate(epoch, config, model, loss_func, val_loader, logger,
@@ -306,6 +308,8 @@ def validate(epoch, config, model, loss_func, val_loader, logger,
 
 
 def main():
+    global global_step
+
     config = load_config()
 
     set_seed(config)
@@ -356,26 +360,24 @@ def main():
     scheduler = create_scheduler(config,
                                  optimizer,
                                  steps_per_epoch=len(train_loader))
-    checkpointer = CheckPointer(model,
+    checkpointer = Checkpointer(model,
                                 optimizer=optimizer,
                                 scheduler=scheduler,
-                                checkpoint_dir=output_dir,
-                                logger=logger,
-                                distributed_rank=get_rank())
+                                save_dir=output_dir,
+                                save_to_disk=get_rank() == 0)
 
     start_epoch = config.train.start_epoch
     scheduler.last_epoch = start_epoch
     if config.train.resume:
-        checkpoint_config, start_epoch, global_step_ = checkpointer.load()
-        global global_step
-        global_step = global_step_
+        checkpoint_config = checkpointer.resume_or_load('', resume=True)
+        global_step = checkpoint_config['global_step']
+        start_epoch = checkpoint_config['epoch']
         config.defrost()
-        config.merge_from_other_cfg(checkpoint_config)
+        config.merge_from_other_cfg(ConfigNode(checkpoint_config['config']))
         config.freeze()
     elif config.train.checkpoint != '':
-        checkpointer.load(config.train.checkpoint,
-                          load_optimizer=False,
-                          load_scheduler=False)
+        checkpoint = torch.load(config.train.checkpoint, map_location='cpu')
+        model.load_state_dict(checkpoint['model'])
 
     if get_rank() == 0 and config.train.use_tensorboard:
         tensorboard_writer = create_tensorboard_writer(
@@ -404,6 +406,9 @@ def main():
                                             config.train.val_period == 0):
             validate(epoch, config, model, val_loss, val_loader, logger,
                      tensorboard_writer)
+
+        tensorboard_writer.flush()
+        tensorboard_writer2.flush()
 
         if (epoch % config.train.checkpoint_period == 0) or (
                 epoch == config.scheduler.epochs):
