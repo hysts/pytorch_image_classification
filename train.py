@@ -7,6 +7,7 @@ import time
 import apex
 import numpy as np
 import torch
+import torch.nn as nn
 import torch.distributed as dist
 import torchvision
 
@@ -377,7 +378,11 @@ def main():
         config.freeze()
     elif config.train.checkpoint != '':
         checkpoint = torch.load(config.train.checkpoint, map_location='cpu')
-        model.load_state_dict(checkpoint['model'])
+        if isinstance(model,
+                      (nn.DataParallel, nn.parallel.DistributedDataParallel)):
+            model.module.load_state_dict(checkpoint['model'])
+        else:
+            model.load_state_dict(checkpoint['model'])
 
     if get_rank() == 0 and config.train.use_tensorboard:
         tensorboard_writer = create_tensorboard_writer(
