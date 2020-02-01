@@ -2,21 +2,21 @@
 
 Following papers are implemented using PyTorch.
 
-* ResNet (1512.03385)
-* ResNet-preact (1603.05027)
-* WRN (1605.07146)
-* DenseNet (1608.06993)
-* PyramidNet (1610.02915)
-* ResNeXt (1611.05431)
-* shake-shake (1705.07485)
-* LARS (1708.03888, 1801.03137)
-* Cutout (1708.04552)
-* Random Erasing (1708.04896)
-* SENet (1709.01507)
-* Mixup (1710.09412)
-* Dual-Cutout (1802.07426)
-* RICAP (1811.09030)
-* CutMix (1905.04899)
+* ResNet ([1512.03385](https://arxiv.org/abs/1512.03385))
+* ResNet-preact ([1603.05027](https://arxiv.org/abs/1603.05027))
+* WRN ([1605.07146](https://arxiv.org/abs/1605.07146))
+* DenseNet ([1608.06993](https://arxiv.org/abs/1608.06993), [2001.02394](https://arxiv.org/abs/2001.02394))
+* PyramidNet ([1610.02915](https://arxiv.org/abs/1610.02915))
+* ResNeXt ([1611.05431](https://arxiv.org/abs/1611.05431))
+* shake-shake ([1705.07485](https://arxiv.org/abs/1705.07485))
+* LARS ([1708.03888](https://arxiv.org/abs/1708.03888), [1801.03137](https://arxiv.org/abs/1801.03137))
+* Cutout ([1708.04552](https://arxiv.org/abs/1708.04552))
+* Random Erasing ([1708.04896](https://arxiv.org/abs/1708.04896))
+* SENet ([1709.01507](https://arxiv.org/abs/1709.01507))
+* Mixup ([1710.09412](https://arxiv.org/abs/1710.09412))
+* Dual-Cutout ([1802.07426](https://arxiv.org/abs/1802.07426))
+* RICAP ([1811.09030](https://arxiv.org/abs/1811.09030))
+* CutMix ([1905.04899](https://arxiv.org/abs/1905.04899))
 
 ## Requirements
 
@@ -635,7 +635,7 @@ python train.py --config configs/cifar/resnet_preact.yaml \
 |:---------------------------------------------------|:-----------------------------:|------------:|--------------:|
 | ResNet-preact-20                                   |             7.60              |     200     |       24m     |
 | ResNet-preact-20, label smoothing (epsilon=0.001)  |             7.51              |     200     |       25m     |
-| ResNet-preact-20, label smoothing (epsilon=0.01)    |            7.21              |     200     |       25m     |
+| ResNet-preact-20, label smoothing (epsilon=0.01)   |             7.21              |     200     |       25m     |
 | ResNet-preact-20, label smoothing (epsilon=0.1)    |             7.57              |     200     |       25m     |
 | ResNet-preact-20, mixup (alpha=1)                  |             7.24              |     200     |       26m     |
 | ResNet-preact-20, RICAP (beta=0.3), w/ random crop |             6.88              |     200     |       28m     |
@@ -1120,6 +1120,7 @@ python train.py --config configs/cifar/resnet_preact.yaml \
 * Xie, Saining, Ross Girshick, Piotr Dollar, Zhuowen Tu, and Kaiming He. "Aggregated Residual Transformations for Deep Neural Networks." The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2017. [link](http://openaccess.thecvf.com/content_cvpr_2017/html/Xie_Aggregated_Residual_Transformations_CVPR_2017_paper.html), [arXiv:1611.05431](https://arxiv.org/abs/1611.05431), [Torch implementation](https://github.com/facebookresearch/ResNeXt)
 * Gastaldi, Xavier. "Shake-Shake regularization of 3-branch residual networks." In International Conference on Learning Representations (ICLR) Workshop, 2017. [link](https://openreview.net/forum?id=HkO-PCmYl), [arXiv:1705.07485](https://arxiv.org/abs/1705.07485), [Torch implementation](https://github.com/xgastaldi/shake-shake)
 * Hu, Jie, Li Shen, and Gang Sun. "Squeeze-and-Excitation Networks." The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2018, pp. 7132-7141. [link](http://openaccess.thecvf.com/content_cvpr_2018/html/Hu_Squeeze-and-Excitation_Networks_CVPR_2018_paper.html), [arXiv:1709.01507](https://arxiv.org/abs/1709.01507), [Caffe implementation](https://github.com/hujie-frank/SENet)
+* Huang, Gao, Zhuang Liu, Geoff Pleiss, Laurens van der Maaten, and Kilian Q. Weinberger. "Convolutional Networks with Dense Connectivity." IEEE transactions on pattern analysis and machine intelligence (2019). [arXiv:2001.02394](https://arxiv.org/abs/2001.02394)
 
 ### Regularization, data augmentation
 
