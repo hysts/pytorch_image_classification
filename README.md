@@ -278,25 +278,24 @@ python train.py --config configs/cifar/shake_shake.yaml \
 
 ### Results using multi-GPU
 
-| Model                       | base lr | batch size | #GPUs | Test Error (1 run) | # of Epochs | Training Time* |
-|:----------------------------|--------:|-----------:|:-----:|:------------------:|------------:|---------------:|
-| WRN-28-10, RICAP (beta=0.3) |   0.3   |     256    |   1   |        2.71        |      200    |      3h33m     |
-| WRN-28-10, RICAP (beta=0.3) |   0.4   |     512    |   2   |        2.68        |      200    |      2h20m     |
-| WRN-28-10, RICAP (beta=0.3) |   0.6   |    1024    |   4   |        3.01        |      200    |      1h24m     |
-| WRN-28-10, RICAP (beta=0.3) |   0.8   |    2048    |   8   |        2.85        |      200    |        43m     |
+| Model                       | batch size | #GPUs | Test Error (1 run) | # of Epochs | Training Time* |
+|:----------------------------|-----------:|:-----:|:------------------:|------------:|---------------:|
+| WRN-28-10, RICAP (beta=0.3) |     512    |   1   |        2.63        |      200    |      3h41m     |
+| WRN-28-10, RICAP (beta=0.3) |     256    |   2   |        2.71        |      200    |      2h14m     |
+| WRN-28-10, RICAP (beta=0.3) |     128    |   4   |        2.89        |      200    |      1h01m     |
+| WRN-28-10, RICAP (beta=0.3) |      64    |   8   |        2.75        |      200    |        34m     |
 
 #### Note
 
 * Tesla V100 was used in these experiments.
-* In these experiments, reported training time doesn't include testing time.
-    * The code was slightly modified so that test was run only at the last epoch.
+
 
 ##### Using 1 GPU
 
 ```bash
 python train.py --config configs/cifar/wrn.yaml \
-    train.base_lr 0.3 \
-    train.batch_size 256 \
+    train.base_lr 0.2 \
+    train.batch_size 512 \
     scheduler.epochs 200 \
     scheduler.type cosine \
     train.output_dir experiments/wrn_28_10_ricap_1gpu/exp00 \
@@ -310,7 +309,7 @@ python train.py --config configs/cifar/wrn.yaml \
 python -m torch.distributed.launch --nproc_per_node 2 \
     train.py --config configs/cifar/wrn.yaml \
     train.distributed True \
-    train.base_lr 0.4 \
+    train.base_lr 0.2 \
     train.batch_size 256 \
     scheduler.epochs 200 \
     scheduler.type cosine \
@@ -325,8 +324,8 @@ python -m torch.distributed.launch --nproc_per_node 2 \
 python -m torch.distributed.launch --nproc_per_node 4 \
     train.py --config configs/cifar/wrn.yaml \
     train.distributed True \
-    train.base_lr 0.6 \
-    train.batch_size 256 \
+    train.base_lr 0.2 \
+    train.batch_size 128 \
     scheduler.epochs 200 \
     scheduler.type cosine \
     train.output_dir experiments/wrn_28_10_ricap_4gpus/exp00 \
@@ -340,8 +339,8 @@ python -m torch.distributed.launch --nproc_per_node 4 \
 python -m torch.distributed.launch --nproc_per_node 8 \
     train.py --config configs/cifar/wrn.yaml \
     train.distributed True \
-    train.base_lr 0.8 \
-    train.batch_size 256 \
+    train.base_lr 0.2 \
+    train.batch_size 64 \
     scheduler.epochs 200 \
     scheduler.type cosine \
     train.output_dir experiments/wrn_28_10_ricap_8gpus/exp00 \
