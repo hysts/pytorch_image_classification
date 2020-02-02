@@ -126,7 +126,8 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
                                                     scale_each=True)
                 tensorboard_writer.add_image('Train/Image', image, epoch)
 
-        data = data.to(device)
+        data = data.to(device,
+                       non_blocking=config.train.dataloader.non_blocking)
         targets = send_targets_to_device(config, targets, device)
 
         data_chunks, target_chunks = subdivide_batch(config, data, targets)
@@ -251,7 +252,8 @@ def validate(epoch, config, model, loss_func, val_loader, logger,
                                                             scale_each=True)
                         tensorboard_writer.add_image('Val/Image', image, epoch)
 
-            data = data.to(device)
+            data = data.to(
+                device, non_blocking=config.validation.dataloader.non_blocking)
             targets = targets.to(device)
 
             outputs = model(data)

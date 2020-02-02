@@ -160,6 +160,7 @@ config.train.dataloader = ConfigNode()
 config.train.dataloader.num_workers = 2
 config.train.dataloader.drop_last = True
 config.train.dataloader.pin_memory = False
+config.train.dataloader.non_blocking = False
 
 # validation data loader
 config.validation = ConfigNode()
@@ -168,6 +169,7 @@ config.validation.dataloader = ConfigNode()
 config.validation.dataloader.num_workers = 2
 config.validation.dataloader.drop_last = False
 config.validation.dataloader.pin_memory = False
+config.validation.dataloader.non_blocking = False
 
 # distributed
 config.train.distributed = False
