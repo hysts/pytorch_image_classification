@@ -5,6 +5,9 @@ import yacs.config
 
 
 class DummyWriter(SummaryWriter):
+    def __init__(self):
+        pass
+
     def add_scalar(self, tag, scalar_value, global_step=None, walltime=None):
         pass
 
