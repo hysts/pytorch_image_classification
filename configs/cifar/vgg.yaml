@@ -1,0 +1,65 @@
+device: cuda
+dataset:
+  name: CIFAR10
+model:
+  type: cifar
+  name: vgg
+  init_mode: kaiming_fan_out
+  vgg:
+    n_channels: [64, 128, 256, 512, 512]
+    n_layers: [2, 2, 3, 3, 3]
+    use_bn: True
+train:
+  seed: 0
+  precision: O0
+  batch_size: 128
+  subdivision: 1
+  optimizer: sgd
+  base_lr: 0.1
+  momentum: 0.9
+  nesterov: True
+  weight_decay: 1e-4
+  output_dir: experiments/cifar10/vgg/exp00
+  log_period: 100
+  checkpoint_period: 100
+  val_ratio: 0.1
+  use_test_as_val: False
+  use_tensorboard: True
+  distributed: False
+  dataloader:
+    num_workers: 2
+    drop_last: True
+    pin_memory: False
+validation:
+  batch_size: 256
+  dataloader:
+    num_workers: 2
+    drop_last: False
+    pin_memory: False
+scheduler:
+  epochs: 160
+  type: multistep
+  milestones: [80, 120]
+  lr_decay: 0.1
+augmentation:
+  use_random_crop: True
+  use_random_horizontal_flip: True
+  use_cutout: False
+  use_random_erasing: False
+  use_dual_cutout: False
+  use_mixup: False
+  use_ricap: False
+  use_cutmix: False
+  use_label_smoothing: False
+  random_crop:
+    padding: 4
+    fill: 0
+    padding_mode: constant
+  random_horizontal_flip:
+    prob: 0.5
+tensorboard:
+  train_images: False
+  val_images: False
+  model_params: False
+
+

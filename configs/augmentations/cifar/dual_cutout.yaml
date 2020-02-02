@@ -1,0 +1,8 @@
+augmentation:
+  use_dual_cutout: True
+  cutout:
+    prob: 1.0
+    mask_size: 16
+    cut_inside: False
+    mask_color: 0
+    dual_cutout_alpha: 0.1

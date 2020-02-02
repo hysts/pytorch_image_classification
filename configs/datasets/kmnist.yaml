@@ -1,0 +1,16 @@
+dataset:
+  name: KMNIST
+  dataset_dir: ''
+  image_size: 28
+  n_channels: 1
+  n_classes: 10
+augmentation:
+  use_random_crop: True
+  use_random_horizontal_flip: False
+  use_cutout: False
+  use_random_erasing: False
+  use_dual_cutout: False
+  use_mixup: False
+  use_ricap: False
+  use_cutmix: False
+  use_label_smoothing: False

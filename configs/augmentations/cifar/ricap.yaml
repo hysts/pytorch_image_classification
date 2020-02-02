@@ -1,0 +1,5 @@
+augmentation:
+  use_random_crop: False
+  use_ricap: True
+  ricap:
+    beta: 0.3

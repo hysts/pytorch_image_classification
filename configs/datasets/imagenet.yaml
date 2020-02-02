@@ -1,0 +1,22 @@
+dataset:
+  name: ImageNet
+  dataset_dir: ''
+  image_size: 224
+  n_channels: 3
+  n_classes: 1000
+augmentation:
+  use_random_crop: True
+  use_random_horizontal_flip: True
+  use_cutout: False
+  use_random_erasing: False
+  use_dual_cutout: False
+  use_mixup: False
+  use_ricap: False
+  use_cutmix: False
+  use_label_smoothing: False
+tta:
+  use_resize: True
+  use_center_crop: True
+  resize: 256
+
+

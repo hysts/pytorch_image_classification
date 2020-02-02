@@ -1,0 +1,4 @@
+augmentation:
+  use_mixup: True
+  mixup:
+    alpha: 1.0
