@@ -1,10 +1,9 @@
 numpy
-torch
+torch>1.4.0
 torchvision
-tensorboardX
 fvcore
 tqdm
 yacs
 git+https://github.com/NVIDIA/apex.git#egg=apex
 termcolor
-thop
+thop<0.0.31.post2004070130
