@@ -352,8 +352,8 @@ def main():
     train_loader, val_loader = create_dataloader(config, is_train=True)
 
     model = create_model(config)
-    flops, n_params = count_op(config, model)
-    logger.info(f'FLOPs  : {flops}')
+    macs, n_params = count_op(config, model)
+    logger.info(f'MACs  : {macs}')
     logger.info(f'#params: {n_params}')
 
     optimizer = create_optimizer(config, model)
