@@ -25,6 +25,9 @@ Following papers are implemented using PyTorch.
 * torchvision
 * [NVIDIA Apex](https://github.com/NVIDIA/apex)
 
+```bash
+pip install -r requirements.txt
+```
 
 
 ## Usage
