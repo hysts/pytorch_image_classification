@@ -216,17 +216,17 @@ python train.py --config configs/cifar/shake_shake.yaml \
 
 ### Results
 
-| Model                      | Test Error (1 run) | # of Epochs | Training Time |
-|:---------------------------|:------------------:|------------:|--------------:|
-| WRN-20-4                   |        4.91        |      200    |      1h26m    |
-| WRN-20-4                   |        4.01        |      400    |      2h53m    |
-| WRN-20-4                   |        3.99        |     1800    |     12h53m    |
-| WRN-20-4, Cutout 16        |        3.71        |      200    |      1h26m    |
-| WRN-20-4, Cutout 16        |        3.46        |      400    |      2h53m    |
-| WRN-20-4, Cutout 16        |        3.76        |     1800    |     12h53m    |
-| WRN-20-4, RICAP (beta=0.3) |        3.45        |      200    |      1h26m    |
-| WRN-20-4, RICAP (beta=0.3) |        3.11        |      400    |      2h53m    |
-| WRN-20-4, RICAP (beta=0.3) |        3.15        |     1800    |     12h53m    |
+| Model                                                 | Test Error (1 run) | # of Epochs | Training Time |
+|:------------------------------------------------------|:------------------:|------------:|--------------:|
+| ResNet-preact-20, widening factor 4                   |        4.91        |      200    |      1h26m    |
+| ResNet-preact-20, widening factor 4                   |        4.01        |      400    |      2h53m    |
+| ResNet-preact-20, widening factor 4                   |        3.99        |     1800    |     12h53m    |
+| ResNet-preact-20, widening factor 4, Cutout 16        |        3.71        |      200    |      1h26m    |
+| ResNet-preact-20, widening factor 4, Cutout 16        |        3.46        |      400    |      2h53m    |
+| ResNet-preact-20, widening factor 4, Cutout 16        |        3.76        |     1800    |     12h53m    |
+| ResNet-preact-20, widening factor 4, RICAP (beta=0.3) |        3.45        |      200    |      1h26m    |
+| ResNet-preact-20, widening factor 4, RICAP (beta=0.3) |        3.11        |      400    |      2h53m    |
+| ResNet-preact-20, widening factor 4, RICAP (beta=0.3) |        3.15        |     1800    |     12h53m    |
 
 | Model                                         | Test Error (1 run) | # of Epochs | Training Time |
 |:----------------------------------------------|:------------------:|------------:|--------------:|
