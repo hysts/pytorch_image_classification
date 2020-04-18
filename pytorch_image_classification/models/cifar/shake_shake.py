@@ -34,30 +34,31 @@ class ResidualPath(nn.Module):
         return x
 
 
-class DownsamplingShortcut(nn.Module):
-    def __init__(self, in_channels):
+class SkipConnection(nn.Module):
+    def __init__(self, in_channels, out_channels, stride):
         super().__init__()
         self.conv1 = nn.Conv2d(in_channels,
-                               in_channels,
+                               out_channels // 2,
                                kernel_size=1,
                                stride=1,
                                padding=0,
                                bias=False)
         self.conv2 = nn.Conv2d(in_channels,
-                               in_channels,
+                               out_channels // 2,
                                kernel_size=1,
                                stride=1,
                                padding=0,
                                bias=False)
-        self.bn = nn.BatchNorm2d(in_channels * 2)
+        self.bn = nn.BatchNorm2d(out_channels)
+        self.stride = stride
 
     def forward(self, x):
         x = F.relu(x, inplace=False)
-        y1 = F.avg_pool2d(x, kernel_size=1, stride=2, padding=0)
+        y1 = F.avg_pool2d(x, kernel_size=1, stride=self.stride, padding=0)
         y1 = self.conv1(y1)
 
         y2 = F.pad(x[:, :, 1:, 1:], (0, 1, 0, 1))
-        y2 = F.avg_pool2d(y2, kernel_size=1, stride=2, padding=0)
+        y2 = F.avg_pool2d(y2, kernel_size=1, stride=self.stride, padding=0)
         y2 = self.conv2(y2)
 
         z = torch.cat([y1, y2], dim=1)
@@ -77,8 +78,8 @@ class BasicBlock(nn.Module):
 
         self.shortcut = nn.Sequential()
         if in_channels != out_channels:
-            self.shortcut.add_module('downsample',
-                                     DownsamplingShortcut(in_channels))
+            self.shortcut.add_module(
+                'skip', SkipConnection(in_channels, out_channels, stride))
 
     def forward(self, x):
         x1 = self.residual_path1(x)
@@ -119,14 +120,14 @@ class Network(nn.Module):
         ]
 
         self.conv = nn.Conv2d(config.dataset.n_channels,
-                              n_channels[0],
+                              16,
                               kernel_size=3,
                               stride=1,
                               padding=1,
                               bias=False)
-        self.bn = nn.BatchNorm2d(initial_channels)
+        self.bn = nn.BatchNorm2d(16)
 
-        self.stage1 = self._make_stage(n_channels[0],
+        self.stage1 = self._make_stage(16,
                                        n_channels[0],
                                        n_blocks_per_stage,
                                        block,
@@ -178,10 +179,11 @@ class Network(nn.Module):
         return stage
 
     def _forward_conv(self, x):
-        x = F.relu(self.bn(self.conv(x)), inplace=True)
+        x = self.bn(self.conv(x))
         x = self.stage1(x)
         x = self.stage2(x)
         x = self.stage3(x)
+        x = F.relu(x, inplace=True)
         x = F.adaptive_avg_pool2d(x, output_size=1)
         return x
 
