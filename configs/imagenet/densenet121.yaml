@@ -7,24 +7,26 @@ dataset:
   n_classes: 1000
 model:
   type: imagenet
-  name: vgg
+  name: densenet
   init_mode: kaiming_fan_out
-  vgg:
-    n_channels: [64, 128, 256, 512, 512]
-    n_layers: [2, 2, 3, 3, 3]
-    use_bn: True
+  densenet:
+    n_blocks: [6, 12, 24, 16]
+    block_type: bottleneck
+    growth_rate: 32
+    drop_rate: 0.0
+    compression_rate: 0.5
 train:
   resume: False
   seed: 0
   precision: O0
   batch_size: 256
-  subdivision: 8
+  subdivision: 1
   optimizer: sgd
-  base_lr: 0.01
+  base_lr: 0.1
   momentum: 0.9
   nesterov: True
-  weight_decay: 5e-4
-  output_dir: experiments/imagenet/vgg_16/exp00
+  weight_decay: 1e-4
+  output_dir: experiments/imagenet/densenet121/exp00
   log_period: 10
   checkpoint_period: 10
   use_tensorboard: True

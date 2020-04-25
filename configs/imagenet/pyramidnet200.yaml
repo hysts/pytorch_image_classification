@@ -7,26 +7,25 @@ dataset:
   n_classes: 1000
 model:
   type: imagenet
-  name: densenet
+  name: pyramidnet
   init_mode: kaiming_fan_out
-  densenet:
-    n_blocks: [6, 12, 24, 16]
+  pyramidnet:
+    n_blocks: [3, 24, 36, 3]
+    initial_channels: 64
     block_type: bottleneck
-    growth_rate: 32
-    drop_rate: 0.0
-    compression_rate: 0.5
+    alpha: 300
 train:
   resume: False
   seed: 0
   precision: O0
-  batch_size: 256
+  batch_size: 128
   subdivision: 1
   optimizer: sgd
-  base_lr: 0.1
+  base_lr: 0.05
   momentum: 0.9
   nesterov: True
   weight_decay: 1e-4
-  output_dir: experiments/imagenet/densenet_121/exp00
+  output_dir: experiments/imagenet/pyramidnet200/exp00
   log_period: 10
   checkpoint_period: 10
   use_tensorboard: True
@@ -42,9 +41,9 @@ validation:
     drop_last: False
     pin_memory: True
 scheduler:
-  epochs: 90
+  epochs: 120
   type: multistep
-  milestones: [30, 60]
+  milestones: [60, 90, 105]
   lr_decay: 0.1
 augmentation:
   use_random_crop: True

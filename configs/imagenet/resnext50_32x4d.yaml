@@ -7,25 +7,25 @@ dataset:
   n_classes: 1000
 model:
   type: imagenet
-  name: pyramidnet
+  name: resnext
   init_mode: kaiming_fan_out
-  pyramidnet:
-    n_blocks: [3, 24, 36, 3]
+  resnext:
     initial_channels: 64
-    block_type: bottleneck
-    alpha: 300
+    n_blocks: [3, 4, 6, 3]
+    cardinality: 32
+    base_channels: 4
 train:
   resume: False
   seed: 0
   precision: O0
-  batch_size: 128
+  batch_size: 256
   subdivision: 1
   optimizer: sgd
-  base_lr: 0.05
+  base_lr: 0.1
   momentum: 0.9
   nesterov: True
   weight_decay: 1e-4
-  output_dir: experiments/imagenet/pyramidnet_200/exp00
+  output_dir: experiments/imagenet/resnext50_32x4d/exp00
   log_period: 10
   checkpoint_period: 10
   use_tensorboard: True
@@ -41,9 +41,9 @@ validation:
     drop_last: False
     pin_memory: True
 scheduler:
-  epochs: 120
+  epochs: 90
   type: multistep
-  milestones: [60, 90, 105]
+  milestones: [30, 60]
   lr_decay: 0.1
 augmentation:
   use_random_crop: True

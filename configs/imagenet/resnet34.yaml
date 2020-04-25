@@ -12,7 +12,7 @@ model:
   resnet:
     initial_channels: 64
     block_type: basic
-    n_blocks: [2, 2, 2, 2]
+    n_blocks: [3, 4, 6, 3]
 train:
   resume: False
   seed: 0
@@ -20,11 +20,11 @@ train:
   batch_size: 256
   subdivision: 1
   optimizer: sgd
-  base_lr: 0.2
+  base_lr: 0.1
   momentum: 0.9
   nesterov: True
   weight_decay: 1e-4
-  output_dir: experiments/imagenet/resnet_18/exp00
+  output_dir: experiments/imagenet/resnet34/exp00
   log_period: 10
   checkpoint_period: 10
   use_tensorboard: True
@@ -34,7 +34,7 @@ train:
     drop_last: True
     pin_memory: True
 validation:
-  batch_size: 256
+  batch_size: 1024
   dataloader:
     num_workers: 8
     drop_last: False

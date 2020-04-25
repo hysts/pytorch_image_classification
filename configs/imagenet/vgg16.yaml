@@ -7,25 +7,24 @@ dataset:
   n_classes: 1000
 model:
   type: imagenet
-  name: resnext
+  name: vgg
   init_mode: kaiming_fan_out
-  resnext:
-    initial_channels: 64
-    n_blocks: [3, 4, 6, 3]
-    cardinality: 32
-    base_channels: 4
+  vgg:
+    n_channels: [64, 128, 256, 512, 512]
+    n_layers: [2, 2, 3, 3, 3]
+    use_bn: True
 train:
   resume: False
   seed: 0
   precision: O0
   batch_size: 256
-  subdivision: 1
+  subdivision: 8
   optimizer: sgd
-  base_lr: 0.1
+  base_lr: 0.01
   momentum: 0.9
   nesterov: True
-  weight_decay: 1e-4
-  output_dir: experiments/imagenet/resnext_50_32x4d/exp00
+  weight_decay: 5e-4
+  output_dir: experiments/imagenet/vgg16/exp00
   log_period: 10
   checkpoint_period: 10
   use_tensorboard: True

@@ -23,7 +23,7 @@ train:
   batch_size: 256
   subdivision: 1
   optimizer: sgd
-  base_lr: 0.2
+  base_lr: 0.1
   momentum: 0.9
   nesterov: True
   weight_decay: 1e-4
