@@ -353,7 +353,7 @@ def main():
 
     model = create_model(config)
     macs, n_params = count_op(config, model)
-    logger.info(f'MACs  : {macs}')
+    logger.info(f'MACs   : {macs}')
     logger.info(f'#params: {n_params}')
 
     optimizer = create_optimizer(config, model)
