@@ -26,8 +26,8 @@ train:
   output_dir: experiments/cifar10/se_resnet_preact/exp00
   log_period: 100
   checkpoint_period: 100
-  val_ratio: 0.1
-  use_test_as_val: False
+  val_ratio: 0.0
+  use_test_as_val: True
   use_tensorboard: True
   distributed: False
   dataloader:

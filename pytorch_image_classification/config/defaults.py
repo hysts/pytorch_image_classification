@@ -110,8 +110,8 @@ config.train.start_epoch = 0
 config.train.seed = 0
 config.train.val_first = True
 config.train.val_period = 1
-config.train.val_ratio = 0.1
-config.train.use_test_as_val = False
+config.train.val_ratio = 0.0
+config.train.use_test_as_val = True
 
 config.train.output_dir = 'experiments/exp00'
 config.train.log_period = 100
