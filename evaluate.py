@@ -9,6 +9,8 @@ import torch
 import torch.nn.functional as F
 import tqdm
 
+from fvcore.common.checkpoint import Checkpointer
+
 from pytorch_image_classification import (
     apply_data_parallel_wrapper,
     create_dataloader,
@@ -19,7 +21,6 @@ from pytorch_image_classification import (
 )
 from pytorch_image_classification.utils import (
     AverageMeter,
-    CheckPointer,
     create_logger,
     get_rank,
 )
@@ -97,7 +98,7 @@ def main():
 
     model = create_model(config)
     model = apply_data_parallel_wrapper(config, model)
-    checkpointer = CheckPointer(model,
+    checkpointer = Checkpointer(model,
                                 checkpoint_dir=output_dir,
                                 logger=logger,
                                 distributed_rank=get_rank())
