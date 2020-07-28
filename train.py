@@ -149,13 +149,21 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
 
             loss = loss_func(output_chunk, target_chunk)
             losses.append(loss)
-            with apex.amp.scale_loss(loss, optimizer) as scaled_loss:
-                scaled_loss.backward()
+            if config.device != 'cpu':
+                with apex.amp.scale_loss(loss, optimizer) as scaled_loss:
+                    scaled_loss.backward()
+            else:
+                loss.backward()
         outputs = torch.cat(outputs)
 
         if config.train.gradient_clip > 0:
-            torch.nn.utils.clip_grad_norm_(apex.amp.master_params(optimizer),
-                                           config.train.gradient_clip)
+            if config.device != 'cpu':
+                torch.nn.utils.clip_grad_norm_(
+                    apex.amp.master_params(optimizer),
+                    config.train.gradient_clip)
+            else:
+                torch.nn.utils.clip_grad_norm_(model.parameters(),
+                                               config.train.gradient_clip)
         if config.train.subdivision > 1:
             for param in model.parameters():
                 param.grad.data.div_(config.train.subdivision)
@@ -357,9 +365,9 @@ def main():
     logger.info(f'#params: {n_params}')
 
     optimizer = create_optimizer(config, model)
-    model, optimizer = apex.amp.initialize(model,
-                                           optimizer,
-                                           opt_level=config.train.precision)
+    if config.device != 'cpu':
+        model, optimizer = apex.amp.initialize(
+            model, optimizer, opt_level=config.train.precision)
     model = apply_data_parallel_wrapper(config, model)
 
     scheduler = create_scheduler(config,
