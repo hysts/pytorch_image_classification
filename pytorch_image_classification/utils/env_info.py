@@ -7,8 +7,8 @@ from pytorch_image_classification.config.config_node import ConfigNode
 def get_env_info(config: yacs.config.CfgNode) -> yacs.config.CfgNode:
     info = {
         'pytorch_version': torch.__version__,
-        'cuda_version': torch.version.cuda,
-        'cudnn_version': torch.backends.cudnn.version(),
+        'cuda_version': torch.version.cuda or '',
+        'cudnn_version': torch.backends.cudnn.version() or '',
     }
     if config.device != 'cpu':
         info['num_gpus'] = torch.cuda.device_count()
