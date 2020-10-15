@@ -201,7 +201,8 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
         acc1_meter.update(acc1, num)
         acc5_meter.update(acc5, num)
 
-        torch.cuda.synchronize()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
 
         if get_rank() == 0:
             if step % config.train.log_period == 0 or step == len(
@@ -298,7 +299,8 @@ def validate(epoch, config, model, loss_func, val_loader, logger,
             acc1_meter.update(acc1, num)
             acc5_meter.update(acc5, num)
 
-            torch.cuda.synchronize()
+            if torch.cuda.is_available():
+                torch.cuda.synchronize()
 
         logger.info(f'Epoch {epoch} '
                     f'loss {loss_meter.avg:.4f} '
