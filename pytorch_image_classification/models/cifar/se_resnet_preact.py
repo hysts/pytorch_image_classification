@@ -10,12 +10,12 @@ def initialize_weights(module):
                                 nonlinearity='relu')
     elif isinstance(module, nn.BatchNorm2d):
         nn.init.ones_(module.weight.data)
-        nn.init.zeros_(module.biasd.data)
+        nn.init.zeros_(module.bias.data)
     elif isinstance(module, nn.Linear):
         nn.init.kaiming_normal_(module.weight.data,
                                 mode='fan_out',
                                 nonlinearity='relu')
-        nn.init.zeros_(module.biasd.data)
+        nn.init.zeros_(module.bias.data)
 
 
 class SELayer(nn.Module):

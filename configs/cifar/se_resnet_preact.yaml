@@ -5,7 +5,7 @@ model:
   type: cifar
   name: se_resnet_preact
   init_mode: kaiming_fan_out
-  resnet_preact:
+  se_resnet_preact:
     depth: 110
     initial_channels: 16
     se_reduction: 16
