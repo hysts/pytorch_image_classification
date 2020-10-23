@@ -4,6 +4,6 @@ torchvision
 fvcore
 tqdm
 yacs
-git+https://github.com/NVIDIA/apex.git#egg=apex
+git+https://github.com/NVIDIA/apex.git@02a33875970e1b555754dfc4ab85d05595d23764#egg=apex
 termcolor
-thop<0.0.31.post2004070130
+thop
