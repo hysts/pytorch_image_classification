@@ -20,6 +20,7 @@ Following papers are implemented using PyTorch.
 
 ## Requirements
 
+* Ubuntu (It's only tested on Ubuntu, so it may not work on Windows.)
 * Python >= 3.7
 * PyTorch >= 1.4.0
 * torchvision
@@ -28,7 +29,6 @@ Following papers are implemented using PyTorch.
 ```bash
 pip install -r requirements.txt
 ```
-
 
 ## Usage
 
