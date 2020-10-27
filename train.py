@@ -424,16 +424,16 @@ def main():
         train(epoch, config, model, optimizer, scheduler, train_loss,
               train_loader, logger, tensorboard_writer, tensorboard_writer2)
 
-        if config.train.val_period > 0 and (epoch %
-                                            config.train.val_period == 0):
+        if config.train.val_period > 0 and (epoch % config.train.val_period
+                                            == 0):
             validate(epoch, config, model, val_loss, val_loader, logger,
                      tensorboard_writer)
 
         tensorboard_writer.flush()
         tensorboard_writer2.flush()
 
-        if (epoch % config.train.checkpoint_period == 0) or (
-                epoch == config.scheduler.epochs):
+        if (epoch % config.train.checkpoint_period
+                == 0) or (epoch == config.scheduler.epochs):
             checkpoint_config = {
                 'epoch': epoch,
                 'global_step': global_step,
