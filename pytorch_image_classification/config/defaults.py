@@ -90,6 +90,7 @@ config.model.se_resnet_preact.preact_stage = [True, True, True]
 config.train = ConfigNode()
 config.train.checkpoint = ''
 config.train.resume = False
+config.train.use_apex = True
 # optimization level for NVIDIA apex
 # O0 = fp32
 # O1 = mixed precision
