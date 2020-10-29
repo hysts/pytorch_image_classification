@@ -28,4 +28,5 @@ def apply_data_parallel_wrapper(config: yacs.config.CfgNode,
     else:
         if config.device == 'cuda':
             model = nn.DataParallel(model)
+            model.to(config.device)
     return model
