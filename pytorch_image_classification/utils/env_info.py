@@ -6,7 +6,7 @@ from pytorch_image_classification.config.config_node import ConfigNode
 
 def get_env_info(config: yacs.config.CfgNode) -> yacs.config.CfgNode:
     info = {
-        'pytorch_version': torch.__version__,
+        'pytorch_version': str(torch.__version__),
         'cuda_version': torch.version.cuda or '',
         'cudnn_version': torch.backends.cudnn.version() or '',
     }
